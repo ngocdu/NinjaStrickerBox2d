@@ -8,50 +8,50 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
-         timestampString = "400498356.93632"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "317"
-         endingLineNumber = "317"
-         landmarkName = "HelloWorld::ccTouchEnded(CCSet* touches, CCEvent* event)"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
-         timestampString = "400498356.93632"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "315"
-         endingLineNumber = "315"
-         landmarkName = "HelloWorld::ccTouchEnded(CCSet* touches, CCEvent* event)"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
-         timestampString = "400498356.93632"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "313"
-         endingLineNumber = "313"
-         landmarkName = "HelloWorld::ccTouchEnded(CCSet* touches, CCEvent* event)"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
-         timestampString = "400499724.377565"
+         timestampString = "400670129.789585"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "447"
          endingLineNumber = "447"
+         landmarkName = "HelloWorld::ccTouchEnded(CCSet* touches, CCEvent* event)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
+         timestampString = "400670129.789585"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "445"
+         endingLineNumber = "445"
+         landmarkName = "HelloWorld::ccTouchEnded(CCSet* touches, CCEvent* event)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
+         timestampString = "400670129.789585"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "443"
+         endingLineNumber = "443"
+         landmarkName = "HelloWorld::ccTouchEnded(CCSet* touches, CCEvent* event)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
+         timestampString = "400670129.789585"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "573"
+         endingLineNumber = "573"
          landmarkName = "HelloWorld::setViewPointCenter(CCPoint position)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -60,25 +60,38 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
-         timestampString = "400498356.93632"
+         timestampString = "400667784.569638"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "268"
-         endingLineNumber = "268"
-         landmarkName = "HelloWorld::update(float dt)"
+         startingLineNumber = "181"
+         endingLineNumber = "181"
+         landmarkName = "HelloWorld::initPhysics()"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
-         timestampString = "400498356.93632"
+         filePath = "NinjaStrickerBox2d/Classes/MyContactListener.cpp"
+         timestampString = "400670662.477204"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "191"
-         endingLineNumber = "191"
-         landmarkName = "HelloWorld::initPhysics()"
+         startingLineNumber = "25"
+         endingLineNumber = "25"
+         landmarkName = "MyContactListener::BeginContact(b2Contact* contact)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "NinjaStrickerBox2d/Classes/MyContactListener.cpp"
+         timestampString = "400670664.920331"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "35"
+         endingLineNumber = "35"
+         landmarkName = "MyContactListener::EndContact(b2Contact* contact)"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

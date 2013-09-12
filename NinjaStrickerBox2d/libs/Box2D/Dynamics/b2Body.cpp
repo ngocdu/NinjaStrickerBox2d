@@ -192,7 +192,6 @@ b2Fixture* b2Body::CreateFixture(const b2Shape* shape, float32 density)
     b2FixtureDef def;
     def.shape = shape;
     def.density = density;
-
     return CreateFixture(&def);
 }
 

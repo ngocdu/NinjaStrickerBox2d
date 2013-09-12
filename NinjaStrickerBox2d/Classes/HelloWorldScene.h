@@ -11,6 +11,9 @@
 // When you import this file, you import all the cocos2d classes
 #include "cocos2d.h"
 #include "Box2D.h"
+#include "GB2ShapeCache-x.h"
+#include "GLES-Render.h"
+#include "MyContactListener.h"
 using namespace cocos2d;
 class PhysicsSprite : public cocos2d::CCSprite
 {
@@ -55,6 +58,8 @@ public:
     void createFixtures(CCTMXLayer* layer);
     void createRectangularFixture(CCTMXLayer* layer, int x, int y,
                                   float width, float height);
+    
+//    void addCharacter();
 private:
     b2World* world;
     cocos2d::CCTexture2D* m_pSpriteTexture; // weak ref
@@ -67,8 +72,20 @@ private:
     
     CCTMXLayer *_meta;
     
-    CCTMXLayer *_foreground;
+//    CCTMXLayer *_foreground;
     float withTileMap;
+    float heightTileMap;
+    GLESDebugDraw *m_debugDraw;
+//    
+//    CCArray * _array_money;
+//    CCArray * _array_
+    
+    CCPoint touchLocation;
+    bool giamVanToc;
+    bool isTouchTop;
+    
+    MyContactListener *_contactListener;
+    bool _contactting;
 };
 
 #endif // __HELLO_WORLD_H__
