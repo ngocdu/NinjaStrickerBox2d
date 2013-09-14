@@ -2,7 +2,7 @@
 //  HelloWorldScene.cpp
 //  NinjaStrickerBox2d
 //
-//  Created by MinhNT on 13/09/09.
+//  Created by NgocDu on 13/09/09.
 //  Copyright __MyCompanyName__ 2013年. All rights reserved.
 //
 #include "HelloWorldScene.h"
@@ -232,7 +232,27 @@ void HelloWorld::addNewSpriteAtPosition(CCPoint p)
     
     // Define another box shape for our dynamic body.
     b2PolygonShape dynamicBox;
-    dynamicBox.SetAsBox(1.2f, 1.2f);//These are mid points for our 1m box
+//    dynamicBox.SetAsBox(1.2f, 1.2f);//These are mid points for our 1m box
+    
+    
+    b2Vec2 vertices[4];
+    
+    vertices[0].Set(-1.2f, -1.2f);
+    
+    vertices[1].Set(1.2f, -1.2f);
+    
+    vertices[2].Set(1.2f, 1.2f);
+    vertices[3].Set(-1.2f, 1.2f);
+//    vertices[4].Set(4.0f, 20.0f);
+    
+    int32 count = 4;
+    
+    
+    
+    b2PolygonShape polygon;
+    
+    dynamicBox.Set(vertices, count);
+    
     
     // Define the dynamic body fixture.
     b2FixtureDef fixtureDef;
@@ -316,9 +336,39 @@ void HelloWorld::update(float dt)
         if (_player->getMpBody()->GetPosition().y * PTM_RATIO > touchLocation.y &&
             giamVanToc == true && isTouchTop == true) {
             b2Vec2 v = _player->getMpBody()->GetLinearVelocity();
+            CCLog("velocity x: %f", v.x);
+            CCLog("velocity y: %f", v.y);
             float diffx = abs(_player->getMpBody()->GetPosition().x * PTM_RATIO - touchLocation.x);
             float diffy = abs(_player->getMpBody()->GetPosition().y * PTM_RATIO - touchLocation.y);
-            _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/100 + 1), v.y  /(diffy/50 + 1)));
+            CCLog("diff y / diff x: %f", v.y / v.x);
+            if (abs(v.y / v.x) > 1 && abs(v.x) > 40) {
+                if (abs(v.x) > 20) {
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/15 + 1), v.y  /(diffy/50 + 1)));
+                }else if (abs(v.y) > 12) {
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/20 + 1), v.y  /(diffy/30 + 1)));
+                }else {
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/20 + 1), v.y  /(diffy/50 + 1)));
+                }
+
+            }else if (abs(v.y / v.x) < 1 && abs(v.x) < 20) {
+                if (abs(v.x) > 20) {
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/150 + 1), v.y  /(diffy/50 + 1)));
+                }else if (abs(v.y) > 12) {
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/200 + 1), v.y  /(diffy/30 + 1)));
+                }else {
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/200 + 1), v.y  /(diffy/50 + 1)));
+                }
+            }else if (abs(v.y / v.x) > 1  || abs(v.x) > 20){
+                if (abs(v.x) > 20) {
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/50 + 1), v.y  /(diffy/50 + 1)));
+                }else if (abs(v.y) > 12) {
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/100 + 1), v.y  /(diffy/30 + 1)));
+                }else {
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/100 + 1), v.y  /(diffy/50 + 1)));
+                }
+            }
+            
+            
             
             //dung yen khong quay ************ cam xoa doan nay 
 //            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
@@ -334,6 +384,8 @@ void HelloWorld::update(float dt)
         }else if (_player->getMpBody()->GetPosition().y * PTM_RATIO < touchLocation.y &&
                   giamVanToc == true && isTouchTop == false) {
             b2Vec2 v = _player->getMpBody()->GetLinearVelocity();
+            CCLog("velocity x: %f", v.x);
+            CCLog("velocity y: %f", v.y);
             float diffx = abs(_player->getMpBody()->GetPosition().x * PTM_RATIO - touchLocation.x);
             float diffy = abs(_player->getMpBody()->GetPosition().y * PTM_RATIO - touchLocation.y);
             _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x /(diffx/100 + 1), v.y /(diffy/30 + 1)));
@@ -374,46 +426,64 @@ void HelloWorld::update(float dt)
     
     
     // Collision Detection
-    if (_contactting == false) {
-        std::vector<MyContact>::iterator pos;
-        for(pos = _contactListener->_contacts.begin();
-            pos != _contactListener->_contacts.end(); ++pos) {
-            MyContact contact = *pos;
-            _contactting = true;
-            if (contact.fixtureA == _player->getMpBody()->GetFixtureList()) {
-                //            SimpleAudioEngine::sharedEngine()->playEffect("hit.caf");
-                b2Body * bodyPlayer = _player->getMpBody();
-                b2Body * bodyB = contact.fixtureB->GetBody();
-                if (bodyPlayer->GetPosition().y > bodyB->GetPosition().y) {
-                    CCAnimation *anim=CCAnimation::create();
-                    
-                    anim->addSpriteFrameWithFileName("ninja_attack.png");
-                    anim->addSpriteFrameWithFileName("ninja.png");
-                    anim->setDelayPerUnit(2.8f / 2.0f);
-                    anim->setRestoreOriginalFrame(true);
-                    CCAnimate * animet=CCAnimate::create(anim);
-                    CCRepeatForever * rep=CCRepeatForever::create(animet);
-                    rep->setTag(123456);
-                    _player->runAction(animet);
-                }
-            }else if (contact.fixtureB == _player->getMpBody()->GetFixtureList()) {
-                b2Body * bodyPlayer = _player->getMpBody();
-                b2Body * bodyA = contact.fixtureA->GetBody();
-                if (bodyPlayer->GetPosition().y > bodyA->GetPosition().y) {
-                    CCAnimation *anim=CCAnimation::create();
-                    
-                    anim->addSpriteFrameWithFileName("ninja_attack.png");
-                    anim->addSpriteFrameWithFileName("ninja.png");
-                    anim->setDelayPerUnit(2.8f / 2.0f);
-                    anim->setRestoreOriginalFrame(true);
-                    CCAnimate * animet=CCAnimate::create(anim);
-                    CCRepeatForever * rep=CCRepeatForever::create(animet);
-                    rep->setTag(123456);
-                    _player->runAction(animet);
-                }
-            }
-        }
+    
+    if (GameManager::sharedGameManager()->getBeginContact() == true) {
+        CCAnimation *anim=CCAnimation::create();
+        
+        anim->addSpriteFrameWithFileName("ninja_attack.png");
+        anim->addSpriteFrameWithFileName("ninja.png");
+        anim->setDelayPerUnit(2.8f / 4.0f);
+        anim->setRestoreOriginalFrame(true);
+        CCAnimate * animet=CCAnimate::create(anim);
+        CCRepeatForever * rep=CCRepeatForever::create(animet);
+        rep->setTag(123456);
+        _player->runAction(animet);
+        GameManager::sharedGameManager()->setBeginContact(false);
     }
+    
+//    if (_contactting == true)
+//    {
+//        std::vector<MyContact>::iterator pos;
+//        for(pos = _contactListener->_contacts.begin();
+//            pos != _contactListener->_contacts.end(); ++pos)
+//        {
+//            MyContact contact = *pos;
+//              _contactting = false;
+//            if (contact.fixtureA == _player->getMpBody()->GetFixtureList()) {
+//                //            SimpleAudioEngine::sharedEngine()->playEffect("hit.caf");
+//                b2Body * bodyPlayer = _player->getMpBody();
+//                b2Body * bodyB = contact.fixtureB->GetBody();
+//                if (bodyPlayer->GetPosition().y > bodyB->GetPosition().y) {
+//                    CCAnimation *anim=CCAnimation::create();
+//                    
+//                    anim->addSpriteFrameWithFileName("ninja_attack.png");
+//                    anim->addSpriteFrameWithFileName("ninja.png");
+//                    anim->setDelayPerUnit(2.8f / 4.0f);
+//                    anim->setRestoreOriginalFrame(true);
+//                    CCAnimate * animet=CCAnimate::create(anim);
+//                    CCRepeatForever * rep=CCRepeatForever::create(animet);
+//                    rep->setTag(123456);
+//                    _player->runAction(animet);
+//                }
+//            }else if (contact.fixtureB == _player->getMpBody()->GetFixtureList()) {
+//                b2Body * bodyPlayer = _player->getMpBody();
+//                b2Body * bodyA = contact.fixtureA->GetBody();
+//                if (bodyPlayer->GetPosition().y > bodyA->GetPosition().y) {
+//                    CCAnimation *anim=CCAnimation::create();
+//                    
+//                    anim->addSpriteFrameWithFileName("ninja_attack.png");
+//                    anim->addSpriteFrameWithFileName("ninja.png");
+//                    anim->setDelayPerUnit(2.8f / 4.0f);
+//                    anim->setRestoreOriginalFrame(true);
+//                    CCAnimate * animet=CCAnimate::create(anim);
+//                    CCRepeatForever * rep=CCRepeatForever::create(animet);
+//                    rep->setTag(123456);
+//                    _player->runAction(animet);
+//                }
+//            }
+//            break;
+//        }
+//    }
 }
 bool HelloWorld::ccTouchBegan(CCTouch *touch, CCEvent *event)
 {
@@ -476,14 +546,41 @@ void HelloWorld::touch( CCPoint location)
 //        CCLOG("point y : %f", _player->getMpBody()->GetPosition().y * PTM_RATIO);
 //        impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO)*4;
 //        impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO)*3;
-        impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.5f + 10;
-        impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.5f;
+       
 //        float k = 10.0f / abs(impulse.y - impulse.x);
 //        impulse.y = impulse.y * k;
 //        impulse.x = impulse.x * k;
-        CCLog("im x %f", impulse.x);
-        CCLog("im y %f", impulse.y);
-        CCLog(" leght  %f", impulse.LengthSquared());
+        impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.5f + 10;
+        impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.5f;
+//        CCLog("im x %f", impulse.x);
+//        CCLog("im y %f", impulse.y);
+//        CCLog(" leght  %f", impulse.LengthSquared());
+//        CCLog(" diff y / diff x  %f", impulse.y / impulse.x);
+        if (abs(impulse.y / impulse.x) < 0.9f) {
+            if (impulse.LengthSquared() > 100000 && impulse.LengthSquared() < 350000) {
+                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.5f + 150 * (1-abs(impulse.y / impulse.x));
+                impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.5f;
+            }else if (impulse.LengthSquared() < 100000) {
+                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 2.0f + 150 * (1-abs(impulse.y / impulse.x));
+                impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 2.0f;
+            }else if (impulse.LengthSquared() > 350000) {
+                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.2f + 150 * (1-abs(impulse.y / impulse.x));
+                impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.2f;
+            }
+        }else {
+            if (impulse.LengthSquared() > 100000 && impulse.LengthSquared() < 350000) {
+                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.5f + 30;
+                impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.5f;
+            }else if (impulse.LengthSquared() < 100000) {
+                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 2.0f + 30;
+                impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 2.0f;
+            }else if (impulse.LengthSquared() > 350000) {
+                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.2f + 10;
+                impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.2f;
+            }
+        }
+        
+        
         if( location.x < (winSize.width * 0.5f) )
 //            impulse.x = -impulse.x;
         b2Vec2 point((location.x - _player->getPositionX())/10, (location.y - _player->getPositionY())/10);
@@ -566,6 +663,24 @@ void HelloWorld::registerWithTouchDispatcher()
 void HelloWorld::setViewPointCenter(CCPoint position)
 {
     
+//    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+//    
+//    int x = MAX(position.x, winSize.width/2);
+//    int y = MAX(position.y, winSize.height/2);
+//    x = MIN(x, (_tileMap->getMapSize().width * this->_tileMap->getTileSize().width) - winSize.width / 2);
+//    y = MIN(y, (_tileMap->getMapSize().height * _tileMap->getTileSize().height) - winSize.height/2);
+//    CCPoint actualPosition = ccp(x, y);
+//    
+//    CCPoint centerOfView = ccp(winSize.width/2, winSize.height/2);
+//    CCPoint viewPoint = ccpSub(centerOfView, actualPosition);
+//    if (this->getPositionX() != 0 || this->getPositionY() != 160) {
+////        CCLog("this x: %f", this->getPositionX());
+////        CCLog("this v: %f", this->getPositionY());
+//    }
+//    
+//    this->setPosition(viewPoint);
+    
+    
     CCSize winSize = CCDirector::sharedDirector()->getWinSize();
     
     int x = MAX(position.x, winSize.width/2);
@@ -576,11 +691,6 @@ void HelloWorld::setViewPointCenter(CCPoint position)
     
     CCPoint centerOfView = ccp(winSize.width/2, winSize.height/2);
     CCPoint viewPoint = ccpSub(centerOfView, actualPosition);
-    if (this->getPositionX() != 0 || this->getPositionY() != 160) {
-//        CCLog("this x: %f", this->getPositionX());
-//        CCLog("this v: %f", this->getPositionY());
-    }
-    
     this->setPosition(viewPoint);
 }
 CCPoint HelloWorld::tileCoordForPosition(CCPoint position)

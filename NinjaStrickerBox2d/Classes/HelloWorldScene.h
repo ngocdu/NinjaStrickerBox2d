@@ -2,7 +2,7 @@
 //  HelloWorldScene.h
 //  NinjaStrickerBox2d
 //
-//  Created by MinhNT on 13/09/09.
+//  Created by NgocDu on 13/09/09.
 //  Copyright __MyCompanyName__ 2013年. All rights reserved.
 //
 #ifndef __HELLO_WORLD_H__
@@ -13,6 +13,7 @@
 #include "Box2D.h"
 #include "GB2ShapeCache-x.h"
 #include "GLES-Render.h"
+#include "GameManager.h"
 #include "MyContactListener.h"
 using namespace cocos2d;
 class PhysicsSprite : public cocos2d::CCSprite
@@ -58,6 +59,11 @@ public:
     void createFixtures(CCTMXLayer* layer);
     void createRectangularFixture(CCTMXLayer* layer, int x, int y,
                                   float width, float height);
+    CCPoint convertPoitMapToPixel(CCPoint pointMap);
+    
+    CCPoint convertMetterToPixel(CCPoint p);
+    
+    CCPoint convertPixelToMetter(CCPoint p);
     
 //    void addCharacter();
 private:

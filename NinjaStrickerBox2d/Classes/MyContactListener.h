@@ -1,18 +1,10 @@
-//
-//  MyContactListener.h
-//  AirHockey
-//
-//  Created by Trung Kien Do on 13/05/25.
-//
-//
-
 #ifndef __Sample_Box2D__MyContactListener__
 #define __Sample_Box2D__MyContactListener__
 
 #include <iostream>
 #include <Box2D/Box2D.h>
 #include <vector>
-
+#include "GameManager.h"
 struct MyContact {
     b2Fixture *fixtureA;
     b2Fixture *fixtureB;
