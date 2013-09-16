@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC16728E17E6A69E00CB8EC6 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728717E6A69D00CB8EC6 /* arrow.png */; };
+		DC16728F17E6A69E00CB8EC6 /* attack.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728817E6A69E00CB8EC6 /* attack.png */; };
+		DC16729017E6A69E00CB8EC6 /* coin.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728917E6A69E00CB8EC6 /* coin.png */; };
+		DC16729117E6A69E00CB8EC6 /* muctieu.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728A17E6A69E00CB8EC6 /* muctieu.png */; };
+		DC16729217E6A69E00CB8EC6 /* ninja_attack2.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728B17E6A69E00CB8EC6 /* ninja_attack2.png */; };
+		DC16729317E6A69E00CB8EC6 /* ninja_attack3.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728C17E6A69E00CB8EC6 /* ninja_attack3.png */; };
+		DC16729417E6A69E00CB8EC6 /* ninja2_bam_tuong.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728D17E6A69E00CB8EC6 /* ninja2_bam_tuong.png */; };
+		DC16729817E6E32F00CB8EC6 /* Coin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC16729717E6E32E00CB8EC6 /* Coin.cpp */; };
+		DC16729B17E6E4EA00CB8EC6 /* Snake.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC16729A17E6E4EA00CB8EC6 /* Snake.cpp */; };
+		DC16729E17E6E6DA00CB8EC6 /* Scorpion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC16729D17E6E6D900CB8EC6 /* Scorpion.cpp */; };
+		DC1672A117E6EDCB00CB8EC6 /* Arrow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC1672A017E6EDCB00CB8EC6 /* Arrow.cpp */; };
 		DC64B7DB17E15ADB00587680 /* ninjaS.plist in Resources */ = {isa = PBXBuildFile; fileRef = DC64B7DA17E15ADB00587680 /* ninjaS.plist */; };
 		DC64B7E817E1B29700587680 /* CCDataVisitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC64B7E017E1B29700587680 /* CCDataVisitor.cpp */; };
 		DC64B7E917E1B29700587680 /* GB2ShapeCache-x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC64B7E217E1B29700587680 /* GB2ShapeCache-x.cpp */; };
@@ -362,9 +373,25 @@
 		DC9CE3F517E05A5600E7A368 /* ninja2.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9CE3E917E05A5600E7A368 /* ninja2.png */; };
 		DC9CE3F617E05A5600E7A368 /* ninja_attack.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9CE3EA17E05A5600E7A368 /* ninja_attack.png */; };
 		DC9CE3FB17E0618C00E7A368 /* Duck.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9CE3FA17E0618B00E7A368 /* Duck.png */; };
+		DCB6123017E464AC00C3C382 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB6122E17E464AC00C3C382 /* GameManager.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC16728717E6A69D00CB8EC6 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
+		DC16728817E6A69E00CB8EC6 /* attack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = attack.png; sourceTree = "<group>"; };
+		DC16728917E6A69E00CB8EC6 /* coin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin.png; sourceTree = "<group>"; };
+		DC16728A17E6A69E00CB8EC6 /* muctieu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = muctieu.png; sourceTree = "<group>"; };
+		DC16728B17E6A69E00CB8EC6 /* ninja_attack2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ninja_attack2.png; sourceTree = "<group>"; };
+		DC16728C17E6A69E00CB8EC6 /* ninja_attack3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ninja_attack3.png; sourceTree = "<group>"; };
+		DC16728D17E6A69E00CB8EC6 /* ninja2_bam_tuong.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ninja2_bam_tuong.png; sourceTree = "<group>"; };
+		DC16729617E6E31E00CB8EC6 /* Coin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Coin.h; sourceTree = "<group>"; };
+		DC16729717E6E32E00CB8EC6 /* Coin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coin.cpp; sourceTree = "<group>"; };
+		DC16729917E6E4DB00CB8EC6 /* Snake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Snake.h; sourceTree = "<group>"; };
+		DC16729A17E6E4EA00CB8EC6 /* Snake.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Snake.cpp; sourceTree = "<group>"; };
+		DC16729C17E6E6BE00CB8EC6 /* Scorpion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Scorpion.h; sourceTree = "<group>"; };
+		DC16729D17E6E6D900CB8EC6 /* Scorpion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scorpion.cpp; sourceTree = "<group>"; };
+		DC16729F17E6EDBA00CB8EC6 /* Arrow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Arrow.h; sourceTree = "<group>"; };
+		DC1672A017E6EDCB00CB8EC6 /* Arrow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Arrow.cpp; sourceTree = "<group>"; };
 		DC64B7DA17E15ADB00587680 /* ninjaS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = ninjaS.plist; path = Resources/ninjaS.plist; sourceTree = "<group>"; };
 		DC64B7E017E1B29700587680 /* CCDataVisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCDataVisitor.cpp; path = Classes/CCDataVisitor.cpp; sourceTree = "<group>"; };
 		DC64B7E117E1B29700587680 /* CCDataVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCDataVisitor.h; path = Classes/CCDataVisitor.h; sourceTree = "<group>"; };
@@ -1044,6 +1071,8 @@
 		DC9CE3E917E05A5600E7A368 /* ninja2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ninja2.png; sourceTree = "<group>"; };
 		DC9CE3EA17E05A5600E7A368 /* ninja_attack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ninja_attack.png; sourceTree = "<group>"; };
 		DC9CE3FA17E0618B00E7A368 /* Duck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Duck.png; path = Resources/Duck.png; sourceTree = "<group>"; };
+		DCB6122E17E464AC00C3C382 /* GameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameManager.cpp; path = Classes/GameManager.cpp; sourceTree = "<group>"; };
+		DCB6122F17E464AC00C3C382 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameManager.h; path = Classes/GameManager.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2254,6 +2283,8 @@
 		DC7C7D5417DD684500A2325D /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DCB6122E17E464AC00C3C382 /* GameManager.cpp */,
+				DCB6122F17E464AC00C3C382 /* GameManager.h */,
 				DC64B7E017E1B29700587680 /* CCDataVisitor.cpp */,
 				DC64B7E117E1B29700587680 /* CCDataVisitor.h */,
 				DC64B7E217E1B29700587680 /* GB2ShapeCache-x.cpp */,
@@ -2266,6 +2297,14 @@
 				DC7C7D5617DD684500A2325D /* AppDelegate.cpp */,
 				DC7C7D5817DD684500A2325D /* HelloWorldScene.h */,
 				DC7C7D5917DD684500A2325D /* HelloWorldScene.cpp */,
+				DC16729617E6E31E00CB8EC6 /* Coin.h */,
+				DC16729717E6E32E00CB8EC6 /* Coin.cpp */,
+				DC16729917E6E4DB00CB8EC6 /* Snake.h */,
+				DC16729A17E6E4EA00CB8EC6 /* Snake.cpp */,
+				DC16729C17E6E6BE00CB8EC6 /* Scorpion.h */,
+				DC16729D17E6E6D900CB8EC6 /* Scorpion.cpp */,
+				DC16729F17E6EDBA00CB8EC6 /* Arrow.h */,
+				DC1672A017E6EDCB00CB8EC6 /* Arrow.cpp */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -2333,6 +2372,13 @@
 		DC9CE3DF17E05A5600E7A368 /* ninjagame */ = {
 			isa = PBXGroup;
 			children = (
+				DC16728717E6A69D00CB8EC6 /* arrow.png */,
+				DC16728817E6A69E00CB8EC6 /* attack.png */,
+				DC16728917E6A69E00CB8EC6 /* coin.png */,
+				DC16728A17E6A69E00CB8EC6 /* muctieu.png */,
+				DC16728B17E6A69E00CB8EC6 /* ninja_attack2.png */,
+				DC16728C17E6A69E00CB8EC6 /* ninja_attack3.png */,
+				DC16728D17E6A69E00CB8EC6 /* ninja2_bam_tuong.png */,
 				DC9CE3E017E05A5600E7A368 /* maps */,
 				DC9CE3E417E05A5600E7A368 /* monters */,
 				DC9CE3E717E05A5600E7A368 /* Ninja */,
@@ -2509,6 +2555,13 @@
 				DC9CE3F617E05A5600E7A368 /* ninja_attack.png in Resources */,
 				DC9CE3FB17E0618C00E7A368 /* Duck.png in Resources */,
 				DC64B7DB17E15ADB00587680 /* ninjaS.plist in Resources */,
+				DC16728E17E6A69E00CB8EC6 /* arrow.png in Resources */,
+				DC16728F17E6A69E00CB8EC6 /* attack.png in Resources */,
+				DC16729017E6A69E00CB8EC6 /* coin.png in Resources */,
+				DC16729117E6A69E00CB8EC6 /* muctieu.png in Resources */,
+				DC16729217E6A69E00CB8EC6 /* ninja_attack2.png in Resources */,
+				DC16729317E6A69E00CB8EC6 /* ninja_attack3.png in Resources */,
+				DC16729417E6A69E00CB8EC6 /* ninja2_bam_tuong.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2775,6 +2828,11 @@
 				DC64B7E917E1B29700587680 /* GB2ShapeCache-x.cpp in Sources */,
 				DC64B7EA17E1B29700587680 /* GLES-Render.cpp in Sources */,
 				DC64B7EB17E1B29700587680 /* MyContactListener.cpp in Sources */,
+				DCB6123017E464AC00C3C382 /* GameManager.cpp in Sources */,
+				DC16729817E6E32F00CB8EC6 /* Coin.cpp in Sources */,
+				DC16729B17E6E4EA00CB8EC6 /* Snake.cpp in Sources */,
+				DC16729E17E6E6DA00CB8EC6 /* Scorpion.cpp in Sources */,
+				DC1672A117E6EDCB00CB8EC6 /* Arrow.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

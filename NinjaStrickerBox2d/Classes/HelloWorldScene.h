@@ -15,6 +15,10 @@
 #include "GLES-Render.h"
 #include "GameManager.h"
 #include "MyContactListener.h"
+#include "Coin.h"
+#include "Snake.h"
+#include "Scorpion.h"
+#include "Arrow.h"
 using namespace cocos2d;
 class PhysicsSprite : public cocos2d::CCSprite
 {
@@ -65,7 +69,11 @@ public:
     
     CCPoint convertPixelToMetter(CCPoint p);
     
-//    void addCharacter();
+    void addCoins();
+    void addSnakes();
+    void addScorpions();
+    void addArrows();
+    
 private:
     b2World* world;
     cocos2d::CCTexture2D* m_pSpriteTexture; // weak ref
@@ -78,13 +86,19 @@ private:
     
     CCTMXLayer *_meta;
     
+    CCTMXLayer *_coin;
+    
+    CCTMXLayer *_snake;
+    
+    CCTMXLayer *_scorpion;
+    
+    CCTMXLayer *_arrow;
+    
 //    CCTMXLayer *_foreground;
     float withTileMap;
     float heightTileMap;
     GLESDebugDraw *m_debugDraw;
-//    
-//    CCArray * _array_money;
-//    CCArray * _array_
+
     
     CCPoint touchLocation;
     bool giamVanToc;
@@ -92,6 +106,13 @@ private:
     
     MyContactListener *_contactListener;
     bool _contactting;
+    
+    // ------------ array------------
+    CCArray * _arrayCoin;
+    CCArray * _arraySnake;
+    CCArray * _arrayScorpion;
+    CCArray * _arrayArrow;
+    
 };
 
 #endif // __HELLO_WORLD_H__

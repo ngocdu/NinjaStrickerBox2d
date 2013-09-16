@@ -85,8 +85,10 @@ HelloWorld::HelloWorld()
     _tileMap = new CCTMXTiledMap();
     _tileMap->initWithTMXFile("TileMap.tmx");
     _background = _tileMap->layerNamed("Background");
-//    _foreground = _tileMap->layerNamed("Foreground");
-//    _foreground->getTexture()->setAntiAliasTexParameters();
+    _coin = _tileMap->layerNamed("Coin");
+    _snake = _tileMap->layerNamed("Snake");
+    _scorpion = _tileMap->layerNamed("Scorpion");
+    _arrow = _tileMap->layerNamed("Arrow");
     _meta = _tileMap->layerNamed("Meta");
     _meta->setVisible(false);
     
@@ -108,9 +110,15 @@ HelloWorld::HelloWorld()
     
     addNewSpriteAtPosition(ccp(s.width/2, s.height/4));
     this->setViewPointCenter(_player->getPosition());
+    //----------------------------------
+    _arrayCoin = new CCArray();
+    _arraySnake = new CCArray();
+    _arrayScorpion = new CCArray();
+    _arrayArrow = new CCArray();
     
-    //----------------------------------    
-    
+    this->addCoins();
+    this->addSnakes();
+    this->addScorpions();
     scheduleUpdate();
 }
 
@@ -132,6 +140,7 @@ void HelloWorld::initPhysics()
     gravity.Set(0.0f, -15.0f);
     world = new b2World(gravity);
     _contactListener = new MyContactListener();
+    _contactListener->setNumberBegin(0);
     world->SetContactListener(_contactListener);
     // Do we want to let bodies sleep?
     world->SetAllowSleeping(true);
@@ -426,12 +435,57 @@ void HelloWorld::update(float dt)
     
     
     // Collision Detection
-    
+    //begin contact
     if (GameManager::sharedGameManager()->getBeginContact() == true) {
         CCAnimation *anim=CCAnimation::create();
-        
-        anim->addSpriteFrameWithFileName("ninja_attack.png");
-        anim->addSpriteFrameWithFileName("ninja.png");
+        //top
+        if (GameManager::sharedGameManager()->getDirectionContact() == 1) {
+            anim->addSpriteFrameWithFileName("ninja_attack.png");
+            anim->addSpriteFrameWithFileName("ninja.png");
+        //bottom
+        }else if (GameManager::sharedGameManager()->getDirectionContact() == 2) {
+            anim->addSpriteFrameWithFileName("ninja_attack.png");
+            anim->addSpriteFrameWithFileName("ninja.png");
+            anim->addSpriteFrameWithFileName("ninja_attack.png");
+            anim->addSpriteFrameWithFileName("ninja.png");
+            _player->setFlipY(true);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
+            _player->getMpBody()->SetGravityScale(0);
+            _player->getMpBody()->SetAngularVelocity(0);
+            //giam soc
+            _player->getMpBody()->SetLinearDamping(0);
+        //left
+        }else if (GameManager::sharedGameManager()->getDirectionContact() == 3) {
+//            anim->addSpriteFrameWithFileName("ninja_attack.png");
+//            anim->addSpriteFrameWithFileName("ninja.png");
+//            anim->addSpriteFrameWithFileName("ninja_attack.png");
+//            anim->addSpriteFrameWithFileName("ninja.png");
+//            anim->addSpriteFrameWithFileName("ninja_attack.png");
+            anim->addSpriteFrameWithFileName("ninja2_bam_tuong.png");
+            _player->setFlipX(true);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
+            _player->getMpBody()->SetGravityScale(0);
+            _player->getMpBody()->SetAngularVelocity(0);
+            //giam soc
+            _player->getMpBody()->SetLinearDamping(0);
+        //right
+        }else if (GameManager::sharedGameManager()->getDirectionContact() == 4) {
+//            anim->addSpriteFrameWithFileName("ninja_attack.png");
+//            anim->addSpriteFrameWithFileName("ninja.png");
+//            anim->addSpriteFrameWithFileName("ninja_attack.png");
+//            anim->addSpriteFrameWithFileName("ninja.png");
+//            anim->addSpriteFrameWithFileName("ninja_attack.png");
+//            anim->addSpriteFrameWithFileName("ninja.png");
+//            anim->addSpriteFrameWithFileName("ninja_attack.png");
+            anim->addSpriteFrameWithFileName("ninja2_bam_tuong.png");
+//            _player->setFlipX(true);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
+            _player->getMpBody()->SetGravityScale(0);
+            _player->getMpBody()->SetAngularVelocity(0);
+            //giam soc
+            _player->getMpBody()->SetLinearDamping(0);
+        }
+
         anim->setDelayPerUnit(2.8f / 4.0f);
         anim->setRestoreOriginalFrame(true);
         CCAnimate * animet=CCAnimate::create(anim);
@@ -440,7 +494,19 @@ void HelloWorld::update(float dt)
         _player->runAction(animet);
         GameManager::sharedGameManager()->setBeginContact(false);
     }
-    
+    //end contact
+    if (GameManager::sharedGameManager()->getEndContact() == true) {
+        _player->getMpBody()->SetGravityScale(1);
+        GameManager::sharedGameManager()->setEndContact(false);
+        CCAnimation *anim=CCAnimation::create();
+        anim->addSpriteFrameWithFileName("ninja.png");
+        anim->setDelayPerUnit(2.8f / 6.0f);
+        anim->setRestoreOriginalFrame(true);
+        CCAnimate * animet=CCAnimate::create(anim);
+        _player->runAction(animet);
+        _player->setFlipX(false);
+        _player->setFlipY(false);
+    }
 //    if (_contactting == true)
 //    {
 //        std::vector<MyContact>::iterator pos;
@@ -710,4 +776,93 @@ CCScene* HelloWorld::scene()
     layer->release();
     
     return scene;
+}
+#pragma mark - add object 
+void HelloWorld::addCoins() {
+    CCSize layerSize = _coin->getLayerSize();
+    for( int y=0; y < layerSize.height; y++ )
+    {
+        for( int x=0; x < layerSize.width; x++ )
+        {
+            // create a fixture if this tile has a sprite
+            CCSprite* tileSprite = _coin->tileAt(ccp(x, y));
+            if( tileSprite ) {
+                CCPoint p = convertPoitMapToPixel(ccp(tileSprite->getPosition().x / PTM_RATIO,
+                                                      tileSprite->getPosition().y / PTM_RATIO));
+                Coin * coin =  new Coin();
+                coin->initWithFile("coin.png");
+                coin->setPosition(p);
+                coin->action();
+                _arrayCoin->addObject(coin);
+                this->addChild(coin, 10000);
+            }
+                
+        }
+    }
+}
+void HelloWorld::addSnakes() {
+    CCSize layerSize = _snake->getLayerSize();
+    for( int y=0; y < layerSize.height; y++ )
+    {
+        for( int x=0; x < layerSize.width; x++ )
+        {
+            // create a fixture if this tile has a sprite
+            CCSprite* tileSprite = _snake->tileAt(ccp(x, y));
+            if( tileSprite ) {
+                CCPoint p = convertPoitMapToPixel(ccp(tileSprite->getPosition().x / PTM_RATIO,
+                                                      tileSprite->getPosition().y / PTM_RATIO));
+                Snake * snake =  new Snake();
+                snake->initWithFile("monter01.png");
+                snake->setPosition(p);
+                snake->actionMoveToPoint(CCPoint(p.x + 200, p.y));
+                _arraySnake->addObject(snake);
+                this->addChild(snake, 10000);
+            }
+            
+        }
+    }
+}
+void HelloWorld::addScorpions() {
+    CCSize layerSize = _scorpion->getLayerSize();
+    for( int y=0; y < layerSize.height; y++ )
+    {
+        for( int x=0; x < layerSize.width; x++ )
+        {
+            // create a fixture if this tile has a sprite
+            CCSprite* tileSprite = _scorpion->tileAt(ccp(x, y));
+            if( tileSprite ) {
+                CCPoint p = convertPoitMapToPixel(ccp(tileSprite->getPosition().x / PTM_RATIO,
+                                                      tileSprite->getPosition().y / PTM_RATIO));
+                Scorpion * scorpion =  new Scorpion();
+                scorpion->initWithFile("monter02.png");
+                scorpion->setPosition(p);
+                int i = rand() % 2;
+                if (i == 0) {
+                    scorpion->fluctuating(30);
+                }
+                if(i == 1)
+                    scorpion->fluctuatingAndMove(30, 200);
+                
+                _arrayScorpion->addObject(scorpion);
+                this->addChild(scorpion, 10000);
+            }
+            
+        }
+    }
+}
+#pragma mark - convert point
+CCPoint HelloWorld::convertMetterToPixel(CCPoint p) {
+    return CCPoint(p.x * PTM_RATIO, p.y * PTM_RATIO);
+}
+CCPoint HelloWorld::convertPixelToMetter(cocos2d::CCPoint p) {
+    return CCPoint(p.x / PTM_RATIO, p.y / PTM_RATIO);
+}
+CCPoint HelloWorld::convertPoitMapToPixel(cocos2d::CCPoint pointMap) {
+    float W = CCDirector::sharedDirector()->getWinSize().width;
+    float H = CCDirector::sharedDirector()->getWinSize().height;
+    float X = _tileMap->getMapSize().width;
+    float Y = _tileMap->getMapSize().height;
+    float x = _tileMap->getTileSize().width;
+    float y = _tileMap->getTileSize().height;
+    return CCPoint(x * 0.5f + x * pointMap.x,H - ((Y - pointMap.y) * y - y * 0.5f));
 }

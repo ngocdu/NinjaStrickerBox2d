@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
-         timestampString = "400670129.789585"
+         timestampString = "401018686.4445"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "447"
-         endingLineNumber = "447"
+         startingLineNumber = "583"
+         endingLineNumber = "583"
          landmarkName = "HelloWorld::ccTouchEnded(CCSet* touches, CCEvent* event)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -21,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
-         timestampString = "400670129.789585"
+         timestampString = "401018686.4445"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "445"
-         endingLineNumber = "445"
+         startingLineNumber = "581"
+         endingLineNumber = "581"
          landmarkName = "HelloWorld::ccTouchEnded(CCSet* touches, CCEvent* event)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -34,11 +34,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
-         timestampString = "400670129.789585"
+         timestampString = "401018686.4445"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "443"
-         endingLineNumber = "443"
+         startingLineNumber = "579"
+         endingLineNumber = "579"
          landmarkName = "HelloWorld::ccTouchEnded(CCSet* touches, CCEvent* event)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -47,24 +47,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
-         timestampString = "400670129.789585"
+         timestampString = "401018686.4445"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "573"
-         endingLineNumber = "573"
-         landmarkName = "HelloWorld::setViewPointCenter(CCPoint position)"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
-         timestampString = "400667784.569638"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "181"
-         endingLineNumber = "181"
+         startingLineNumber = "190"
+         endingLineNumber = "190"
          landmarkName = "HelloWorld::initPhysics()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -72,26 +59,13 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "NinjaStrickerBox2d/Classes/MyContactListener.cpp"
-         timestampString = "400670662.477204"
+         filePath = "NinjaStrickerBox2d/Classes/HelloWorldScene.cpp"
+         timestampString = "401018686.4445"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "25"
-         endingLineNumber = "25"
-         landmarkName = "MyContactListener::BeginContact(b2Contact* contact)"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "NinjaStrickerBox2d/Classes/MyContactListener.cpp"
-         timestampString = "400670664.920331"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "35"
-         endingLineNumber = "35"
-         landmarkName = "MyContactListener::EndContact(b2Contact* contact)"
+         startingLineNumber = "794"
+         endingLineNumber = "794"
+         landmarkName = "HelloWorld::addCoins()"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

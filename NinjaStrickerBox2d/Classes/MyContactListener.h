@@ -28,6 +28,8 @@ struct MyContact {
         virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
         
     private:
+        CC_SYNTHESIZE(int, _numberBegin, NumberBegin);
+        CC_SYNTHESIZE(int, _numberEnd, NumberEnd);
     };
 
 #endif /* defined(__AirHockey__MyContactListener__) */

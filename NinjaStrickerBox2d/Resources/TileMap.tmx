@@ -24,7 +24,7 @@
  </tileset>
  <layer name="Background" width="100" height="20">
   <data encoding="base64" compression="zlib">
-   eJztlcENACEIBOnADnxc/0Xe38SEOyCuOiTzdEUHYzez7uBx4sny7hPNOhl8aIGPO8EHzKh4/4APBTL+Onxo+QCoImsOmWt8RPtT7xMf66n0kXEHkayvPY1Zf9ZHz6+Wgw+tnF18NACATaAoal4vmLrF+Q==
+   eJzt1EEKwCAMBEDP/f+D+wLBgtHVzkDuiRvTGgAAAJzpGSzWkAc3St7jP/655BnlceeMJ5FHltl5pNyX0VuXtovyqKvKPme+wwq7s5DH9z569QIQEQk5
   </data>
  </layer>
  <objectgroup name="Objects" width="100" height="20">
@@ -32,7 +32,27 @@
  </objectgroup>
  <layer name="Meta" width="100" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt1ksKwCAMRVG35P4351wQNXlKNPdAhw22135KWVMXDy/lrJ/RIxZ65EQPjJx4/mFHDx3Ft44eOjf+PQAr1T5kX2tk6fHK+5AesZzsobgHnlm7a+pnWc73Xn+0OZa5qjXRYy5qDwAA8L4GZQI4eA==
+   eJzt1NEJgDAMQMGu5P7LuYBCSGKJegf9UUTKa7MWAAAAvNMRXOyhB180+Rz/8c5d7WfKHvW4f8YeeszS3WPKfInOumnz74kelfddsv+pdMx0jX6XPTN61Ht03uFJPbLrBFdSH2U=
+  </data>
+ </layer>
+ <layer name="Coin" width="100" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt10EKwCAMBEDf1P8/rvelUCgWTDJz0eNuBMW1AGC2K9bcA9DLyXf8H2/SyX1TpazdTJt99q3Uv1LW6qbN+q1vpXl8ydrpX5hdnrrRh3MFgP1uLYME4w==
+  </data>
+ </layer>
+ <layer name="Snake" width="100" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1EEJAAAIA0Ar2b+cBXyr4F2CDcYiAAAAALgmtwMA0Pr6z197M8/WgG0Fbk4AxQ==
+  </data>
+ </layer>
+ <layer name="Scorpion" width="100" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1MEJACAMA8Cu5P7LuYFCsWDp3QAhnyQCAADO1ue5Vf2Ad7I77bTvTl0BbnwaAABTbY6BAVg=
+  </data>
+ </layer>
+ <layer name="Arrow" width="100" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztzgENAAAIA6Bnsn84Y3w6SEACAAAAfDHtAAAAABy2Hp0AMw==
   </data>
  </layer>
 </map>

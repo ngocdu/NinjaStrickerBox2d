@@ -2,7 +2,7 @@
 //  NinjaStrickerBox2dAppDelegate.h
 //  NinjaStrickerBox2d
 //
-//  Created by MinhNT on 13/09/09.
+//  Created by NgocDu on 13/09/09.
 //  Copyright __MyCompanyName__ 2013年. All rights reserved.
 //
 
