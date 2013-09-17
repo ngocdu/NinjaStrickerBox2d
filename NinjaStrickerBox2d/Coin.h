@@ -16,6 +16,7 @@ public:
     //Constructor
     Coin();
     void action();
+    void actionMoveTop();
 private:
     
 };

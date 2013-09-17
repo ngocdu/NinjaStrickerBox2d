@@ -13,7 +13,8 @@ using namespace cocos2d;
 class Snake : public CCSprite
 {
 private:
-    
+    CC_SYNTHESIZE(int, _direction, Direction);
+    CC_SYNTHESIZE(CCPoint, _location, Location);
 public:
     Snake();
     void actionMoveToPoint(CCPoint p);

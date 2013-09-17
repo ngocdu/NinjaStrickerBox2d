@@ -19,20 +19,8 @@
 #include "Snake.h"
 #include "Scorpion.h"
 #include "Arrow.h"
+#include "Ninja.h"
 using namespace cocos2d;
-class PhysicsSprite : public cocos2d::CCSprite
-{
-public:
-    PhysicsSprite();
-//    void setPhysicsBody(b2Body * body);
-//    b2Body getPhysicsBody();
-    virtual bool isDirty(void);
-    virtual cocos2d::CCAffineTransform nodeToParentTransform(void);
-private:
-//    b2Body* m_pBody;    // strong ref
-    CC_SYNTHESIZE(b2Body *, _mpBody, MpBody);
-};
-
 class HelloWorld : public cocos2d::CCLayer {
 public:
     ~HelloWorld();
@@ -74,10 +62,13 @@ public:
     void addScorpions();
     void addArrows();
     
+    void updateLocation_Direction(float dt);
+    
+    void removeSprite(CCNode * node);
 private:
     b2World* world;
     cocos2d::CCTexture2D* m_pSpriteTexture; // weak ref
-    PhysicsSprite * _player;
+    Ninja * _player;
     float delta;
     
     CCTMXTiledMap *_tileMap;
@@ -94,7 +85,6 @@ private:
     
     CCTMXLayer *_arrow;
     
-//    CCTMXLayer *_foreground;
     float withTileMap;
     float heightTileMap;
     GLESDebugDraw *m_debugDraw;

@@ -18,6 +18,7 @@ void MyContactListener::BeginContact(b2Contact* contact)
     MyContact myContact = { contact->GetFixtureA(), contact->GetFixtureB() };
     _contacts.push_back(myContact);
     CCLog("begin contact");
+    GameManager::sharedGameManager()->setNumberActionPlayer(2);
     GameManager::sharedGameManager()->setBeginContact(true);
     this->setNumberBegin(this->getNumberBegin() + 1);
 //    if (this->getNumberBegin() == 2)
@@ -67,6 +68,7 @@ void MyContactListener::EndContact(b2Contact* contact)
         _contacts.erase(pos);
     }
     CCLog("end contact");
+    GameManager::sharedGameManager()->setNumberActionPlayer(1);
     GameManager::sharedGameManager()->setEndContact(true);
 }
 
