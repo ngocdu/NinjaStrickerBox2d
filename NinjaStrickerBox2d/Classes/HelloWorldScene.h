@@ -37,6 +37,7 @@ public:
     bool ccTouchBegan(CCTouch *touch, CCEvent *event);
     virtual void ccTouchEnded(cocos2d::CCSet* touches, cocos2d::CCEvent* event);
     void update(float dt);
+    void updatePhantom(float dt);
     void touch( CCPoint location);
     
     
@@ -65,6 +66,12 @@ public:
     void updateLocation_Direction(float dt);
     
     void removeSprite(CCNode * node);
+    void removeCoin(CCNode * node);
+    void removeSnake(CCNode * node);
+    void removeScorpion(CCNode * node);
+    
+    void checkTouchPoint(CCPoint p);
+    void arrowAttack(int direction);
 private:
     b2World* world;
     cocos2d::CCTexture2D* m_pSpriteTexture; // weak ref
@@ -102,7 +109,9 @@ private:
     CCArray * _arraySnake;
     CCArray * _arrayScorpion;
     CCArray * _arrayArrow;
-    
+    CCArray * _arrayRemoveSnake;
+    CCArray * _arrayRemoveScorpion;
+    CCArray * _arrayRemoveCoin;
 };
 
 #endif // __HELLO_WORLD_H__

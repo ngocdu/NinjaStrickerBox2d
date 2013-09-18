@@ -24,15 +24,15 @@
  </tileset>
  <layer name="Background" width="100" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt1MERABAMRcGcFaH/MrXgwPjYw96TeaFXVQcAAIALtUmn5/yFHrwo+Y5/fHPJO+rx5o430SPL6h4p/8vsX5d2i3rss3NOPfQ41WMABR3X8Q==
+   eJzt1MERABAMRcGcFaH/MrXgwPjYw96TeaFXVQcAAIALtUmn5/yFHrwo+Y5/fHPJO+rx5o430SPL6h4p/8vsX5d2i3rss3NOPThlAKSA1IE=
   </data>
  </layer>
- <objectgroup name="Objects" width="100" height="20" visible="0">
+ <objectgroup name="Objects" width="100" height="20">
   <object name="SpawnPoint" x="80" y="299"/>
  </objectgroup>
  <layer name="Meta" width="100" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt1NEJgDAMQMGu5P7LuYBCSGKJegf9UUTKa7MWAAAAvNMRXOyhB180+Rz/8c5d7WfKHvW4f8YeeszS3WPKfInOumnz74kelfddsv+pdMx0jX6XPTN61Ht03uFJPbLrBFdSH2U=
+   eJztlkkKwCAMAP2S//9cTz0ILYSoZGxnIBdFTJi4tCYUenUCMqAPFvpgoQ8W+mChDxb6YKEPFl/x0YNB54QcI+hDdlDtg9zHFWeuuvan/atzutHH+9hfqK5dHyPVta/2QfljRe862tu5w8fM/Cqy+8x4zHiNrsv2jD54cXq9F0FRKuE=
   </data>
  </layer>
  <layer name="Coin" width="100" height="20">
@@ -52,7 +52,7 @@
  </layer>
  <layer name="Arrow" width="100" height="20">
   <data encoding="base64" compression="zlib">
-   eJztzgENAAAIA6Bnsn84Y3w6SEACAAAAfDHtAAAAABy2Hp0AMw==
+   eJzt1MERABAMBEA16b84DfAwBgm7f+PkJkoBdqi3A7Asc4eZs//qlc6ivONEjtU7Zs6fnGuUDgGi819CDnZ1zGwAAKCvAbCDAos=
   </data>
  </layer>
 </map>

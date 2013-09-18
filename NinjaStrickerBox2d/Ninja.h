@@ -18,9 +18,10 @@ public:
     virtual bool isDirty(void);
     virtual cocos2d::CCAffineTransform nodeToParentTransform(void);
     void actionAttack();
+    void actionAttack2();
 private:
     CC_SYNTHESIZE(b2Body *, _mpBody, MpBody);
-    // 0 nothing 1 - attack  2 - was attack
+    // 0 nothing 1 - attack  2 - was attack 3 - attack to taget
     CC_SYNTHESIZE(int, _attack, Attack);
     CC_SYNTHESIZE(CCSprite *, _image, Image);
 };

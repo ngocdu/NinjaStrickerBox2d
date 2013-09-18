@@ -58,4 +58,26 @@ CCAffineTransform Ninja::nodeToParentTransform(void)
     
     return m_sTransform;
 }
-
+void Ninja::actionAttack() {
+    CCAnimation *anim=CCAnimation::create();
+    anim->addSpriteFrameWithFileName("ninja_attack.png");
+    anim->addSpriteFrameWithFileName("ninja_attack3.png");
+    anim->addSpriteFrameWithFileName("ninja_attack2.png");
+    anim->setDelayPerUnit(2.8f / 24.0f);
+    anim->setRestoreOriginalFrame(true);
+    CCAnimate * animet=CCAnimate::create(anim);
+    this->getImage()->runAction(animet);
+}
+void Ninja::actionAttack2() {
+    CCAnimation *anim=CCAnimation::create();
+    anim->addSpriteFrameWithFileName("ninja_attack.png");
+    anim->addSpriteFrameWithFileName("ninja_attack3.png");
+    anim->addSpriteFrameWithFileName("ninja_attack2.png");
+    anim->addSpriteFrameWithFileName("ninja_attack.png");
+    anim->addSpriteFrameWithFileName("ninja_attack3.png");
+    anim->addSpriteFrameWithFileName("ninja_attack2.png");
+    anim->setDelayPerUnit(2.8f / 24.0f);
+    anim->setRestoreOriginalFrame(true);
+    CCAnimate * animet=CCAnimate::create(anim);
+    this->getImage()->runAction(animet);
+}

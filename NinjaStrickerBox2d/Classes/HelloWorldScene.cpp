@@ -64,12 +64,15 @@ HelloWorld::HelloWorld()
     _arraySnake = new CCArray();
     _arrayScorpion = new CCArray();
     _arrayArrow = new CCArray();
-    
+    _arrayRemoveCoin = new CCArray();
+    _arrayRemoveSnake = new CCArray();
+    _arrayRemoveScorpion = new CCArray();
     this->addCoins();
     this->addSnakes();
     this->addScorpions();
-    
+    this->addArrows();
     this->schedule(schedule_selector(HelloWorld::updateLocation_Direction), 0.1f);
+    this->schedule(schedule_selector(HelloWorld::updatePhantom), 0.02f);
     scheduleUpdate();
 }
 
@@ -149,15 +152,15 @@ void HelloWorld::draw()
     // This is only for debug purposes
     // It is recommend to disable it
     //
-    CCLayer::draw();
-
-    ccGLEnableVertexAttribs( kCCVertexAttribFlag_Position );
-
-    kmGLPushMatrix();
-
-    world->DrawDebugData();
-
-    kmGLPopMatrix();
+//    CCLayer::draw();
+//
+//    ccGLEnableVertexAttribs( kCCVertexAttribFlag_Position );
+//
+//    kmGLPushMatrix();
+//
+////    world->DrawDebugData();
+//
+//    kmGLPopMatrix();
     
 }
 
@@ -482,7 +485,39 @@ void HelloWorld::update(float dt)
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 5));
             _player->setAttack(0);
         }else if (kc2 <= kc1 && _player->getAttack() == 1) {
-            
+            CCSprite *attack = CCSprite::create("attack.png");
+            attack->setPosition(snake->getPosition());
+            this->addChild(attack, 11);
+            CCDelayTime * delay = CCDelayTime::create(0.3f);
+            CCHide * hide = CCHide::create();
+            CCSequence *sq = CCSequence::create(delay, hide, NULL);
+            attack->runAction(sq);
+            snake->stopAllActions();
+            _arrayRemoveSnake->addObject(snake);
+            _player->setAttack(0);
+            _player->actionAttack();
+        }else if (kc2 <= kc1 && _player->getAttack() == 3) {
+            CCSprite *attack = CCSprite::create("attack.png");
+            CCSprite *attack2 = CCSprite::create("attack.png");
+            CCRotateTo *rotate = CCRotateTo::create(0, 90);
+            attack->setPosition(snake->getPosition());
+            attack2->setPosition(snake->getPosition());
+            this->addChild(attack, 11);
+            this->addChild(attack2, 11);
+            CCDelayTime * delay = CCDelayTime::create(0.3f);
+            CCHide * hide = CCHide::create();
+            CCSequence *sq = CCSequence::create(delay, hide, NULL);
+            CCSequence *sq2 = CCSequence::create(rotate, delay, hide, NULL);
+            attack->runAction(sq);
+            attack2->runAction(sq2);
+            snake->stopAllActions();
+            _arrayRemoveSnake->addObject(snake);
+            if (isTouchTop) {
+                _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 10));
+            }
+//            else _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 3));
+            _player->actionAttack2();
+            _player->setAttack(0);
         }
     }
     //--------------------contact with Scorpion---------------------------------
@@ -495,21 +530,96 @@ void HelloWorld::update(float dt)
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 5));
             _player->setAttack(0);
         }else if (kc2 <= kc1 && _player->getAttack() == 1) {
-            
+            CCSprite *attack = CCSprite::create("attack.png");
+            attack->setPosition(scorpion->getPosition());
+            this->addChild(attack, 11);
+            CCDelayTime * delay = CCDelayTime::create(0.3f);
+            CCHide * hide = CCHide::create();
+            CCSequence *sq = CCSequence::create(delay, hide, NULL);
+            attack->runAction(sq);
+            scorpion->stopAllActions();
+            _arrayRemoveScorpion->addObject(scorpion);
+            _player->setAttack(0);
+            _player->actionAttack();
+        }else if (kc2 <= kc1 && _player->getAttack() == 3) {
+            CCSprite *attack = CCSprite::create("attack.png");
+            CCSprite *attack2 = CCSprite::create("attack.png");
+            CCRotateTo *rotate = CCRotateTo::create(0, 90);
+            attack->setPosition(scorpion->getPosition());
+            attack2->setPosition(scorpion->getPosition());
+            this->addChild(attack, 11);
+            this->addChild(attack2, 11);
+            CCDelayTime * delay = CCDelayTime::create(0.3f);
+            CCHide * hide = CCHide::create();
+            CCSequence *sq = CCSequence::create(delay, hide, NULL);
+            CCSequence *sq2 = CCSequence::create(rotate, delay, hide, NULL);
+            attack->runAction(sq);
+            attack2->runAction(sq2);
+
+            scorpion->stopAllActions();
+            _arrayRemoveScorpion->addObject(scorpion);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 10));
+            _player->setAttack(0);
+            _player->actionAttack2();
         }
     }
     
+    //--------------------contact with arrow -----------------------------------
+    CCObject *i8;
+    CCARRAY_FOREACH(_arrayArrow, i8) {
+        Arrow *arrow = (Arrow*)i8;
+        float kc1 = _player->getImage()->getContentSize().width/2 + arrow->getContentSize().width/2;
+        float kc2 = ccpDistance(arrow->getPosition(), _player->getPosition());
+        if (kc2 <= kc1/2) {
+            this->arrowAttack(arrow->getDirection());
+        }
+    }
+        
+    //---------------remove object when ninja attack ---------------------------
+    CCObject * i6;
+    CCARRAY_FOREACH(_arrayRemoveSnake, i6) {
+        Snake * sp = (Snake*)i6;
+        sp->resumeSchedulerAndActions();
+        CCDelayTime * delay = CCDelayTime::create(0.5f);
+        CCFadeIn *fo = CCFadeIn::create(0.5f);
+        CCCallFuncN *remove = CCCallFuncN::create(this,callfuncN_selector(HelloWorld::removeSnake));
+        CCSequence * sq = CCSequence::create(delay, fo, remove, NULL);
+        sp->runAction(sq);
+    }
+    
+    CCObject * i7;
+    CCARRAY_FOREACH(_arrayRemoveScorpion, i7) {
+        Scorpion * sp = (Scorpion*)i7;
+        sp->resumeSchedulerAndActions();
+        CCDelayTime * delay = CCDelayTime::create(0.5f);
+        CCFadeIn *fo = CCFadeIn::create(0.5f);
+        CCCallFuncN *remove = CCCallFuncN::create(this,callfuncN_selector(HelloWorld::removeScorpion));
+        CCSequence * sq = CCSequence::create(delay, fo, remove, NULL);
+        sp->runAction(sq);
+    }
+
+}
+void HelloWorld::updatePhantom(float dt) {
     //-----------------phantom--------------------------------------------------
-    if (_player->getAttack() == 1) {
+    if (_player->getAttack() == 3) {
         CCSprite * sprite = CCSprite::create("ninja.png");
         sprite->setPosition(_player->getPosition());
         CCFadeOut *fo = CCFadeOut::create(0.4f);
-        CCCallFuncN *remove = CCCallFuncN::create(this,callfuncN_selector(HelloWorld::removeSprite));
+        CCCallFuncN *remove = CCCallFuncN::create(sprite,callfuncN_selector(HelloWorld::removeSprite));
         CCSequence * sq = CCSequence::create(fo, remove, NULL);
         sprite->runAction(sq);
         this->addChild(sprite, 1000);
+    }else if (_player->getAttack() == 1) {
+        CCSprite * sprite = CCSprite::create("ninja_attack.png");
+        sprite->setPosition(_player->getPosition());
+        CCRotateTo *rotate = CCRotateTo::create(0.4, 360);
+        CCFadeOut *fo = CCFadeOut::create(0.4f);
+        CCCallFuncN *remove = CCCallFuncN::create(sprite,callfuncN_selector(HelloWorld::removeSprite));
+        CCSequence * sq = CCSequence::create(fo, remove, NULL);
+        sprite->runAction(sq);
+        sprite->runAction(rotate);
+        this->addChild(sprite, 1000);
     }
-
 }
 void HelloWorld::updateLocation_Direction(float dt) {
     CCObject * i1;
@@ -538,19 +648,8 @@ bool HelloWorld::ccTouchBegan(CCTouch *touch, CCEvent *event)
         if (_player->getMpBody()->GetPosition().y * PTM_RATIO < touchLocation.y )
             isTouchTop = true;
         else isTouchTop = false;
-        CCSprite * t = CCSprite::create("Icon-72.png");
-        CCScaleBy *scale = CCScaleBy::create(2, 0);
-        CCHide *hide = CCHide::create();
-        CCSequence * sq = CCSequence::create(scale, hide, NULL);
-        t->runAction(sq);
-        t->setPosition(touchLocation);
-        this->addChild(t, 10);
-        _player->setAttack(true);
-        _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
-        this->touch(touchLocation);
-        
-        GameManager::sharedGameManager()->setNumberActionPlayer(
-                GameManager::sharedGameManager()->getNumberActionPlayer() - 1);
+        this->checkTouchPoint(touchLocation);
+       
     }
     return true;
 }
@@ -571,10 +670,64 @@ void HelloWorld::ccTouchEnded(CCSet* touches, CCEvent* event)
         CCPoint location = touch->getLocationInView();
         
         location = CCDirector::sharedDirector()->convertToGL(location);
-        
-//        addNewSpriteAtPosition( location );
         this->touch(location);
     }
+}
+void HelloWorld::checkTouchPoint(cocos2d::CCPoint p) {
+    CCObject *i1;
+    CCARRAY_FOREACH(_arraySnake, i1) {
+        Snake * snake = (Snake*)i1;
+        CCRect rect = snake->boundingBox();
+        if (rect.containsPoint(p)) {
+            CCSprite * taget = CCSprite::create("muctieu.png");
+            taget->setPosition(CCPoint(snake->getContentSize().width/2, snake->getContentSize().height/2));
+            snake->addChild(taget);
+            CCFadeOut * fo = CCFadeOut::create(1.5f);
+            CCHide * hide = CCHide::create();
+            CCSequence * sq = CCSequence::create(fo, hide, NULL);
+            taget->runAction(sq);
+            _player->setAttack(3);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
+            this->touch(p);
+            GameManager::sharedGameManager()->setNumberActionPlayer(
+                    GameManager::sharedGameManager()->getNumberActionPlayer() - 1);
+            return;
+        }
+    }
+    
+    CCObject *i2;
+    CCARRAY_FOREACH(_arrayScorpion, i2) {
+        Scorpion * scorpion = (Scorpion*)i2;
+        CCRect rect = scorpion->boundingBox();
+        if (rect.containsPoint(p)) {
+            CCSprite * taget = CCSprite::create("muctieu.png");
+            taget->setPosition(CCPoint(scorpion->getContentSize().width/2, scorpion->getContentSize().height/2));
+            scorpion->addChild(taget);
+            CCFadeOut * fo = CCFadeOut::create(1.5f);
+            CCHide * hide = CCHide::create();
+            CCSequence * sq = CCSequence::create(fo, hide, NULL);
+            taget->runAction(sq);
+            _player->setAttack(3);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
+            this->touch(p);
+            GameManager::sharedGameManager()->setNumberActionPlayer(
+                    GameManager::sharedGameManager()->getNumberActionPlayer() - 1);
+            return;
+        }
+    }
+    CCSprite * t = CCSprite::create("Icon-72.png");
+    CCScaleBy *scale = CCScaleBy::create(2, 0);
+    CCHide *hide = CCHide::create();
+    CCSequence * sq = CCSequence::create(scale, hide, NULL);
+    t->runAction(sq);
+    t->setPosition(p);
+    this->addChild(t, 10);
+    _player->setAttack(1);
+    _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
+    this->touch(p);
+    
+    GameManager::sharedGameManager()->setNumberActionPlayer(
+                GameManager::sharedGameManager()->getNumberActionPlayer() - 1);
 }
 void HelloWorld::touch( CCPoint location)
 {
@@ -833,6 +986,33 @@ void HelloWorld::addScorpions() {
         }
     }
 }
+void HelloWorld::addArrows() {
+    CCSize layerSize = _arrow->getLayerSize();
+    for( int y=0; y < layerSize.height; y++ )
+    {
+        for( int x=0; x < layerSize.width; x++ )
+        {
+            // create a fixture if this tile has a sprite
+            CCSprite* tileSprite = _arrow->tileAt(ccp(x, y));
+            if( tileSprite ) {
+                CCPoint p = convertPoitMapToPixel(ccp(tileSprite->getPosition().x / PTM_RATIO,
+                                                      tileSprite->getPosition().y / PTM_RATIO));
+                Arrow * arrow =  new Arrow();
+                arrow->initWithFile("arrow.png");
+                arrow->setPosition(p);
+                int i = rand() % 8 + 1;
+                arrow->setDirection(i);
+                CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);;
+                    
+                arrow->runAction(rotate);
+                _arrayArrow->addObject(arrow);
+                this->addChild(arrow, 10000);
+            }
+            
+        }
+    }
+
+}
 #pragma mark - convert point
 CCPoint HelloWorld::convertMetterToPixel(CCPoint p) {
     return CCPoint(p.x * PTM_RATIO, p.y * PTM_RATIO);
@@ -852,4 +1032,66 @@ CCPoint HelloWorld::convertPoitMapToPixel(cocos2d::CCPoint pointMap) {
 void HelloWorld::removeSprite(cocos2d::CCNode *node) {
     CCSprite * sp = (CCSprite*)node;
     sp->removeFromParentAndCleanup(true);
+}
+void HelloWorld::removeCoin(cocos2d::CCNode *node) {
+    Coin * coin = (Coin*)node;
+    _arrayCoin->removeObject(coin);
+//    _arrayRemoveCoin->removeObject(coin);
+    this->removeChild(coin, true);
+}
+void HelloWorld::removeSnake(cocos2d::CCNode *node) {
+    Snake * snake = (Snake*)node;
+    snake->removeAllChildren();
+    _arraySnake->removeObject(snake);
+    _arrayRemoveSnake->removeObject(snake);
+    this->removeChild(snake);
+}
+void HelloWorld::removeScorpion(cocos2d::CCNode *node) {
+    Scorpion * scorpion = (Scorpion*)node;
+    scorpion->removeAllChildren();
+    _arrayScorpion->removeObject(scorpion);
+    _arrayRemoveScorpion->removeObject(scorpion);
+    this->removeChild(scorpion);
+}
+void HelloWorld::arrowAttack(int direction) {
+    _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
+    _player->setAttack(1);
+    int x = 50;
+    int y = 30;
+    switch (direction) {
+        case 1:
+            _player->getMpBody()->SetGravityScale(0);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(x , 0));
+            break;
+        case 2:
+            _player->getMpBody()->SetGravityScale(1);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(x/2, -y/2));
+            break;
+        case 3:
+            _player->getMpBody()->SetGravityScale(1);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, -y));
+            break;
+        case 4:
+            _player->getMpBody()->SetGravityScale(1);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(-x/2, -y/2));
+            break;
+        case 5:
+            _player->getMpBody()->SetGravityScale(0);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(-x, 0));
+            break;
+        case 6:
+            _player->getMpBody()->SetGravityScale(1);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(-x/2, y/2));
+            break;
+        case 7:
+            _player->getMpBody()->SetGravityScale(1);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, y));
+            break;
+        case 8:
+            _player->getMpBody()->SetGravityScale(1);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(x/2, y/2));
+            break;
+        default:
+            break;
+    }
 }
