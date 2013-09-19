@@ -24,6 +24,8 @@ private:
     // 0 nothing 1 - attack  2 - was attack 3 - attack to taget
     CC_SYNTHESIZE(int, _attack, Attack);
     CC_SYNTHESIZE(CCSprite *, _image, Image);
+    CC_SYNTHESIZE(CCPoint , _point, Point);
+    CC_SYNTHESIZE(bool , _stop, Stop);
 };
 
 

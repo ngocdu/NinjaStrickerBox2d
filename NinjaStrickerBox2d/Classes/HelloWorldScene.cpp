@@ -55,9 +55,9 @@ HelloWorld::HelloWorld()
 //        return false;
     }
 
-    this->prepareLayers();
+//    this->prepareLayers();
     
-    addNewSpriteAtPosition(ccp(s.width/2, s.height/4));
+    addNewSpriteAtPosition(convertPoitMapToPixel(CCPoint(0, 17)));
     this->setViewPointCenter(_player->getPosition());
     //----------------------------------
     _arrayCoin = new CCArray();
@@ -71,7 +71,11 @@ HelloWorld::HelloWorld()
     this->addSnakes();
     this->addScorpions();
     this->addArrows();
+    
+    this->addWalls();
+    
     this->schedule(schedule_selector(HelloWorld::updateLocation_Direction), 0.1f);
+    this->schedule(schedule_selector(HelloWorld::updateCheckStop), 0.05f);
     this->schedule(schedule_selector(HelloWorld::updatePhantom), 0.02f);
     scheduleUpdate();
 }
@@ -152,15 +156,15 @@ void HelloWorld::draw()
     // This is only for debug purposes
     // It is recommend to disable it
     //
-//    CCLayer::draw();
-//
-//    ccGLEnableVertexAttribs( kCCVertexAttribFlag_Position );
-//
-//    kmGLPushMatrix();
-//
-////    world->DrawDebugData();
-//
-//    kmGLPopMatrix();
+    CCLayer::draw();
+
+    ccGLEnableVertexAttribs( kCCVertexAttribFlag_Position );
+
+    kmGLPushMatrix();
+
+    world->DrawDebugData();
+
+    kmGLPopMatrix();
     
 }
 
@@ -190,21 +194,28 @@ void HelloWorld::addNewSpriteAtPosition(CCPoint p)
     // Define another box shape for our dynamic body.
     b2PolygonShape dynamicBox;
     
-    b2Vec2 vertices[4];
-    vertices[0].Set(-1.2f, -1.2f);    
-    vertices[1].Set(1.2f, -1.2f);    
-    vertices[2].Set(1.2f, 1.2f);
-    vertices[3].Set(-1.2f, 1.2f);
+//    b2Vec2 vertices[4];
+//    vertices[0].Set(-1.2f, -1.2f);    
+//    vertices[1].Set(1.2f, -1.2f);    
+//    vertices[2].Set(1.2f, 1.2f);
+//    vertices[3].Set(-1.2f, 1.2f);
+//    
+//    int32 count = 4;
+//
+//    b2PolygonShape polygon;
+//    
+//    dynamicBox.Set(vertices, count);
     
-    int32 count = 4;
+    b2CircleShape circle;
+    
+    float _radius = _player->getImage()->getContentSize().width / 2;
+    circle.m_radius = _radius / PTM_RATIO;
 
-    b2PolygonShape polygon;
-    
-    dynamicBox.Set(vertices, count);
 
     // Define the dynamic body fixture.
     b2FixtureDef fixtureDef;
-    fixtureDef.shape = &dynamicBox;    
+    fixtureDef.shape = &circle;
+//    fixtureDef.shape = &dynamicBox;
     fixtureDef.density = 4.0f; // trong luong
     fixtureDef.friction = 1.0f; //ma sat
     fixtureDef.restitution = 0;
@@ -352,33 +363,20 @@ void HelloWorld::update(float dt)
     // Instruct the world to perform a single step of simulation. It is
     // generally best to keep the time step and iterations fixed.
     world->Step(dt, velocityIterations, positionIterations);
-    
-    //Iterate over the bodies in the physics world
-//    for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
-//    {
-//        if (b->GetUserData() != NULL) {
-//            //Synchronize the AtlasSprites position and rotation with the corresponding body
-//            CCSprite* myActor = (CCSprite*)b->GetUserData();
-//            myActor->setPosition( CCPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO) );
-////            myActor->setRotation( -1 * CC_RADIANS_TO_DEGREES(b->GetAngle()) );
-//            
-//            if (b->GetPosition().y * PTM_RATIO > touchLocation.y) {
-//                
-//            }
-//        }
-//    }
-    
-    // Collision Detection
-//    std::vector<MyContact>::iterator pos;
-//    for(pos = _contactListener->_contacts.begin();
-//        pos != _contactListener->_contacts.end(); ++pos) {
-//        MyContact contact = *pos;
-//        GameManager::sharedGameManager()->setNumberActionPlayer(GameManager::sharedGameManager()->getNumberActionPlayer() - 1);
-//    }
 
+    if (_player->getAttack() == 1 && isTouchRight == true) {
+//        _player->getMpBody()->SetAngularVelocity(-100);
+    }else if (_player->getAttack() == 1 && isTouchRight == false) {
+//        _player->getMpBody()->SetAngularVelocity(100);
+    }else {
+        _player->getMpBody()->SetAngularVelocity(0);
+        _player->getMpBody()->SetTransform(_player->getMpBody()->GetPosition(), 0);
+    }
+    
     // Collision Detection ----------- contact wall ----------------------------
     //begin contact
     if (GameManager::sharedGameManager()->getBeginContact() == true) {
+        _player->getMpBody()->SetAngularVelocity(0);
         CCAnimation *anim=CCAnimation::create();
         //top
         if (GameManager::sharedGameManager()->getDirectionContact() == 1) {
@@ -396,10 +394,15 @@ void HelloWorld::update(float dt)
             _player->getMpBody()->SetAngularVelocity(0);
             //giam soc
             _player->getMpBody()->SetLinearDamping(0);
+            
+//            CCSprite * sp = CCSprite::create("ninja.png");
+//            CCRotateTo * rotate = CCRotateTo::create(0, -180);
+//            sp->runAction(rotate);
+//            _player->setImage(sp);
         //left
         }else if (GameManager::sharedGameManager()->getDirectionContact() == 3) {
             anim->addSpriteFrameWithFileName("ninja2_bam_tuong.png");
-            _player->setFlipX(true);
+            _player->getImage()->setFlipX(true);
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
             _player->getMpBody()->SetGravityScale(0);
             _player->getMpBody()->SetAngularVelocity(0);
@@ -426,6 +429,7 @@ void HelloWorld::update(float dt)
     }
     //end contact
     if (GameManager::sharedGameManager()->getEndContact() == true) {
+        _player->getImage()->stopActionByTag(123456);
         _player->getMpBody()->SetGravityScale(1);
         GameManager::sharedGameManager()->setEndContact(false);
         CCAnimation *anim=CCAnimation::create();
@@ -434,7 +438,7 @@ void HelloWorld::update(float dt)
         anim->setRestoreOriginalFrame(true);
         CCAnimate * animet=CCAnimate::create(anim);
         _player->getImage()->runAction(animet);
-        _player->getImage()->setFlipX(false);
+//        _player->getImage()->setFlipX(false);
         _player->getImage()->setFlipY(false);
     }
     
@@ -463,6 +467,15 @@ void HelloWorld::update(float dt)
             scorpion->setFlipX(false);
         }
 
+    }
+    
+    if (_player->getPosition().x > _player->getPoint().x) {
+        
+        _player->setFlipX(false);
+        _player->getImage()->setFlipX(false);
+    }else {
+        _player->setFlipX(true);
+        _player->getImage()->setFlipX(true);
     }
     
     //--------------------contact with coins------------------------------------
@@ -601,25 +614,40 @@ void HelloWorld::update(float dt)
 }
 void HelloWorld::updatePhantom(float dt) {
     //-----------------phantom--------------------------------------------------
-    if (_player->getAttack() == 3) {
-        CCSprite * sprite = CCSprite::create("ninja.png");
-        sprite->setPosition(_player->getPosition());
-        CCFadeOut *fo = CCFadeOut::create(0.4f);
-        CCCallFuncN *remove = CCCallFuncN::create(sprite,callfuncN_selector(HelloWorld::removeSprite));
-        CCSequence * sq = CCSequence::create(fo, remove, NULL);
-        sprite->runAction(sq);
-        this->addChild(sprite, 1000);
-    }else if (_player->getAttack() == 1) {
-        CCSprite * sprite = CCSprite::create("ninja_attack.png");
-        sprite->setPosition(_player->getPosition());
-        CCRotateTo *rotate = CCRotateTo::create(0.4, 360);
-        CCFadeOut *fo = CCFadeOut::create(0.4f);
-        CCCallFuncN *remove = CCCallFuncN::create(sprite,callfuncN_selector(HelloWorld::removeSprite));
-        CCSequence * sq = CCSequence::create(fo, remove, NULL);
-        sprite->runAction(sq);
-        sprite->runAction(rotate);
-        this->addChild(sprite, 1000);
+    if (_player->getStop() == false) {
+        if (_player->getAttack() == 3 ) {
+            CCSprite * sprite = CCSprite::create("ninja.png");
+            sprite->setPosition(_player->getPosition());
+            CCFadeOut *fo = CCFadeOut::create(0.4f);
+            CCCallFuncN *remove = CCCallFuncN::create(sprite,callfuncN_selector(HelloWorld::removeSprite));
+            CCSequence * sq = CCSequence::create(fo, remove, NULL);
+            sprite->runAction(sq);
+            this->addChild(sprite, 1000);
+        }else if (_player->getAttack() == 1 ) {
+            CCSprite * sprite = CCSprite::create("ninja_attack.png");
+            sprite->setPosition(_player->getPosition());
+            int i = rand() % 4 + 1;
+            CCRotateTo *rotate = CCRotateTo::create(0, 360 / i);
+            CCFadeOut *fo = CCFadeOut::create(0.4f);
+            CCCallFuncN *remove = CCCallFuncN::create(sprite,callfuncN_selector(HelloWorld::removeSprite));
+            CCSequence * sq = CCSequence::create(fo, remove, NULL);
+            sprite->runAction(sq);
+            sprite->runAction(rotate);
+            this->addChild(sprite, 1000);
+        }
+    }else {
+        _player->getMpBody()->SetAngularVelocity(0);
+        _player->getMpBody()->SetTransform(_player->getMpBody()->GetPosition(), 0);
     }
+    
+}
+void HelloWorld::updateCheckStop(float dt) {
+    CCPoint p = _player->getPosition();
+    CCPoint p2 = _player->getPoint();
+    if (p.x == p2.x && p.y == p2.y) {
+        _player->setStop(true);
+    }else _player->setStop(false);
+    
 }
 void HelloWorld::updateLocation_Direction(float dt) {
     CCObject * i1;
@@ -634,7 +662,7 @@ void HelloWorld::updateLocation_Direction(float dt) {
         scorpion->setLocation(scorpion->getPosition());
     }
     
-    
+    _player->setPoint(_player->getPosition());
 }
 bool HelloWorld::ccTouchBegan(CCTouch *touch, CCEvent *event)
 {
@@ -648,6 +676,9 @@ bool HelloWorld::ccTouchBegan(CCTouch *touch, CCEvent *event)
         if (_player->getMpBody()->GetPosition().y * PTM_RATIO < touchLocation.y )
             isTouchTop = true;
         else isTouchTop = false;
+        if (_player->getMpBody()->GetPosition().x * PTM_RATIO < touchLocation.x ) {
+            isTouchRight = true;
+        }else isTouchRight = false;
         this->checkTouchPoint(touchLocation);
        
     }
@@ -736,27 +767,8 @@ void HelloWorld::touch( CCPoint location)
     b2Vec2 impulse(0.0f,0.0f);
     
     {
-        // apply impulse
-//        impulse.y = 1300.0f * delta;
-//        impulse.x = 30.0f * delta;
-//        impulse.y = 16.0f;
-//        impulse.x = 10.0f;
-//        CCLOG("location x : %f", location.x);
-//        CCLOG("location y : %f", location.y);
-//        CCLOG("point x : %f", _player->getMpBody()->GetPosition().x * PTM_RATIO);
-//        CCLOG("point y : %f", _player->getMpBody()->GetPosition().y * PTM_RATIO);
-//        impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO)*4;
-//        impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO)*3;
-       
-//        float k = 10.0f / abs(impulse.y - impulse.x);
-//        impulse.y = impulse.y * k;
-//        impulse.x = impulse.x * k;
         impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.5f + 10;
         impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.5f;
-//        CCLog("im x %f", impulse.x);
-//        CCLog("im y %f", impulse.y);
-//        CCLog(" leght  %f", impulse.LengthSquared());
-//        CCLog(" diff y / diff x  %f", impulse.y / impulse.x);
         if (abs(impulse.y / impulse.x) < 0.9f) {
             if (impulse.LengthSquared() > 100000 && impulse.LengthSquared() < 350000) {
                 impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.5f + 150 * (1-abs(impulse.y / impulse.x));
@@ -780,21 +792,25 @@ void HelloWorld::touch( CCPoint location)
                 impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.2f;
             }
         }
-        
-        
         if( location.x < (winSize.width * 0.5f) )
-//            impulse.x = -impulse.x;
         b2Vec2 point((location.x - _player->getPositionX())/10, (location.y - _player->getPositionY())/10);
         _player->getMpBody()->ApplyLinearImpulse(impulse, _player->getMpBody()->GetWorldCenter());
-        
-//        world->GetGravity();
-//        _player->getMpBody()->ApplyForce(impulse, _player->getMpBody()->GetWorldCenter());
-//        _player->getMpBody()->ApplyForceToCenter(impulse);
-//        _player->getMpBody()->ApplyLinearImpulse(impulse, point);
-        
+        if (isTouchRight == true) {
+            _player->getMpBody()->SetAngularVelocity(-10000);
+        }else if ( isTouchRight == false) {
+            _player->getMpBody()->SetAngularVelocity(10000);
+        }
     }
 }
-#pragma mark - create map 
+void HelloWorld::touch1(cocos2d::CCPoint location) {
+    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    b2Vec2 currentVelocity = _player->getMpBody()->GetLinearVelocity();
+    b2Vec2 impulse(0.0f,0.0f);
+    impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.5f + 10;
+    impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.5f;
+    _player->getMpBody()->SetLinearVelocity(impulse);
+}
+#pragma mark - create map
 void HelloWorld::prepareLayers()
 {
 //    CCObject *object;
@@ -853,6 +869,59 @@ void HelloWorld::createRectangularFixture(CCTMXLayer* layer, int x, int y,
 //    fixtureDef.filter.categoryBits = kFilterCategoryLevel;
     fixtureDef.filter.maskBits = 0xffff;
     body->CreateFixture(&fixtureDef);
+}
+void HelloWorld::createRectangularFixtureWithPoint(cocos2d::CCPoint p1, cocos2d::CCPoint p2) {
+    const float pixelsPerMeter = 32.0f;
+    float with = 0;
+    float height = 0;
+    float sizeTileWith = _tileMap->getTileSize().width;
+    float sizeTileHeight = _tileMap->getTileSize().height;
+    CCPoint pointWord1 = convertPoitMapToPixelReverseY(p1);
+    CCPoint pointWord2 = convertPoitMapToPixelReverseY(p2);
+    CCLog("pointWord 1 : %f   -  %f", pointWord1.x, pointWord1.y);
+    CCLog("pointWord 2 : %f   -  %f", pointWord2.x, pointWord2.y);
+    CCPoint pw1 = CCPoint(pointWord1.x - sizeTileWith/2, pointWord1.y + sizeTileHeight/2);
+    CCPoint pw2 = CCPoint(pointWord2.x + sizeTileWith/2, pointWord2.y - sizeTileHeight/2);
+    CCPoint pCenter = CCPoint((pw2.x - pw1.x)/2 + pw1.x, abs(pw1.y - pw2.y)/2 + pw2.y );
+    CCLog("pw1 1 : %f   -  %f", pw1.x, pw1.y);
+    CCLog("pw1 2 : %f   -  %f", pw2.x, pw2.y);
+    CCLog("pCenter 2 : %f   -  %f", pCenter.x, pCenter.y);
+    with = pw2.x - pw1.x;
+    height = abs(pw1.y - pw2.y);
+    
+    // create the body
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_staticBody;
+    bodyDef.position.Set(pCenter.x / pixelsPerMeter, pCenter.y / pixelsPerMeter);
+//    bodyDef.position.Set(pCenter.x , pCenter.y );
+    b2Body* body = world->CreateBody(&bodyDef);
+    // define the shape
+    b2PolygonShape shape;
+    CCLog("with : %f, height : %f", with, height);
+    shape.SetAsBox(with / 2 /pixelsPerMeter, height / 2/ pixelsPerMeter);
+    
+    // create the fixture
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &shape;
+    fixtureDef.density = 1000.0f;
+    fixtureDef.friction = 1.0f;
+    fixtureDef.restitution = 0.0f;
+//    fixtureDef.filter.categoryBits = 1;
+    fixtureDef.filter.maskBits = 0xffff;
+    body->CreateFixture(&fixtureDef);
+}
+void HelloWorld::addWalls() {
+    this->createRectangularFixtureWithPoint(CCPoint(0, 18), CCPoint(17, 19));
+    this->createRectangularFixtureWithPoint(CCPoint(18, 19), CCPoint(26, 19));
+    this->createRectangularFixtureWithPoint(CCPoint(27, 18), CCPoint(40, 19));
+    this->createRectangularFixtureWithPoint(CCPoint(31, 12), CCPoint(36, 17));
+    this->createRectangularFixtureWithPoint(CCPoint(41, 19), CCPoint(50, 19));
+    this->createRectangularFixtureWithPoint(CCPoint(51, 16), CCPoint(59, 19));
+    this->createRectangularFixtureWithPoint(CCPoint(49, 9), CCPoint(58, 10));
+    this->createRectangularFixtureWithPoint(CCPoint(60, 19), CCPoint(84, 19));
+    this->createRectangularFixtureWithPoint(CCPoint(70, 12), CCPoint(79, 13));
+    this->createRectangularFixtureWithPoint(CCPoint(85, 16), CCPoint(98, 19));
+    this->createRectangularFixtureWithPoint(CCPoint(99, 0), CCPoint(99, 19));
 }
 #pragma mark - handle touches
 
@@ -1028,6 +1097,15 @@ CCPoint HelloWorld::convertPoitMapToPixel(cocos2d::CCPoint pointMap) {
     float x = _tileMap->getTileSize().width;
     float y = _tileMap->getTileSize().height;
     return CCPoint(x * 0.5f + x * pointMap.x,H - ((Y - pointMap.y) * y - y * 0.5f));
+}
+CCPoint HelloWorld::convertPoitMapToPixelReverseY(cocos2d::CCPoint pointMap) {
+    float W = CCDirector::sharedDirector()->getWinSize().width;
+    float H = CCDirector::sharedDirector()->getWinSize().height;
+    float X = _tileMap->getMapSize().width;
+    float Y = _tileMap->getMapSize().height;
+    float x = _tileMap->getTileSize().width;
+    float y = _tileMap->getTileSize().height;
+    return CCPoint(x * 0.5f + x * pointMap.x,((Y - pointMap.y) * y - y * 0.5f));
 }
 void HelloWorld::removeSprite(cocos2d::CCNode *node) {
     CCSprite * sp = (CCSprite*)node;

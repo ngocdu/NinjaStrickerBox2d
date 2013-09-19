@@ -25,7 +25,8 @@ void MyContactListener::BeginContact(b2Contact* contact)
     {
         if (myContact.fixtureA->GetBody()->GetType() == b2_dynamicBody) {
             //            SimpleAudioEngine::sharedEngine()->playEffect("hit.caf");
-            
+            myContact.fixtureA->GetBody()->SetAngularVelocity(0);
+//            myContact.fixtureA->GetBody()->SetAngularDamping(0);
             b2Body * bodyPlayer = myContact.fixtureA->GetBody();
             b2Body * bodyB = myContact.fixtureB->GetBody();
             if (bodyPlayer->GetPosition().y >= bodyB->GetPosition().y + 0.5f) {
@@ -39,6 +40,8 @@ void MyContactListener::BeginContact(b2Contact* contact)
             }
         }else if (myContact.fixtureB->GetBody()->GetType() == b2_dynamicBody) {
             //            SimpleAudioEngine::sharedEngine()->playEffect("hit.caf");
+             myContact.fixtureB->GetBody()->SetAngularVelocity(0);
+//            myContact.fixtureB->GetBody()->SetAngularDamping(0);
             b2Body * bodyPlayer = myContact.fixtureB->GetBody();
             b2Body * bodyB = myContact.fixtureA->GetBody();
             if (bodyPlayer->GetPosition().y >= bodyB->GetPosition().y + 0.5f) {

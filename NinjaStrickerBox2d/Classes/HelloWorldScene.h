@@ -38,7 +38,9 @@ public:
     virtual void ccTouchEnded(cocos2d::CCSet* touches, cocos2d::CCEvent* event);
     void update(float dt);
     void updatePhantom(float dt);
+    void updateCheckStop(float dt);
     void touch( CCPoint location);
+    void touch1( CCPoint location);
     
     
     void setViewPointCenter(CCPoint position);
@@ -52,8 +54,9 @@ public:
     void createFixtures(CCTMXLayer* layer);
     void createRectangularFixture(CCTMXLayer* layer, int x, int y,
                                   float width, float height);
+    void createRectangularFixtureWithPoint(CCPoint p1, CCPoint p2);
     CCPoint convertPoitMapToPixel(CCPoint pointMap);
-    
+    CCPoint convertPoitMapToPixelReverseY(CCPoint pointMap);
     CCPoint convertMetterToPixel(CCPoint p);
     
     CCPoint convertPixelToMetter(CCPoint p);
@@ -62,6 +65,8 @@ public:
     void addSnakes();
     void addScorpions();
     void addArrows();
+    
+    void addWalls();
     
     void updateLocation_Direction(float dt);
     
@@ -100,6 +105,7 @@ private:
     CCPoint touchLocation;
     bool giamVanToc;
     bool isTouchTop;
+    bool isTouchRight;
     
     MyContactListener *_contactListener;
     bool _contactting;
