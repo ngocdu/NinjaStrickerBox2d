@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC0258BB17E8634B00C8F628 /* Ninja.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0258B917E8634B00C8F628 /* Ninja.cpp */; };
 		DC16728E17E6A69E00CB8EC6 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728717E6A69D00CB8EC6 /* arrow.png */; };
 		DC16728F17E6A69E00CB8EC6 /* attack.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728817E6A69E00CB8EC6 /* attack.png */; };
 		DC16729017E6A69E00CB8EC6 /* coin.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728917E6A69E00CB8EC6 /* coin.png */; };
@@ -373,10 +374,15 @@
 		DC9CE3F517E05A5600E7A368 /* ninja2.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9CE3E917E05A5600E7A368 /* ninja2.png */; };
 		DC9CE3F617E05A5600E7A368 /* ninja_attack.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9CE3EA17E05A5600E7A368 /* ninja_attack.png */; };
 		DC9CE3FB17E0618C00E7A368 /* Duck.png in Resources */ = {isa = PBXBuildFile; fileRef = DC9CE3FA17E0618B00E7A368 /* Duck.png */; };
+		DCA59F2617EBE599009FC501 /* GameMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCA59F2517EBE599009FC501 /* GameMenu.cpp */; };
+		DCA59F2B17EBF607009FC501 /* Map.tmx in Resources */ = {isa = PBXBuildFile; fileRef = DCA59F2A17EBF607009FC501 /* Map.tmx */; };
+		DCA59F2D17EBFB6B009FC501 /* wall2.png in Resources */ = {isa = PBXBuildFile; fileRef = DCA59F2C17EBFB6B009FC501 /* wall2.png */; };
 		DCB6123017E464AC00C3C382 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB6122E17E464AC00C3C382 /* GameManager.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC0258B917E8634B00C8F628 /* Ninja.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ninja.cpp; sourceTree = "<group>"; };
+		DC0258BA17E8634B00C8F628 /* Ninja.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ninja.h; sourceTree = "<group>"; };
 		DC16728717E6A69D00CB8EC6 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 		DC16728817E6A69E00CB8EC6 /* attack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = attack.png; sourceTree = "<group>"; };
 		DC16728917E6A69E00CB8EC6 /* coin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin.png; sourceTree = "<group>"; };
@@ -1062,7 +1068,7 @@
 		DC9CE3A817E04E4100E7A368 /* 9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 9.png; sourceTree = "<group>"; };
 		DC9CE3A917E04E4100E7A368 /* gach.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gach.png; sourceTree = "<group>"; };
 		DC9CE3AA17E04E4100E7A368 /* gach2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gach2.png; sourceTree = "<group>"; };
-		DC9CE3E117E05A5600E7A368 /* wall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wall.png; sourceTree = "<group>"; };
+		DC9CE3E117E05A5600E7A368 /* wall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wall.png; path = Resources/ninjagame/maps/wall.png; sourceTree = "<group>"; };
 		DC9CE3E217E05A5600E7A368 /* wall2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wall2.png; sourceTree = "<group>"; };
 		DC9CE3E317E05A5600E7A368 /* wall3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wall3.png; sourceTree = "<group>"; };
 		DC9CE3E517E05A5600E7A368 /* monter01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monter01.png; sourceTree = "<group>"; };
@@ -1071,6 +1077,10 @@
 		DC9CE3E917E05A5600E7A368 /* ninja2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ninja2.png; sourceTree = "<group>"; };
 		DC9CE3EA17E05A5600E7A368 /* ninja_attack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ninja_attack.png; sourceTree = "<group>"; };
 		DC9CE3FA17E0618B00E7A368 /* Duck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Duck.png; path = Resources/Duck.png; sourceTree = "<group>"; };
+		DCA59F2417EBE58B009FC501 /* GameMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameMenu.h; sourceTree = "<group>"; };
+		DCA59F2517EBE599009FC501 /* GameMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameMenu.cpp; sourceTree = "<group>"; };
+		DCA59F2A17EBF607009FC501 /* Map.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Map.tmx; path = Resources/Map.tmx; sourceTree = "<group>"; };
+		DCA59F2C17EBFB6B009FC501 /* wall2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wall2.png; path = Resources/wall2.png; sourceTree = "<group>"; };
 		DCB6122E17E464AC00C3C382 /* GameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameManager.cpp; path = Classes/GameManager.cpp; sourceTree = "<group>"; };
 		DCB6122F17E464AC00C3C382 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameManager.h; path = Classes/GameManager.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1143,7 +1153,10 @@
 		DC7C79C117DD683500A2325D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DCA59F2C17EBFB6B009FC501 /* wall2.png */,
+				DCA59F2A17EBF607009FC501 /* Map.tmx */,
 				DC64B7DA17E15ADB00587680 /* ninjaS.plist */,
+				DC9CE3E117E05A5600E7A368 /* wall.png */,
 				DC9CE3FA17E0618B00E7A368 /* Duck.png */,
 				DC9CE3DF17E05A5600E7A368 /* ninjagame */,
 				DC9CE37617E04E4100E7A368 /* hehe */,
@@ -2283,6 +2296,8 @@
 		DC7C7D5417DD684500A2325D /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DC0258B917E8634B00C8F628 /* Ninja.cpp */,
+				DC0258BA17E8634B00C8F628 /* Ninja.h */,
 				DCB6122E17E464AC00C3C382 /* GameManager.cpp */,
 				DCB6122F17E464AC00C3C382 /* GameManager.h */,
 				DC64B7E017E1B29700587680 /* CCDataVisitor.cpp */,
@@ -2305,6 +2320,8 @@
 				DC16729D17E6E6D900CB8EC6 /* Scorpion.cpp */,
 				DC16729F17E6EDBA00CB8EC6 /* Arrow.h */,
 				DC1672A017E6EDCB00CB8EC6 /* Arrow.cpp */,
+				DCA59F2417EBE58B009FC501 /* GameMenu.h */,
+				DCA59F2517EBE599009FC501 /* GameMenu.cpp */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -2390,7 +2407,6 @@
 		DC9CE3E017E05A5600E7A368 /* maps */ = {
 			isa = PBXGroup;
 			children = (
-				DC9CE3E117E05A5600E7A368 /* wall.png */,
 				DC9CE3E217E05A5600E7A368 /* wall2.png */,
 				DC9CE3E317E05A5600E7A368 /* wall3.png */,
 			);
@@ -2562,6 +2578,8 @@
 				DC16729217E6A69E00CB8EC6 /* ninja_attack2.png in Resources */,
 				DC16729317E6A69E00CB8EC6 /* ninja_attack3.png in Resources */,
 				DC16729417E6A69E00CB8EC6 /* ninja2_bam_tuong.png in Resources */,
+				DCA59F2B17EBF607009FC501 /* Map.tmx in Resources */,
+				DCA59F2D17EBFB6B009FC501 /* wall2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2833,6 +2851,8 @@
 				DC16729B17E6E4EA00CB8EC6 /* Snake.cpp in Sources */,
 				DC16729E17E6E6DA00CB8EC6 /* Scorpion.cpp in Sources */,
 				DC1672A117E6EDCB00CB8EC6 /* Arrow.cpp in Sources */,
+				DC0258BB17E8634B00C8F628 /* Ninja.cpp in Sources */,
+				DCA59F2617EBE599009FC501 /* GameMenu.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2915,6 +2935,7 @@
 				GCC_PREFIX_HEADER = NinjaStrickerBox2d/Prefix.pch;
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = NinjaStrickerBox2d/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/NinjaStrickerBox2d/libs/cocos2dx/platform/third_party/ios/libraries\"",
@@ -2925,6 +2946,7 @@
 					"-lsqlite3",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"NinjaStrickerBox2d/libs\"";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2939,6 +2961,7 @@
 				GCC_PREFIX_HEADER = NinjaStrickerBox2d/Prefix.pch;
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = NinjaStrickerBox2d/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/NinjaStrickerBox2d/libs/cocos2dx/platform/third_party/ios/libraries\"",
@@ -2949,6 +2972,7 @@
 					"-lsqlite3",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"NinjaStrickerBox2d/libs\"";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;

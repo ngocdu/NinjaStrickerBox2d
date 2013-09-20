@@ -15,6 +15,7 @@ class Scorpion : public CCSprite
 private:
     CC_SYNTHESIZE(int, _direction, Direction);
     CC_SYNTHESIZE(CCPoint, _location, Location);
+    CC_SYNTHESIZE(int, _point, Point);
 public:
     Scorpion();
     void fluctuating(float amplitude);

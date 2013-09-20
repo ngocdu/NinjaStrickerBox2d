@@ -18,7 +18,7 @@ public:
     void action();
     void actionMoveTop();
 private:
-    
+    CC_SYNTHESIZE(int, _point, Point);
 };
 
 #endif

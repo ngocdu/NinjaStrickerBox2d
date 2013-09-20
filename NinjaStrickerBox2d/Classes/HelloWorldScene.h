@@ -39,6 +39,7 @@ public:
     void update(float dt);
     void updatePhantom(float dt);
     void updateCheckStop(float dt);
+    void updateScoreLife(float dt);
     void touch( CCPoint location);
     void touch1( CCPoint location);
     
@@ -78,6 +79,8 @@ public:
     void checkTouchPoint(CCPoint p);
     void arrowAttack(int direction);
 private:
+    CCSize s;
+    CCLayer * _layerBg;
     b2World* world;
     cocos2d::CCTexture2D* m_pSpriteTexture; // weak ref
     Ninja * _player;
@@ -118,6 +121,13 @@ private:
     CCArray * _arrayRemoveSnake;
     CCArray * _arrayRemoveScorpion;
     CCArray * _arrayRemoveCoin;
+    
+    //--------------score-------------
+    int _scores;
+    CCLabelTTF *_lbScores;
+    
+    int _lifes;
+    CCLabelTTF *_lbLifes;
 };
 
 #endif // __HELLO_WORLD_H__

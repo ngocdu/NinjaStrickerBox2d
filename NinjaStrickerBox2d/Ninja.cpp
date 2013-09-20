@@ -81,3 +81,15 @@ void Ninja::actionAttack2() {
     CCAnimate * animet=CCAnimate::create(anim);
     this->getImage()->runAction(animet);
 }
+void Ninja::effectsAddPoint(int point) {
+    char scoreStr[20] = {0};
+    sprintf(scoreStr, "%i", point);
+    CCLabelTTF *lable = CCLabelTTF::create(scoreStr, "", 25);
+    lable->setPosition(this->getPosition());
+    int k = rand() % (int)(this->getImage()->getContentSize().width * 2)  -   this->getImage()->getContentSize().width;
+    CCMoveTo * moveTop = CCMoveTo::create(2, CCPoint(lable->getPosition().x + k, lable->getPosition().y + 70));
+    CCHide * hide = CCHide::create();
+    CCSequence * sq = CCSequence::create(moveTop, hide, NULL);
+    lable->runAction(sq);
+    this->getParent()->addChild(lable);
+}

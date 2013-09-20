@@ -23,7 +23,7 @@ HelloWorld::HelloWorld()
     // load physics shapes
     GB2ShapeCache::sharedGB2ShapeCache()->addShapesWithFile("ninjaS.plist");
     
-    CCSize s = CCDirector::sharedDirector()->getWinSize();
+    s = CCDirector::sharedDirector()->getWinSize();
     delta = 3.14f;
     setTouchEnabled( true );
     setAccelerometerEnabled( true );
@@ -58,7 +58,7 @@ HelloWorld::HelloWorld()
 //    this->prepareLayers();
     
     addNewSpriteAtPosition(convertPoitMapToPixel(CCPoint(0, 17)));
-    this->setViewPointCenter(_player->getPosition());
+    
     //----------------------------------
     _arrayCoin = new CCArray();
     _arraySnake = new CCArray();
@@ -74,9 +74,27 @@ HelloWorld::HelloWorld()
     
     this->addWalls();
     
+    //----------point ,life-----------------------
+    _scores = 0;
+    _lifes = 3;
+    _layerBg = CCLayer::create();
+    _layerBg->setPosition(CCPoint(s.width/2, s.height/2));
+    _layerBg->setContentSize(CCSize(s.width, s.height));
+    this->addChild(_layerBg, 1);
+    _lbScores = CCLabelTTF::create("0", "", 20);
+    _lbScores->setPosition(CCPoint(s.width/2 - 300, s.height/2 - 30));
+    _layerBg->addChild(_lbScores, 100);
+    _lbLifes = CCLabelTTF::create("X  X  X", "", 40);
+    _lbLifes->setPosition(CCPoint(s.width/2 - 100, s.height/2 - 50));
+    _layerBg->addChild(_lbLifes, 100);
+    
+    
+    this->setViewPointCenter(_player->getPosition());
+    
     this->schedule(schedule_selector(HelloWorld::updateLocation_Direction), 0.1f);
     this->schedule(schedule_selector(HelloWorld::updateCheckStop), 0.05f);
     this->schedule(schedule_selector(HelloWorld::updatePhantom), 0.02f);
+    this->schedule(schedule_selector(HelloWorld::updateScoreLife), 0.2f);
     scheduleUpdate();
 }
 
@@ -484,8 +502,8 @@ void HelloWorld::update(float dt)
         Coin *coin = (Coin*)i3;
         float kc1 = _player->getImage()->getContentSize().width/2 + coin->getContentSize().width/2;
         float kc2 = ccpDistance(_player->getPosition(), coin->getPosition());
-        if (kc2 <= kc1) {
-            coin->actionMoveTop();
+        if (kc2 < kc1) {
+            _arrayRemoveCoin->addObject(coin);
         }
     }
     //--------------------contact with snake------------------------------------
@@ -494,9 +512,10 @@ void HelloWorld::update(float dt)
         Coin *snake = (Coin*)i4;
         float kc1 = _player->getImage()->getContentSize().width/2 + snake->getContentSize().width/2;
         float kc2 = ccpDistance(_player->getPosition(), snake->getPosition());
-        if (kc2 <= kc1 && _player->getAttack() == 2) {
+        if (kc2 < kc1 && _player->getAttack() == 2) {
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 5));
             _player->setAttack(0);
+            _lifes --;
         }else if (kc2 <= kc1 && _player->getAttack() == 1) {
             CCSprite *attack = CCSprite::create("attack.png");
             attack->setPosition(snake->getPosition());
@@ -539,9 +558,10 @@ void HelloWorld::update(float dt)
         Scorpion *scorpion = (Scorpion*)i5;
         float kc1 = _player->getImage()->getContentSize().width/2 + scorpion->getContentSize().width/2;
         float kc2 = ccpDistance(_player->getPosition(), scorpion->getPosition());
-        if (kc2 <= kc1 && _player->getAttack() == 2) {
+        if (kc2 < kc1 && _player->getAttack() == 2) {
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 5));
             _player->setAttack(0);
+            _lifes --;
         }else if (kc2 <= kc1 && _player->getAttack() == 1) {
             CCSprite *attack = CCSprite::create("attack.png");
             attack->setPosition(scorpion->getPosition());
@@ -593,24 +613,39 @@ void HelloWorld::update(float dt)
     CCARRAY_FOREACH(_arrayRemoveSnake, i6) {
         Snake * sp = (Snake*)i6;
         sp->resumeSchedulerAndActions();
+        _scores = _scores + sp->getPoint();
         CCDelayTime * delay = CCDelayTime::create(0.5f);
         CCFadeIn *fo = CCFadeIn::create(0.5f);
         CCCallFuncN *remove = CCCallFuncN::create(this,callfuncN_selector(HelloWorld::removeSnake));
         CCSequence * sq = CCSequence::create(delay, fo, remove, NULL);
         sp->runAction(sq);
+        _player->effectsAddPoint(sp->getPoint());
     }
     
     CCObject * i7;
     CCARRAY_FOREACH(_arrayRemoveScorpion, i7) {
         Scorpion * sp = (Scorpion*)i7;
         sp->resumeSchedulerAndActions();
+        _scores = _scores + sp->getPoint();
         CCDelayTime * delay = CCDelayTime::create(0.5f);
         CCFadeIn *fo = CCFadeIn::create(0.5f);
         CCCallFuncN *remove = CCCallFuncN::create(this,callfuncN_selector(HelloWorld::removeScorpion));
         CCSequence * sq = CCSequence::create(delay, fo, remove, NULL);
         sp->runAction(sq);
+        _player->effectsAddPoint(sp->getPoint());
     }
-
+    
+    CCObject * i9;
+    CCARRAY_FOREACH(_arrayRemoveCoin, i9) {
+        Coin * sp = (Coin*)i9;
+        _scores = _scores + sp->getPoint();
+        CCMoveTo * moveTop = CCMoveTo::create(0.3f, CCPoint(sp->getPosition().x , sp->getPosition().y + 10));
+        CCCallFuncN *remove = CCCallFuncN::create(this,callfuncN_selector(HelloWorld::removeCoin));
+        CCSequence * sq = CCSequence::create(moveTop, remove, NULL);
+        sp->runAction(sq);
+        _player->effectsAddPoint(sp->getPoint());
+    }
+    _arrayRemoveCoin->removeAllObjects();
 }
 void HelloWorld::updatePhantom(float dt) {
     //-----------------phantom--------------------------------------------------
@@ -663,6 +698,16 @@ void HelloWorld::updateLocation_Direction(float dt) {
     }
     
     _player->setPoint(_player->getPosition());
+}
+void HelloWorld::updateScoreLife(float dt) {
+    char scoreStr[20] = {0};
+    sprintf(scoreStr, "%i", _scores);
+    _lbScores->setString(scoreStr);
+    
+    char strlife[20] = {0};
+    sprintf(strlife, "%i-X", _lifes);
+    _lbLifes->setString(strlife);
+
 }
 bool HelloWorld::ccTouchBegan(CCTouch *touch, CCEvent *event)
 {
@@ -933,25 +978,6 @@ void HelloWorld::registerWithTouchDispatcher()
 }
 void HelloWorld::setViewPointCenter(CCPoint position)
 {
-    
-//    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-//    
-//    int x = MAX(position.x, winSize.width/2);
-//    int y = MAX(position.y, winSize.height/2);
-//    x = MIN(x, (_tileMap->getMapSize().width * this->_tileMap->getTileSize().width) - winSize.width / 2);
-//    y = MIN(y, (_tileMap->getMapSize().height * _tileMap->getTileSize().height) - winSize.height/2);
-//    CCPoint actualPosition = ccp(x, y);
-//    
-//    CCPoint centerOfView = ccp(winSize.width/2, winSize.height/2);
-//    CCPoint viewPoint = ccpSub(centerOfView, actualPosition);
-//    if (this->getPositionX() != 0 || this->getPositionY() != 160) {
-////        CCLog("this x: %f", this->getPositionX());
-////        CCLog("this v: %f", this->getPositionY());
-//    }
-//    
-//    this->setPosition(viewPoint);
-    
-    
     CCSize winSize = CCDirector::sharedDirector()->getWinSize();
     
     int x = MAX(position.x, winSize.width/2);
@@ -963,6 +989,10 @@ void HelloWorld::setViewPointCenter(CCPoint position)
     CCPoint centerOfView = ccp(winSize.width/2, winSize.height/2);
     CCPoint viewPoint = ccpSub(centerOfView, actualPosition);
     this->setPosition(viewPoint);
+//    CCLog("this point x: %f , y: %f", viewPoint.x, viewPoint.y);
+    _layerBg->setPosition(CCPoint(s.width/2 - viewPoint.x, s.height/2 + viewPoint.y));
+//    _layerBg->setPosition(viewPoint);
+//    CCLog("layer point x: %f , y: %f", _layerBg->getPosition().x, _layerBg->getPosition().y);
 }
 CCPoint HelloWorld::tileCoordForPosition(CCPoint position)
 {
@@ -995,6 +1025,7 @@ void HelloWorld::addCoins() {
                 CCPoint p = convertPoitMapToPixel(ccp(tileSprite->getPosition().x / PTM_RATIO,
                                                       tileSprite->getPosition().y / PTM_RATIO));
                 Coin * coin =  new Coin();
+                coin->setPoint(10);
                 coin->initWithFile("coin.png");
                 coin->setPosition(p);
                 coin->action();
@@ -1017,6 +1048,7 @@ void HelloWorld::addSnakes() {
                 CCPoint p = convertPoitMapToPixel(ccp(tileSprite->getPosition().x / PTM_RATIO,
                                                       tileSprite->getPosition().y / PTM_RATIO));
                 Snake * snake =  new Snake();
+                snake->setPoint(20);
                 snake->initWithFile("monter01.png");
                 snake->setPosition(p);
                 snake->actionMoveToPoint(CCPoint(p.x + 200, p.y));
@@ -1039,6 +1071,7 @@ void HelloWorld::addScorpions() {
                 CCPoint p = convertPoitMapToPixel(ccp(tileSprite->getPosition().x / PTM_RATIO,
                                                       tileSprite->getPosition().y / PTM_RATIO));
                 Scorpion * scorpion =  new Scorpion();
+                scorpion->setPoint(40);
                 scorpion->initWithFile("monter02.png");
                 scorpion->setPosition(p);
                 int i = rand() % 2;
@@ -1075,7 +1108,7 @@ void HelloWorld::addArrows() {
                     
                 arrow->runAction(rotate);
                 _arrayArrow->addObject(arrow);
-                this->addChild(arrow, 10000);
+                this->addChild(arrow, 100);
             }
             
         }
@@ -1114,8 +1147,8 @@ void HelloWorld::removeSprite(cocos2d::CCNode *node) {
 void HelloWorld::removeCoin(cocos2d::CCNode *node) {
     Coin * coin = (Coin*)node;
     _arrayCoin->removeObject(coin);
-//    _arrayRemoveCoin->removeObject(coin);
-    this->removeChild(coin, true);
+    _arrayRemoveCoin->removeObject(coin);
+    this->removeChild(coin);
 }
 void HelloWorld::removeSnake(cocos2d::CCNode *node) {
     Snake * snake = (Snake*)node;
@@ -1131,6 +1164,7 @@ void HelloWorld::removeScorpion(cocos2d::CCNode *node) {
     _arrayRemoveScorpion->removeObject(scorpion);
     this->removeChild(scorpion);
 }
+
 void HelloWorld::arrowAttack(int direction) {
     _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
     _player->setAttack(1);
