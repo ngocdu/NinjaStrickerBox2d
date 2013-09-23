@@ -20,6 +20,7 @@
 #include "Scorpion.h"
 #include "Arrow.h"
 #include "Ninja.h"
+#include "GameMenu.h"
 using namespace cocos2d;
 class HelloWorld : public cocos2d::CCLayer {
 public:
@@ -85,7 +86,7 @@ private:
     cocos2d::CCTexture2D* m_pSpriteTexture; // weak ref
     Ninja * _player;
     float delta;
-    
+    int delayPlayer;
     CCTMXTiledMap *_tileMap;
     
     CCTMXLayer *_background;

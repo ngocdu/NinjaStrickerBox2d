@@ -88,6 +88,7 @@ HelloWorld::HelloWorld()
     _lbLifes->setPosition(CCPoint(s.width/2 - 100, s.height/2 - 50));
     _layerBg->addChild(_lbLifes, 100);
     
+    delayPlayer = 25;
     
     this->setViewPointCenter(_player->getPosition());
     
@@ -109,7 +110,6 @@ HelloWorld::~HelloWorld()
 void HelloWorld::initPhysics()
 {
 
-    
     CCSize s = CCDirector::sharedDirector()->getWinSize();
 
     b2Vec2 gravity;
@@ -192,7 +192,7 @@ void HelloWorld::addNewSpriteAtPosition(CCPoint p)
     
     _player = new Ninja();
         
-    _player->setAttack(0);
+    _player->setAttack(4);
 //    _player->initWithFile("ninja.png");
     _player->init();
 //    _player->autorelease();
@@ -311,7 +311,7 @@ void HelloWorld::update(float dt)
 //        _player->getMpBody()->SetFixedRotation(false);
         
         if (_player->getMpBody()->GetPosition().y * PTM_RATIO > touchLocation.y &&
-            giamVanToc == true && isTouchTop == true) {
+            giamVanToc == true && isTouchTop == true && _player->getAttack() == 1) {
             _player->setAttack(2);
             b2Vec2 v = _player->getMpBody()->GetLinearVelocity();
             CCLog("velocity x: %f", v.x);
@@ -345,9 +345,6 @@ void HelloWorld::update(float dt)
                     _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/100 + 1), v.y  /(diffy/50 + 1)));
                 }
             }
-            
-            
-            
             //dung yen khong quay ************ cam xoa doan nay 
 //            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
 //            _player->getMpBody()->SetGravityScale(0);
@@ -355,12 +352,10 @@ void HelloWorld::update(float dt)
 //            _player->getMpBody()->SetAngularVelocity(0);
 //            //giam soc
 //            _player->getMpBody()->SetLinearDamping(0);
-//            _player->getMpBody()->se
-            
-            
+//            _player->getMpBody()->se 
             giamVanToc = false;
         }else if (_player->getMpBody()->GetPosition().y * PTM_RATIO < touchLocation.y &&
-                  giamVanToc == true && isTouchTop == false) {
+                  giamVanToc == true && isTouchTop == false && _player->getAttack() == 1) {
             _player->setAttack(2);
             b2Vec2 v = _player->getMpBody()->GetLinearVelocity();
             CCLog("velocity x: %f", v.x);
@@ -394,6 +389,9 @@ void HelloWorld::update(float dt)
     // Collision Detection ----------- contact wall ----------------------------
     //begin contact
     if (GameManager::sharedGameManager()->getBeginContact() == true) {
+        if (_player->getAttack() != 0) {
+            _player->setAttack(0);
+        }
         _player->getMpBody()->SetAngularVelocity(0);
         CCAnimation *anim=CCAnimation::create();
         //top
@@ -413,10 +411,6 @@ void HelloWorld::update(float dt)
             //giam soc
             _player->getMpBody()->SetLinearDamping(0);
             
-//            CCSprite * sp = CCSprite::create("ninja.png");
-//            CCRotateTo * rotate = CCRotateTo::create(0, -180);
-//            sp->runAction(rotate);
-//            _player->setImage(sp);
         //left
         }else if (GameManager::sharedGameManager()->getDirectionContact() == 3) {
             anim->addSpriteFrameWithFileName("ninja2_bam_tuong.png");
@@ -460,7 +454,7 @@ void HelloWorld::update(float dt)
         _player->getImage()->setFlipY(false);
     }
     
-    
+   
     //---------------------change direction ------------------------------------
     CCObject * i1;
     CCARRAY_FOREACH(_arraySnake, i1) {
@@ -512,10 +506,19 @@ void HelloWorld::update(float dt)
         Coin *snake = (Coin*)i4;
         float kc1 = _player->getImage()->getContentSize().width/2 + snake->getContentSize().width/2;
         float kc2 = ccpDistance(_player->getPosition(), snake->getPosition());
-        if (kc2 < kc1 && _player->getAttack() == 2) {
+        
+        if (kc2 < kc1 && _player->getAttack() == 0 && delayPlayer <= 0) {
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 5));
-            _player->setAttack(0);
+            _player->setAttack(4);
+//            _player->setStop(false);
             _lifes --;
+            delayPlayer = 25;
+        }
+        else if (kc2 < kc1 && _player->getAttack() == 2 && delayPlayer <= 0) {
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 5));
+            _player->setAttack(4);
+            _lifes --;
+            delayPlayer = 25;
         }else if (kc2 <= kc1 && _player->getAttack() == 1) {
             CCSprite *attack = CCSprite::create("attack.png");
             attack->setPosition(snake->getPosition());
@@ -526,7 +529,7 @@ void HelloWorld::update(float dt)
             attack->runAction(sq);
             snake->stopAllActions();
             _arrayRemoveSnake->addObject(snake);
-            _player->setAttack(0);
+            _player->setAttack(4);
             _player->actionAttack();
         }else if (kc2 <= kc1 && _player->getAttack() == 3) {
             CCSprite *attack = CCSprite::create("attack.png");
@@ -549,7 +552,7 @@ void HelloWorld::update(float dt)
             }
 //            else _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 3));
             _player->actionAttack2();
-            _player->setAttack(0);
+            _player->setAttack(4);
         }
     }
     //--------------------contact with Scorpion---------------------------------
@@ -558,10 +561,17 @@ void HelloWorld::update(float dt)
         Scorpion *scorpion = (Scorpion*)i5;
         float kc1 = _player->getImage()->getContentSize().width/2 + scorpion->getContentSize().width/2;
         float kc2 = ccpDistance(_player->getPosition(), scorpion->getPosition());
-        if (kc2 < kc1 && _player->getAttack() == 2) {
+        if (kc2 < kc1 && _player->getAttack() == 0 && delayPlayer <= 0) {
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 5));
-            _player->setAttack(0);
+            _player->setAttack(4);
+            delayPlayer = 25;
             _lifes --;
+        }
+        else if (kc2 < kc1 && _player->getAttack() == 2 && delayPlayer <= 0) {
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 5));
+            _player->setAttack(4);
+            _lifes --;
+            delayPlayer = 25;
         }else if (kc2 <= kc1 && _player->getAttack() == 1) {
             CCSprite *attack = CCSprite::create("attack.png");
             attack->setPosition(scorpion->getPosition());
@@ -572,7 +582,7 @@ void HelloWorld::update(float dt)
             attack->runAction(sq);
             scorpion->stopAllActions();
             _arrayRemoveScorpion->addObject(scorpion);
-            _player->setAttack(0);
+            _player->setAttack(4);
             _player->actionAttack();
         }else if (kc2 <= kc1 && _player->getAttack() == 3) {
             CCSprite *attack = CCSprite::create("attack.png");
@@ -592,7 +602,7 @@ void HelloWorld::update(float dt)
             scorpion->stopAllActions();
             _arrayRemoveScorpion->addObject(scorpion);
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 10));
-            _player->setAttack(0);
+            _player->setAttack(4);
             _player->actionAttack2();
         }
     }
@@ -646,6 +656,12 @@ void HelloWorld::update(float dt)
         _player->effectsAddPoint(sp->getPoint());
     }
     _arrayRemoveCoin->removeAllObjects();
+    
+    
+    //----------------------End game -------------------------
+    if (_lifes == 0) {
+        CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, GameMenu::scene()));
+    }
 }
 void HelloWorld::updatePhantom(float dt) {
     //-----------------phantom--------------------------------------------------
@@ -685,6 +701,9 @@ void HelloWorld::updateCheckStop(float dt) {
     
 }
 void HelloWorld::updateLocation_Direction(float dt) {
+    if (delayPlayer > 0) {
+        delayPlayer --;
+    }
     CCObject * i1;
     CCARRAY_FOREACH(_arraySnake, i1) {
         Snake *snake = (Snake*)i1;
@@ -816,10 +835,10 @@ void HelloWorld::touch( CCPoint location)
         impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.5f;
         if (abs(impulse.y / impulse.x) < 0.9f) {
             if (impulse.LengthSquared() > 100000 && impulse.LengthSquared() < 350000) {
-                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.5f + 150 * (1-abs(impulse.y / impulse.x));
+                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.8f + 150 * (1-abs(impulse.y / impulse.x));
                 impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.5f;
             }else if (impulse.LengthSquared() < 100000) {
-                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 2.0f + 150 * (1-abs(impulse.y / impulse.x));
+                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 2.8f + 150 * (1-abs(impulse.y / impulse.x));
                 impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 2.0f;
             }else if (impulse.LengthSquared() > 350000) {
                 impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.2f + 150 * (1-abs(impulse.y / impulse.x));
@@ -830,7 +849,7 @@ void HelloWorld::touch( CCPoint location)
                 impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.5f + 30;
                 impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.5f;
             }else if (impulse.LengthSquared() < 100000) {
-                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 2.0f + 30;
+                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 2.8f + 30;
                 impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 2.0f;
             }else if (impulse.LengthSquared() > 350000) {
                 impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.2f + 10;

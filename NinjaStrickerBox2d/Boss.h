@@ -1,25 +1,23 @@
 //
-//  Ninja.h
+//  Boss.h
 //  NinjaStrickerBox2d
 //
-//  Created by MinhNT on 13/09/17.
+//  Created by MinhNT on 13/09/23.
 //
 //
 
-#ifndef NinjaStrickerBox2d_Ninja_h
-#define NinjaStrickerBox2d_Ninja_h
+#ifndef NinjaStrickerBox2d_Boss_h
+#define NinjaStrickerBox2d_Boss_h
 #include "cocos2d.h"
 #include "Box2D.h"
 using namespace cocos2d;
-class Ninja : public CCSprite
+class Boss : public CCSprite
 {
 public:
-    Ninja();
+    Boss();
     virtual bool isDirty(void);
     virtual cocos2d::CCAffineTransform nodeToParentTransform(void);
     void actionAttack();
-    void actionAttack2();
-    void effectsAddPoint(int point);
 private:
     CC_SYNTHESIZE(b2Body *, _mpBody, MpBody);
     // 0 nothing 1 - attack  2 - was attack 3 - attack to taget
@@ -28,5 +26,6 @@ private:
     CC_SYNTHESIZE(CCPoint , _point, Point);
     CC_SYNTHESIZE(bool , _stop, Stop);
 };
+
 
 #endif

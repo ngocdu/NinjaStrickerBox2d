@@ -12,6 +12,7 @@
 #include "SimpleAudioEngine.h"
 #include "HelloWorldScene.h"
 #include "GameMenu.h"
+#include "GamePlayWithBoss.h"
 USING_NS_CC;
 using namespace CocosDenshion;
 
@@ -38,8 +39,8 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     // create a scene. it's an autorelease object
 //    CCScene *pScene = HelloWorld::scene();
-    CCScene * pScene = GameMenu::scene();
-
+//    CCScene * pScene = GameMenu::scene();
+    CCScene * pScene = GamePlayWithBoss::scene();
     // run
     pDirector->runWithScene(pScene);
 
