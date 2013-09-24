@@ -13,6 +13,10 @@ private:
     CC_SYNTHESIZE(int, _numberAction, NumberAction);
     CC_SYNTHESIZE(bool, _beginContact, BeginContact);
     CC_SYNTHESIZE(bool, _endContact, EndContact);
+    
+    CC_SYNTHESIZE(bool, _beginContactBoss, BeginContactBoss);
+    CC_SYNTHESIZE(bool, _endContactBoss, EndContactBoss);
+    
     // 1 - top, 2 bottom, 3 left, 4 right
     CC_SYNTHESIZE(int, _directionContact, DirectionContact);
     CC_SYNTHESIZE(int, _numberActionPlayer, NumberActionPlayer);

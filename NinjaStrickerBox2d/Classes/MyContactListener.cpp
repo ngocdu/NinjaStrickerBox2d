@@ -17,42 +17,56 @@ void MyContactListener::BeginContact(b2Contact* contact)
     // is reused.
     MyContact myContact = { contact->GetFixtureA(), contact->GetFixtureB() };
     _contacts.push_back(myContact);
-    CCLog("begin contact");
-    GameManager::sharedGameManager()->setNumberActionPlayer(2);
-    GameManager::sharedGameManager()->setBeginContact(true);
-    this->setNumberBegin(this->getNumberBegin() + 1);
+    CCLog("begin contact");  
 //    if (this->getNumberBegin() == 2)
     {
+        
         if (myContact.fixtureA->GetBody()->GetType() == b2_dynamicBody) {
             //            SimpleAudioEngine::sharedEngine()->playEffect("hit.caf");
-            myContact.fixtureA->GetBody()->SetAngularVelocity(0);
-//            myContact.fixtureA->GetBody()->SetAngularDamping(0);
-            b2Body * bodyPlayer = myContact.fixtureA->GetBody();
-            b2Body * bodyB = myContact.fixtureB->GetBody();
-            if (bodyPlayer->GetPosition().y >= bodyB->GetPosition().y + 0.5f) {
-                GameManager::sharedGameManager()->setDirectionContact(1);//top
-            }else if (bodyPlayer->GetPosition().y <= bodyB->GetPosition().y - 0.5f){
-                GameManager::sharedGameManager()->setDirectionContact(2);//bottom
-            }else if (bodyPlayer->GetPosition().x >= bodyB->GetPosition().x + 0.5f) {
-                GameManager::sharedGameManager()->setDirectionContact(4);//right
-            }else if (bodyPlayer->GetPosition().x <= bodyB->GetPosition().x - 0.5f) {
-                GameManager::sharedGameManager()->setDirectionContact(3);//left
+            if (myContact.fixtureA->GetDensity() == 14) {
+                GameManager::sharedGameManager()->setBeginContactBoss(true);
+                GameManager::sharedGameManager()->setEndContactBoss(false);
+            }else {
+                GameManager::sharedGameManager()->setNumberActionPlayer(2);
+                GameManager::sharedGameManager()->setBeginContact(true);
+                this->setNumberBegin(this->getNumberBegin() + 1);
+                myContact.fixtureA->GetBody()->SetAngularVelocity(0);
+                //            myContact.fixtureA->GetBody()->SetAngularDamping(0);
+                b2Body * bodyPlayer = myContact.fixtureA->GetBody();
+                b2Body * bodyB = myContact.fixtureB->GetBody();
+                if (bodyPlayer->GetPosition().y >= bodyB->GetPosition().y + 0.5f) {
+                    GameManager::sharedGameManager()->setDirectionContact(1);//top
+                }else if (bodyPlayer->GetPosition().y <= bodyB->GetPosition().y - 0.5f){
+                    GameManager::sharedGameManager()->setDirectionContact(2);//bottom
+                }else if (bodyPlayer->GetPosition().x >= bodyB->GetPosition().x + 0.5f) {
+                    GameManager::sharedGameManager()->setDirectionContact(4);//right
+                }else if (bodyPlayer->GetPosition().x <= bodyB->GetPosition().x - 0.5f) {
+                    GameManager::sharedGameManager()->setDirectionContact(3);//left
+                }
             }
         }else if (myContact.fixtureB->GetBody()->GetType() == b2_dynamicBody) {
             //            SimpleAudioEngine::sharedEngine()->playEffect("hit.caf");
-             myContact.fixtureB->GetBody()->SetAngularVelocity(0);
-//            myContact.fixtureB->GetBody()->SetAngularDamping(0);
-            b2Body * bodyPlayer = myContact.fixtureB->GetBody();
-            b2Body * bodyB = myContact.fixtureA->GetBody();
-            if (bodyPlayer->GetPosition().y >= bodyB->GetPosition().y + 0.5f) {
-                GameManager::sharedGameManager()->setDirectionContact(1);
-            }else if (bodyPlayer->GetPosition().y <= bodyB->GetPosition().y - 0.5f){
-                GameManager::sharedGameManager()->setDirectionContact(2);
-            }else if (bodyPlayer->GetPosition().x >= bodyB->GetPosition().x + 0.5f) {
-                GameManager::sharedGameManager()->setDirectionContact(4);
-            }else if (bodyPlayer->GetPosition().x <= bodyB->GetPosition().x - 0.5f) {
-                GameManager::sharedGameManager()->setDirectionContact(3);
-            }
+            if (myContact.fixtureB->GetDensity() == 14) {
+                 GameManager::sharedGameManager()->setBeginContactBoss(true);
+                 GameManager::sharedGameManager()->setEndContactBoss(false);
+            }else {
+                GameManager::sharedGameManager()->setNumberActionPlayer(2);
+                GameManager::sharedGameManager()->setBeginContact(true);
+                this->setNumberBegin(this->getNumberBegin() + 1);
+                myContact.fixtureB->GetBody()->SetAngularVelocity(0);
+                //            myContact.fixtureB->GetBody()->SetAngularDamping(0);
+                b2Body * bodyPlayer = myContact.fixtureB->GetBody();
+                b2Body * bodyB = myContact.fixtureA->GetBody();
+                if (bodyPlayer->GetPosition().y >= bodyB->GetPosition().y + 0.5f) {
+                    GameManager::sharedGameManager()->setDirectionContact(1);
+                }else if (bodyPlayer->GetPosition().y <= bodyB->GetPosition().y - 0.5f){
+                    GameManager::sharedGameManager()->setDirectionContact(2);
+                }else if (bodyPlayer->GetPosition().x >= bodyB->GetPosition().x + 0.5f) {
+                    GameManager::sharedGameManager()->setDirectionContact(4);
+                }else if (bodyPlayer->GetPosition().x <= bodyB->GetPosition().x - 0.5f) {
+                    GameManager::sharedGameManager()->setDirectionContact(3);
+                }
+            }            
         }
     }
 //    else if(this->getNumberBegin() == 4) {
@@ -71,9 +85,24 @@ void MyContactListener::EndContact(b2Contact* contact)
         _contacts.erase(pos);
     }
     CCLog("end contact");
-    GameManager::sharedGameManager()->setNumberActionPlayer(1);
-    GameManager::sharedGameManager()->setEndContact(true);
-}
+    if (myContact.fixtureB->GetBody()->GetType() == b2_dynamicBody) {
+        if (myContact.fixtureB->GetDensity() == 14) {
+            GameManager::sharedGameManager()->setEndContactBoss(true);
+            GameManager::sharedGameManager()->setBeginContactBoss(false);
+        }else {
+            GameManager::sharedGameManager()->setNumberActionPlayer(1);
+            GameManager::sharedGameManager()->setEndContact(true);
+        }
+    }else if (myContact.fixtureA->GetBody()->GetType() == b2_dynamicBody) {
+        if (myContact.fixtureA->GetDensity() == 14) {
+            GameManager::sharedGameManager()->setEndContactBoss(true);
+            GameManager::sharedGameManager()->setBeginContactBoss(false);
+        }else {
+            GameManager::sharedGameManager()->setNumberActionPlayer(1);
+            GameManager::sharedGameManager()->setEndContact(true);
+        }
+    }
+   }
 
 void MyContactListener::PreSolve(b2Contact* contact,
                                  const b2Manifold* oldManifold)

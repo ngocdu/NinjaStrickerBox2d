@@ -27,6 +27,8 @@ public:
     bool ccTouchBegan(CCTouch *touch, CCEvent *event);
     virtual void ccTouchEnded(cocos2d::CCSet* touches, cocos2d::CCEvent* event);
     void update(float dt);
+    void updateBoss(float dt);
+    void updateTime(float dt);
     void updatePhantom(float dt);
     void updateCheckStop(float dt);
     void updateLocation_Direction(float dt);
@@ -35,6 +37,9 @@ public:
     void addNewSpriteAtPosition(cocos2d::CCPoint p);
     void addNewBossAtPosition(cocos2d::CCPoint p);
     void touch( CCPoint location);
+    void touchBoss( CCPoint location);
+    
+    void bossAttack();
     
     CCPoint convertPoitMapToPixel(CCPoint pointMap);
     CCPoint convertPoitMapToPixelReverseY(CCPoint pointMap);
@@ -47,6 +52,7 @@ public:
     
     void removeSprite(CCNode * node);
 private:
+    CCSize size;
     b2World* world;
     GLESDebugDraw *m_debugDraw;
     CCTMXTiledMap *_tileMap;
@@ -54,6 +60,13 @@ private:
     CCTMXLayer *_background;
     Ninja * _player;
     Boss * _boss;
+    CCSprite * taget;
+    float maxHeightJumpBoss;
+    float maxWithJumpBoss;
+    bool bossContacting;
+    
+    int timeDelayContactBoss;
+    int timeDelayAttackBoss;
     
     MyContactListener *_contactListener;
     bool _contactting;
@@ -62,6 +75,8 @@ private:
     CCPoint touchLocation;
     bool giamVanToc;
     bool isTouchTop;
+    
+    bool isBossLeftPlayer;
     
     float withTileMap;
     float heightTileMap;
