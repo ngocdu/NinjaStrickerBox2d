@@ -660,7 +660,7 @@ void HelloWorld::update(float dt)
     
     //----------------------End game -------------------------
     if (_lifes == 0) {
-        CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, GameMenu::scene()));
+        CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(3.7f, GameMenu::scene()));
     }
 }
 void HelloWorld::updatePhantom(float dt) {

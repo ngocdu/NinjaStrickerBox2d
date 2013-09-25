@@ -40,6 +40,7 @@ public:
     void touchBoss( CCPoint location);
     
     void bossAttack();
+    void attackBoss();
     
     CCPoint convertPoitMapToPixel(CCPoint pointMap);
     CCPoint convertPoitMapToPixelReverseY(CCPoint pointMap);
@@ -76,6 +77,7 @@ private:
     bool giamVanToc;
     bool isTouchTop;
     
+    bool ninjaAttack;
     bool isBossLeftPlayer;
     
     float withTileMap;
