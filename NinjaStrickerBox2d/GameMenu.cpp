@@ -19,14 +19,20 @@ bool GameMenu::init() {
     CCMenuItemFont * menuPlay = CCMenuItemFont::create("PLAY", this, menu_selector(GameMenu::click_play));
     menuPlay->setPosition(CCPoint(size.width/2, size.height/2));
     
-    CCMenuItemFont * menuExit = CCMenuItemFont::create("EXIT", this, menu_selector(GameMenu::click_exit));
-    menuExit->setPosition(CCPoint(size.width/2, size.height/3));
+    CCMenuItemFont * menuPlayBoss = CCMenuItemFont::create("PLAY BOSS", this, menu_selector(GameMenu::click_play_boss));
+    menuPlayBoss->setPosition(CCPoint(size.width/2, size.height * 0.375f));
     
-    menu = CCMenu::create(menuPlay, menuExit, NULL);
+    CCMenuItemFont * menuExit = CCMenuItemFont::create("EXIT", this, menu_selector(GameMenu::click_exit));
+    menuExit->setPosition(CCPoint(size.width/2, size.height/4));
+    
+    menu = CCMenu::create(menuPlay, menuExit, menuPlayBoss, NULL);
     menu->setPosition(CCPoint(0, 0));
     this->addChild(menu, 10);
     this->addSpriteBg();
     return true;
+}
+void GameMenu::click_play_boss(cocos2d::CCObject *pSender) {
+    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, GamePlayWithBoss::scene()));
 }
 void GameMenu::click_play(cocos2d::CCObject *pSender) {
     CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, HelloWorld::scene()));

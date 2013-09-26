@@ -15,6 +15,7 @@
 #include "MyContactListener.h"
 #include "Ninja.h"
 #include "Boss.h"
+#include "GameMenu.h"
 using namespace cocos2d;
 class GamePlayWithBoss : public CCLayer
 {
@@ -82,7 +83,11 @@ private:
     
     float withTileMap;
     float heightTileMap;
+    
+    //-------------score -----------
+    float _bloodBoss;
+    CCProgressTimer *_progressBloodBoss;
+    int _lifes;
+    CCLabelTTF *_lbLifes;
 };
-
-
 #endif

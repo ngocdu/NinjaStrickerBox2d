@@ -42,11 +42,31 @@ GamePlayWithBoss::GamePlayWithBoss() {
     timeDelayAttackBoss = 2;
     timeDelayContactBoss = 2;
     ninjaAttack = false;
+    
+    _lifes = 3;
+    _bloodBoss = 100;
+    
+    _lbLifes = CCLabelTTF::create("X  X  X", "", 40);
+    _lbLifes->setPosition(CCPoint(size.width - 150, size.height - 50));
+    _lbLifes->setColor(ccc3(150, 150, 255));
+    this->addChild(_lbLifes, 100);
+    
+    CCSprite * spprogre = CCSprite::create("progressBar.png");
+    spprogre->setAnchorPoint(ccp(0, 0));
+    _progressBloodBoss = CCProgressTimer::create(spprogre);
+    _progressBloodBoss->setType(kCCProgressTimerTypeBar);
+    _progressBloodBoss->setPercentage(100);
+    _progressBloodBoss->setPosition(CCPoint(size.width/2, size.height/6));
+//    _progressBloodBoss->setAnchorPoint(ccp(0, 0));
+    _progressBloodBoss->setMidpoint(ccp(0,0));
+    _progressBloodBoss->setBarChangeRate(ccp(1, 0));
+    this->addChild(_progressBloodBoss, 100);
+    
     scheduleUpdate();
     this->schedule(schedule_selector(GamePlayWithBoss::updateLocation_Direction), 0.1f);
     this->schedule(schedule_selector(GamePlayWithBoss::updateCheckStop), 0.05f);
     this->schedule(schedule_selector(GamePlayWithBoss::updatePhantom), 0.01f);
-    this->schedule(schedule_selector(GamePlayWithBoss::updateTime), 0.5f);
+    this->schedule(schedule_selector(GamePlayWithBoss::updateTime), 0.4f);
     this->schedule(schedule_selector(GamePlayWithBoss::updateBoss));
 }
 void GamePlayWithBoss::initPhysics()
@@ -217,7 +237,7 @@ void GamePlayWithBoss::addNewSpriteAtPosition(CCPoint p)
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &circle;
     //    fixtureDef.shape = &dynamicBox;
-    fixtureDef.density = 1.0f; // trong luong
+    fixtureDef.density = 0.1f; // trong luong
     fixtureDef.friction = 1.0f; //ma sat
     fixtureDef.restitution = 0;
     fixtureDef.filter.groupIndex = -10;
@@ -260,7 +280,7 @@ void GamePlayWithBoss::addNewBossAtPosition(CCPoint p)
     //    fixtureDef.shape = &dynamicBox;
     fixtureDef.density = 14.0f; // trong luong
     fixtureDef.friction = 1.0f; //ma sat
-    fixtureDef.restitution = 0;
+    fixtureDef.restitution = 0.0f;
     fixtureDef.filter.groupIndex = -10;
     body->CreateFixture(&fixtureDef);
     
@@ -286,6 +306,16 @@ void GamePlayWithBoss::setViewPointCenter(CCPoint position)
 #pragma mark - Touch
 bool GamePlayWithBoss::ccTouchBegan(CCTouch *touch, CCEvent *event)
 {
+    if (_player->getAttack() == 3) {
+        _player->setAttack(0);
+        for (b2Fixture* f = _player->getMpBody()->GetFixtureList(); f; f = f->GetNext())
+        {
+            //do something with the fixture 'f'
+            b2Filter  fi = b2Filter();
+            fi.groupIndex = - 10;
+            f->SetFilterData(fi);
+        }
+    }
 //    if (GameManager::sharedGameManager()->getNumberActionPlayer() > 0)
     {
         _contactting = false;
@@ -349,7 +379,10 @@ void GamePlayWithBoss::checkTouchPoint(cocos2d::CCPoint p) {
         t->runAction(sq);
         t->setPosition(p);
         this->addChild(t, 10);
-        _player->setAttack(1);
+        if (_player->getAttack() != 3) {
+            _player->setAttack(1);
+        }else _player->setAttack(0);
+        
         ninjaAttack = false;
         _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
         this->touch(p);
@@ -392,7 +425,7 @@ void GamePlayWithBoss::touch( CCPoint location)
         if( location.x < (winSize.width * 0.5f) )
             b2Vec2 point((location.x - _player->getPositionX())/10, (location.y - _player->getPositionY())/10);
         
-        _player->getMpBody()->ApplyLinearImpulse(impulse, _player->getMpBody()->GetWorldCenter());
+                _player->getMpBody()->ApplyLinearImpulse(impulse, _player->getMpBody()->GetWorldCenter());
         
         if (isTouchRight == true) {
             _player->getMpBody()->SetAngularVelocity(-10000);
@@ -403,7 +436,7 @@ void GamePlayWithBoss::touch( CCPoint location)
 }
 void GamePlayWithBoss::touchBoss(cocos2d::CCPoint location) {
     b2Vec2 impulse(0.0f,0.0f);
-    impulse.y = (location.y - _boss->getMpBody()->GetPosition().y * PTM_RATIO) / 14 ;
+    impulse.y = (location.y - _boss->getMpBody()->GetPosition().y * PTM_RATIO) / 10 ;
     if (isBossLeftPlayer == false) {
         impulse.x = - abs(location.x - _boss->getMpBody()->GetPosition().x * PTM_RATIO) / 35 ;
     }else
@@ -639,12 +672,13 @@ void GamePlayWithBoss::updateTime(float dt) {
     if (timeDelayContactBoss > 0) {
         timeDelayContactBoss --;
     }
+    
     if (timeDelayAttackBoss == 0) {
         _boss->getMpBody()->SetGravityScale(1);
         timeDelayAttackBoss = -1;
         if (isBossLeftPlayer == false) {
-            _boss->getMpBody()->SetLinearVelocity(b2Vec2(-10, -4));
-        }else _boss->getMpBody()->SetLinearVelocity(b2Vec2(10, -4));
+            _boss->getMpBody()->SetLinearVelocity(b2Vec2(-6, -4));
+        }else _boss->getMpBody()->SetLinearVelocity(b2Vec2(6, -4));
         
     }
     if (timeDelayContactBoss == 0) {
@@ -662,10 +696,35 @@ void GamePlayWithBoss::updateTime(float dt) {
     }
 }
 void GamePlayWithBoss::updateBoss(float dt) {
+    char strlife[20] = {0};
+    sprintf(strlife, "%i-X", _lifes);
+    _lbLifes->setString(strlife);
+    if (_lifes == 0) {
+        this->unscheduleUpdate();
+        this->unscheduleAllSelectors();
+        CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(3.7f, GameMenu::scene()));
+    }
+    if (_player->getAttack() != 3 && GameManager::sharedGameManager()->getBeginContact() == false) {
+        for (b2Fixture* f = _player->getMpBody()->GetFixtureList(); f; f = f->GetNext())
+        {
+            //do something with the fixture 'f'
+            b2Filter  fi = b2Filter();
+            fi.groupIndex = - 10;
+            f->SetFilterData(fi);
+        }
+    }else {
+        for (b2Fixture* f = _player->getMpBody()->GetFixtureList(); f; f = f->GetNext())
+        {
+            //do something with the fixture 'f'
+            b2Filter  fi = b2Filter();
+            fi.groupIndex =  10;
+            f->SetFilterData(fi);
+        }
+    }
     if (GameManager::sharedGameManager()->getBeginContactBoss() == true) {
         timeDelayContactBoss = 2;
         GameManager::sharedGameManager()->setBeginContactBoss(false);
-        if (_boss->getMpBody()->GetPosition().x > _player->getMpBody()->GetPosition().x) {
+        if (_boss->getMpBody()->GetPosition().x >= _player->getMpBody()->GetPosition().x) {
             isBossLeftPlayer = false;
         }else isBossLeftPlayer = true;
     }
@@ -687,6 +746,8 @@ void GamePlayWithBoss::updateBoss(float dt) {
         float kc2 = ccpDistance(_player->getPosition(), sprite->getPosition());
         if (kc2 <= kc1 ) {
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 4));
+            _player->getMpBody()->SetGravityScale(1);
+            _lifes --;
             ninjaAttack = false;
             _player->setAttack(2);
         }
@@ -700,6 +761,23 @@ void GamePlayWithBoss::updateBoss(float dt) {
     }else {
 //        _player->getMpBody()->GetFixtureList()->SetSensor(false);
     }
+    
+    //----------ninja contact with boss------------
+    float kc1 = _player->getImage()->getContentSize().width/2 + _boss->getImage()->getContentSize().width/2;
+    float kc2 = ccpDistance(_player->getPoint(), _boss->getPoint());
+    if (kc2 < kc1) {
+        
+        if (_player->getAttack() == 1) {
+            _bloodBoss = _bloodBoss - 1;
+            _player->actionAttack();
+        }else if(_player->getAttack() == 3) {
+            _bloodBoss = _bloodBoss - 0.2f;
+            _player->actionAttack2();
+        }
+        
+    }
+    _progressBloodBoss->setPercentage(_bloodBoss);
+    
 }
 void GamePlayWithBoss::removeSprite(cocos2d::CCNode *node) {
     CCSprite * sp = (CCSprite*)node;

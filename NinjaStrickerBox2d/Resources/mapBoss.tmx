@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="32" height="24" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="background2" tilewidth="32" tileheight="32" spacing="1" margin="1">
+  <image source="background2.png" trans="ff00ff" width="800" height="340"/>
+ </tileset>
+ <layer name="background" width="32" height="24">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA8XURU5FMRTG8eLuMMDdYYC7wwB3hwWge0B38AbojmCOu+sS+L8Byc27ucnLaQmDX5q0OadtvqYupZTLC9GIQSzi4ANf+MEfAQj0spdEAQpRhGIkIgnJSEEq0v5w/1a0oR0dKEM5KlCJKlQL+g5gEEMYxghGMYZxTGASU5jGDGbRjR70og/9wl7W7IIQjBCEIgzhiEAkopT9HcRr1lqzS0cGMpGFbOQgF3nIV/Z3UKJZa82uBrWoQz0a0IgmNKNF2d9Bp2atTnbudzCnWWsif2ldgjKTv7SuVJnJX1rXpczkL62bV/b/W5qlNH/P/1uapaTGnb/n/y3NUpq/7v/9m6U0/wUsYgnLWMGqZXRaNzW/hnVsYBNb2LaMTuum5newiz3s4wCHltFp3dT8EY7/cbzAJa5wjRvc4g73eMAjnvCMF7ziDe84wSnOcC7op7v/h+YZdM9vPY+kl/TOn/jCt+YdfgAhzAa9AAwAAA==
+  </data>
+ </layer>
+</map>

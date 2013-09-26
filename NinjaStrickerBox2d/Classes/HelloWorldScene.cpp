@@ -660,6 +660,8 @@ void HelloWorld::update(float dt)
     
     //----------------------End game -------------------------
     if (_lifes == 0) {
+        this->unscheduleAllSelectors();
+        this->unscheduleUpdate();
         CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(3.7f, GameMenu::scene()));
     }
 }
