@@ -79,6 +79,11 @@ public:
     
     void checkTouchPoint(CCPoint p);
     void arrowAttack(int direction);
+    void attackTaget(CCPoint p);
+    
+    void click_pause(CCObject* pSender);
+    void click_quit(CCObject* pSender);
+    void click_continue(CCObject* pSender);
 private:
     CCSize s;
     CCLayer * _layerBg;
@@ -129,6 +134,13 @@ private:
     
     int _lifes;
     CCLabelTTF *_lbLifes;
+    
+    CCSprite * spriteTaget;
+    
+    CCMenu * menu;
+    CCMenuItemFont * btpause;
+    CCMenuItemFont * btquit;
+    CCMenuItemFont * btcontinue;
 };
 
 #endif // __HELLO_WORLD_H__

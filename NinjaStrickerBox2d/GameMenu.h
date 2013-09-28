@@ -29,5 +29,6 @@ private:
     CCSize size;
     CCMenu * menu;
     CCTMXTiledMap *mapBg;
+    CCTMXLayer *_meta;
 };
 #endif

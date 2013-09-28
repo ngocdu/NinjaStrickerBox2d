@@ -53,6 +53,10 @@ public:
     void checkTouchPoint(CCPoint p);
     
     void removeSprite(CCNode * node);
+    
+    void click_pause(CCObject* pSender);
+    void click_quit(CCObject* pSender);
+    void click_continue(CCObject* pSender);
 private:
     CCSize size;
     b2World* world;
@@ -62,7 +66,7 @@ private:
     CCTMXLayer *_background;
     Ninja * _player;
     Boss * _boss;
-    CCSprite * taget;
+    CCArray * array_taget;
     float maxHeightJumpBoss;
     float maxWithJumpBoss;
     bool bossContacting;
@@ -89,5 +93,10 @@ private:
     CCProgressTimer *_progressBloodBoss;
     int _lifes;
     CCLabelTTF *_lbLifes;
+    
+    CCMenu * menu;
+    CCMenuItemFont * btpause;
+    CCMenuItemFont * btquit;
+    CCMenuItemFont * btcontinue;
 };
 #endif

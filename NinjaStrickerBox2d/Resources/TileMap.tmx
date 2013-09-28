@@ -1,7 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="100" height="20" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="100" height="24" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="tmw_desert_spacing" tilewidth="32" tileheight="32" spacing="1" margin="1">
   <image source="tmw_desert_spacing.png" width="265" height="199"/>
+  <tile id="30">
+   <properties>
+    <property name="right" value="true"/>
+   </properties>
+  </tile>
+  <tile id="31">
+   <properties>
+    <property name="left" value="true"/>
+   </properties>
+  </tile>
+  <tile id="37">
+   <properties>
+    <property name="up" value="true"/>
+   </properties>
+  </tile>
+  <tile id="38">
+   <properties>
+    <property name="down" value="true"/>
+   </properties>
+  </tile>
+  <tile id="39">
+   <properties>
+    <property name="right_up" value="true"/>
+   </properties>
+  </tile>
+  <tile id="45">
+   <properties>
+    <property name="right_down" value="true"/>
+   </properties>
+  </tile>
+  <tile id="46">
+   <properties>
+    <property name="left_up" value="true"/>
+   </properties>
+  </tile>
+  <tile id="47">
+   <properties>
+    <property name="left_down" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="49" name="meta_tiles" tilewidth="32" tileheight="32" spacing="1" margin="1">
   <image source="meta_tiles.png" width="67" height="34"/>
@@ -22,37 +62,40 @@
  <tileset firstgid="279" name="tiles" tilewidth="16" tileheight="16" spacing="1" margin="1">
   <image source="tiles.png" trans="ff00ff" width="256" height="256"/>
  </tileset>
- <layer name="Background" width="100" height="20">
+ <layer name="Background" width="100" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt1MERABAMRcGcFaH/MrXgwPjYw96TeaFXVQcAAIALtUmn5/yFHrwo+Y5/fHPJO+rx5o430SPL6h4p/8vsX5d2i3rss3NOPThlAKSA1IE=
+   eJzt06ERwCAQRUF0ikCk/yLjUQlDuANWrGU+vKGWUioAAAAs6Hopeucp9IC5/LlcdupxN6L3nE6PXGb10FyPFbU9evWeHX3/bPTIZaUeIzb9df9R7xa958s76pFjox65Nmbt8QBBdxwE
   </data>
  </layer>
- <objectgroup name="Objects" width="100" height="20">
+ <objectgroup name="Objects" width="100" height="24">
   <object name="SpawnPoint" x="80" y="299"/>
  </objectgroup>
- <layer name="Meta" width="100" height="20">
+ <layer name="Meta" width="100" height="24">
   <data encoding="base64" compression="zlib">
-   eJztlkkKwCAMAP2S//9cTz0ILYSoZGxnIBdFTJi4tCYUenUCMqAPFvpgoQ8W+mChDxb6YKEPFl/x0YNB54QcI+hDdlDtg9zHFWeuuvan/atzutHH+9hfqK5dHyPVta/2QfljRe862tu5w8fM/Cqy+8x4zHiNrsv2jD54cXq9F0FRKuE=
+   eJzt10EOgCAMBVGuxP0v51YXJQgt/DbzElcqECeQ2BpU9NsLwAc9tNBDCz200EMLPbTQQws9tFTp0ScvdRnWOIMeiEAP2409Rw9bpR7Zzm0VkT2i56goe49qe7BCj+g5TjrVY/Wyxs7+n2FR3h+jHivvZUAPnz27O+Z77J3zxFqjVw/P7zF69s+aPJ+LENnDCz3G91fHXZWpxwM6rCNq
   </data>
  </layer>
- <layer name="Coin" width="100" height="20">
+ <layer name="Coin" width="100" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt10EKwCAMBEDf1P8/rvelUCgWTDJz0eNuBMW1AGC2K9bcA9DLyXf8H2/SyX1TpazdTJt99q3Uv1LW6qbN+q1vpXl8ydrpX5hdnrrRh3MFgP1uLYME4w==
+   eJzt10kKwCAQBEDflP8/LvcmEAgEZqm66LF7BMVzAGC3K9bcAzBL5Tv+jzepct/UKes022affTv175S1u22zfuvbaR5fsk76F2aXp27M4VwBAABquAG6BQTj
   </data>
  </layer>
- <layer name="Snake" width="100" height="20">
+ <layer name="Snake" width="100" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt1EEJAAAIA0Ar2b+cBXyr4F2CDcYiAAAAALgmtwMA0Pr6z197M8/WgG0Fbk4AxQ==
+   eJzt1EENADAIA0As4d/cDPCGEe4UtEnTCAAAAAB+k9MBAChd/eervelnawAAbPQAPdkAxQ==
   </data>
  </layer>
- <layer name="Scorpion" width="100" height="20">
+ <layer name="Scorpion" width="100" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt1MEJACAMA8Cu5P7LuYFCsWDp3QAhnyQCAADO1ue5Vf2Ad7I77bTvTl0BbnwaAABTbY6BAVg=
+   eJzt1MEJACAMA8Cu1P2XcwMtUsHC3QAhnyQCAAD28vPcV/2APrc7nbTvSV0BTnwaAAAAQN0C9PkBWA==
   </data>
  </layer>
- <layer name="Arrow" width="100" height="20">
+ <layer name="Arrow" width="100" height="24">
+  <properties>
+   <property name="1" value="true"/>
+  </properties>
   <data encoding="base64" compression="zlib">
-   eJzt1MERABAMBEA16b84DfAwBgm7f+PkJkoBdqi3A7Asc4eZs//qlc6ivONEjtU7Zs6fnGuUDgGi819CDnZ1zGwAAKCvAbCDAos=
+   eJzt1LENwCAMRUE2CVVCx/7bZYMQIcBC3LVfll7llIC/rsb+LKkAIuWO7esG4HR3Y88rIjZSowPgMCU6gGH8TwAAAABmegGQ+gFz
   </data>
  </layer>
 </map>

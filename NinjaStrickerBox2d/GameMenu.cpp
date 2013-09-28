@@ -56,6 +56,7 @@ void GameMenu::addSpriteBg() {
     mapBg->setPosition(CCPoint(0, 0));
     this->addChild(mapBg);
     CCTMXLayer *_meta = mapBg->layerNamed("meta");
+    _meta->setVisible(false);
     CCSize layerSize = _meta->getLayerSize();
     for( int y=0; y < layerSize.height; y++ )
     {

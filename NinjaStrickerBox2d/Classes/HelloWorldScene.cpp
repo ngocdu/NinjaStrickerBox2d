@@ -39,7 +39,11 @@ HelloWorld::HelloWorld()
     _scorpion = _tileMap->layerNamed("Scorpion");
     _arrow = _tileMap->layerNamed("Arrow");
     _meta = _tileMap->layerNamed("Meta");
+    _coin->setVisible(false);
+    _snake->setVisible(false);
+    _scorpion->setVisible(false);
     _meta->setVisible(false);
+    _arrow->setVisible(false);
     
     CCLOG("size tiled: %f , %f",_tileMap->getTileSize().width, _tileMap->getTileSize().height);
     withTileMap = _tileMap->getMapSize().width * _tileMap->getTileSize().width;
@@ -57,7 +61,7 @@ HelloWorld::HelloWorld()
 
 //    this->prepareLayers();
     
-    addNewSpriteAtPosition(convertPoitMapToPixel(CCPoint(0, 17)));
+    addNewSpriteAtPosition(convertPoitMapToPixel(CCPoint(3, 19)));
     
     //----------------------------------
     _arrayCoin = new CCArray();
@@ -74,6 +78,7 @@ HelloWorld::HelloWorld()
     
     this->addWalls();
     
+        
     //----------point ,life-----------------------
     _scores = 0;
     _lifes = 3;
@@ -88,8 +93,24 @@ HelloWorld::HelloWorld()
     _lbLifes->setPosition(CCPoint(s.width/2 - 100, s.height/2 - 50));
     _layerBg->addChild(_lbLifes, 100);
     
-    delayPlayer = 25;
     
+    btpause = CCMenuItemFont::create("PAUSE", this, menu_selector(HelloWorld::click_pause));
+    btpause->setPosition(CCPoint( - s.width/2, -50));
+    
+    btquit = CCMenuItemFont::create("QUIT", this, menu_selector(HelloWorld::click_quit));
+    btquit->setPosition(CCPoint(- s.width/2, - s.height/2 * 0.275f));
+    btquit->setVisible(false);
+    btcontinue = CCMenuItemFont::create("CONTINUE", this, menu_selector(HelloWorld::click_continue));
+    btcontinue->setPosition(CCPoint(- s.width/2, - s.height/4));
+    btcontinue->setVisible(false);
+    menu = CCMenu::create(btpause, btquit, btcontinue, NULL);
+    menu->setPosition(CCPoint( s.width/2 ,  s.height/2 ));
+    _layerBg->addChild(menu, 10);
+    
+    CCLog(" bt pause  x: %f, y : %f", btpause->getPosition().x, btpause->getPosition().y);
+    
+    delayPlayer = 25;
+    spriteTaget = NULL;
     this->setViewPointCenter(_player->getPosition());
     
     this->schedule(schedule_selector(HelloWorld::updateLocation_Direction), 0.1f);
@@ -613,7 +634,8 @@ void HelloWorld::update(float dt)
         Arrow *arrow = (Arrow*)i8;
         float kc1 = _player->getImage()->getContentSize().width/2 + arrow->getContentSize().width/2;
         float kc2 = ccpDistance(arrow->getPosition(), _player->getPosition());
-        if (kc2 <= kc1/2) {
+        if (kc2 <= kc1) {
+            GameManager::sharedGameManager()->setNumberActionPlayer(1);
             this->arrowAttack(arrow->getDirection());
         }
     }
@@ -657,6 +679,9 @@ void HelloWorld::update(float dt)
     }
     _arrayRemoveCoin->removeAllObjects();
     
+//    if (spriteTaget != NULL) {
+//        this->attackTaget(spriteTaget->getPosition());
+//    }
     
     //----------------------End game -------------------------
     if (_lifes == 0) {
@@ -776,6 +801,7 @@ void HelloWorld::checkTouchPoint(cocos2d::CCPoint p) {
         Snake * snake = (Snake*)i1;
         CCRect rect = snake->boundingBox();
         if (rect.containsPoint(p)) {
+            spriteTaget = (CCSprite*)snake;
             CCSprite * taget = CCSprite::create("muctieu.png");
             taget->setPosition(CCPoint(snake->getContentSize().width/2, snake->getContentSize().height/2));
             snake->addChild(taget);
@@ -785,7 +811,7 @@ void HelloWorld::checkTouchPoint(cocos2d::CCPoint p) {
             taget->runAction(sq);
             _player->setAttack(3);
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
-            this->touch(p);
+            this->touch1(p);
             GameManager::sharedGameManager()->setNumberActionPlayer(
                     GameManager::sharedGameManager()->getNumberActionPlayer() - 1);
             return;
@@ -797,6 +823,7 @@ void HelloWorld::checkTouchPoint(cocos2d::CCPoint p) {
         Scorpion * scorpion = (Scorpion*)i2;
         CCRect rect = scorpion->boundingBox();
         if (rect.containsPoint(p)) {
+            spriteTaget = (CCSprite*)scorpion;
             CCSprite * taget = CCSprite::create("muctieu.png");
             taget->setPosition(CCPoint(scorpion->getContentSize().width/2, scorpion->getContentSize().height/2));
             scorpion->addChild(taget);
@@ -806,7 +833,7 @@ void HelloWorld::checkTouchPoint(cocos2d::CCPoint p) {
             taget->runAction(sq);
             _player->setAttack(3);
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
-            this->touch(p);
+            this->touch1(p);
             GameManager::sharedGameManager()->setNumberActionPlayer(
                     GameManager::sharedGameManager()->getNumberActionPlayer() - 1);
             return;
@@ -872,8 +899,17 @@ void HelloWorld::touch1(cocos2d::CCPoint location) {
     CCSize winSize = CCDirector::sharedDirector()->getWinSize();
     b2Vec2 currentVelocity = _player->getMpBody()->GetLinearVelocity();
     b2Vec2 impulse(0.0f,0.0f);
-    impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.5f + 10;
-    impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.5f;
+    impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) / 10 + 10;
+    impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) /5 ;
+    _player->getMpBody()->SetLinearVelocity(impulse);
+}
+void HelloWorld::attackTaget(cocos2d::CCPoint p) {
+    CCPoint point = convertPixelToMetter(p);
+    b2Vec2  p1 = b2Vec2(point.x, point.y);
+    b2Vec2  p2 = _player->getMpBody()->GetPosition();
+    b2Vec2 impulse(0.0f, 0.0f) ;
+    impulse.y = (- p2.y + p1.y) * 20 ;
+    impulse.x = (- p2.x + p1.x) * 20  ;
     _player->getMpBody()->SetLinearVelocity(impulse);
 }
 #pragma mark - create map
@@ -977,17 +1013,17 @@ void HelloWorld::createRectangularFixtureWithPoint(cocos2d::CCPoint p1, cocos2d:
     body->CreateFixture(&fixtureDef);
 }
 void HelloWorld::addWalls() {
-    this->createRectangularFixtureWithPoint(CCPoint(0, 18), CCPoint(17, 19));
-    this->createRectangularFixtureWithPoint(CCPoint(18, 19), CCPoint(26, 19));
-    this->createRectangularFixtureWithPoint(CCPoint(27, 18), CCPoint(40, 19));
-    this->createRectangularFixtureWithPoint(CCPoint(31, 12), CCPoint(36, 17));
-    this->createRectangularFixtureWithPoint(CCPoint(41, 19), CCPoint(50, 19));
-    this->createRectangularFixtureWithPoint(CCPoint(51, 16), CCPoint(59, 19));
-    this->createRectangularFixtureWithPoint(CCPoint(49, 9), CCPoint(58, 10));
-    this->createRectangularFixtureWithPoint(CCPoint(60, 19), CCPoint(84, 19));
-    this->createRectangularFixtureWithPoint(CCPoint(70, 12), CCPoint(79, 13));
-    this->createRectangularFixtureWithPoint(CCPoint(85, 16), CCPoint(98, 19));
+    this->createRectangularFixtureWithPoint(CCPoint(0, 21), CCPoint(16, 23));
+    this->createRectangularFixtureWithPoint(CCPoint(21, 14), CCPoint(24, 23));
+    this->createRectangularFixtureWithPoint(CCPoint(25, 18), CCPoint(38, 23));
+    this->createRectangularFixtureWithPoint(CCPoint(39, 21), CCPoint(57, 23));
+    this->createRectangularFixtureWithPoint(CCPoint(44, 18), CCPoint(52, 20));
+    this->createRectangularFixtureWithPoint(CCPoint(47, 16), CCPoint(49, 17));
+    this->createRectangularFixtureWithPoint(CCPoint(64, 20), CCPoint(75, 23));
+    this->createRectangularFixtureWithPoint(CCPoint(85, 20), CCPoint(98, 23));
     this->createRectangularFixtureWithPoint(CCPoint(99, 0), CCPoint(99, 19));
+    this->createRectangularFixtureWithPoint(CCPoint(70, 12), CCPoint(79, 13));
+    this->createRectangularFixtureWithPoint(CCPoint(49, 9), CCPoint(58, 10));
 }
 #pragma mark - handle touches
 
@@ -1117,24 +1153,110 @@ void HelloWorld::addArrows() {
         {
             // create a fixture if this tile has a sprite
             CCSprite* tileSprite = _arrow->tileAt(ccp(x, y));
-            if( tileSprite ) {
-                CCPoint p = convertPoitMapToPixel(ccp(tileSprite->getPosition().x / PTM_RATIO,
-                                                      tileSprite->getPosition().y / PTM_RATIO));
-                Arrow * arrow =  new Arrow();
-                arrow->initWithFile("arrow.png");
-                arrow->setPosition(p);
-                int i = rand() % 8 + 1;
-                arrow->setDirection(i);
-                CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);;
-                    
-                arrow->runAction(rotate);
-                _arrayArrow->addObject(arrow);
-                this->addChild(arrow, 100);
-            }
             
+            
+            CCPoint tileCoord = this->tileCoordForPosition(convertPoitMapToPixel(ccp(x, y)));
+            int tileGid = _arrow->tileGIDAt(ccp(x, y));
+            if (tileGid) {
+                CCDictionary *properties = _tileMap->propertiesForGID(tileGid);
+                if (properties) {
+                    CCPoint p = convertPoitMapToPixel(ccp(tileSprite->getPosition().x / PTM_RATIO,
+                                                          tileSprite->getPosition().y / PTM_RATIO));
+                    Arrow * arrow =  new Arrow();
+                    arrow->initWithFile("arrow.png");
+                    arrow->setPosition(p);
+                    _arrayArrow->addObject(arrow);
+                    this->addChild(arrow, 100);
+                    //right
+                    CCString *collisionRight = new CCString();
+                    *collisionRight = *properties->valueForKey("right");
+                    if (collisionRight && (collisionRight->compare("true") == 0)) {
+                        int i =  1;
+                        arrow->setDirection(i);
+                        CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);                            
+                        arrow->runAction(rotate);
+//                        break;
+                    }
+                    //right down
+                    CCString *collisionRightDown = new CCString();
+                    *collisionRightDown = *properties->valueForKey("right_down");
+                    if (collisionRightDown && (collisionRightDown->compare("true") == 0)) {
+                        int i =  2;
+                        arrow->setDirection(i);
+                        CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
+                        arrow->runAction(rotate);
+//                        break;
+                    }
+                    
+                    // down
+                    CCString *collisionDown = new CCString();
+                    *collisionDown = *properties->valueForKey("down");
+                    if (collisionDown && (collisionDown->compare("true") == 0)) {
+                        int i =  3;
+                        arrow->setDirection(i);
+                        CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
+                        arrow->runAction(rotate);
+//                        break;
+                    }
+                    
+                    //left down
+                    CCString *collisionLeftDown = new CCString();
+                    *collisionLeftDown = *properties->valueForKey("left_down");
+                    if (collisionLeftDown && (collisionLeftDown->compare("true") == 0)) {
+                        int i =  4;
+                        arrow->setDirection(i);
+                        CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
+                        arrow->runAction(rotate);
+//                        break;
+                    }
+
+                    //left
+                    CCString *collisionLeft = new CCString();
+                    *collisionLeft = *properties->valueForKey("left");
+                    if (collisionLeft && (collisionLeft->compare("true") == 0)) {
+                        int i = 5;
+                        arrow->setDirection(i);
+                        CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
+                        arrow->runAction(rotate);
+//                        break;
+                    }
+                    
+                    //left up
+                    CCString *collisionLeftUp = new CCString();
+                    *collisionLeftUp = *properties->valueForKey("left_up");
+                    if (collisionLeftUp && (collisionLeftUp->compare("true") == 0)) {
+                        int i = 6;
+                        arrow->setDirection(i);
+                        CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
+                        arrow->runAction(rotate);
+//                        break;
+                    }
+
+                    // up
+                    CCString *collisionUp = new CCString();
+                    *collisionUp = *properties->valueForKey("up");
+                    if (collisionUp && (collisionUp->compare("true") == 0)) {
+                        int i = 7;
+                        arrow->setDirection(i);
+                        CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
+                        arrow->runAction(rotate);
+//                        break;
+                    }
+                    
+                    //right up
+                    CCString *collisionRightUp = new CCString();
+                    *collisionRightUp = *properties->valueForKey("right_up");
+                    if (collisionRightUp && (collisionRightUp->compare("true") == 0)) {
+                        int i = 8;
+                        arrow->setDirection(i);
+                        CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
+                        arrow->runAction(rotate);
+//                        break;
+                    }
+                }
+            }
         }
     }
-
 }
 #pragma mark - convert point
 CCPoint HelloWorld::convertMetterToPixel(CCPoint p) {
@@ -1193,8 +1315,8 @@ void HelloWorld::arrowAttack(int direction) {
     int y = 30;
     switch (direction) {
         case 1:
-            _player->getMpBody()->SetGravityScale(0);
-            _player->getMpBody()->SetLinearVelocity(b2Vec2(x , 0));
+            _player->getMpBody()->SetGravityScale(1);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(x + 50, 0));
             break;
         case 2:
             _player->getMpBody()->SetGravityScale(1);
@@ -1209,8 +1331,8 @@ void HelloWorld::arrowAttack(int direction) {
             _player->getMpBody()->SetLinearVelocity(b2Vec2(-x/2, -y/2));
             break;
         case 5:
-            _player->getMpBody()->SetGravityScale(0);
-            _player->getMpBody()->SetLinearVelocity(b2Vec2(-x, 0));
+            _player->getMpBody()->SetGravityScale(1);
+            _player->getMpBody()->SetLinearVelocity(b2Vec2(-x - 50, 0));
             break;
         case 6:
             _player->getMpBody()->SetGravityScale(1);
@@ -1227,4 +1349,22 @@ void HelloWorld::arrowAttack(int direction) {
         default:
             break;
     }
+}
+#pragma mark - click menu item
+void HelloWorld::click_continue(cocos2d::CCObject *pSender) {
+    btquit->setVisible(false);
+    btcontinue->setVisible(false);
+    btpause->setVisible(true);
+    this->resumeSchedulerAndActions();
+}
+void HelloWorld::click_pause(cocos2d::CCObject *pSender) {
+    btquit->setVisible(true);
+    btcontinue->setVisible(true);
+    btpause->setVisible(false);
+    this->pauseSchedulerAndActions();
+}
+void HelloWorld::click_quit(cocos2d::CCObject *pSender) {
+    this->unscheduleUpdate();
+    this->unscheduleAllSelectors();
+    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, GameMenu::scene()));
 }
