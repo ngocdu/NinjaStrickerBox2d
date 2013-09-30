@@ -84,6 +84,7 @@ public:
     void click_pause(CCObject* pSender);
     void click_quit(CCObject* pSender);
     void click_continue(CCObject* pSender);
+    void click_reset(CCObject* pSender);
 private:
     CCSize s;
     CCLayer * _layerBg;
@@ -141,6 +142,12 @@ private:
     CCMenuItemFont * btpause;
     CCMenuItemFont * btquit;
     CCMenuItemFont * btcontinue;
+    //--------------end game -------
+    CCMenuItemFont * btreset;
+    CCLabelTTF *_lbWin;
+    CCLabelTTF *_lbLost;
+    
+    
 };
 
 #endif // __HELLO_WORLD_H__

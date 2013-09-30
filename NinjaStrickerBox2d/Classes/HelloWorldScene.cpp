@@ -33,6 +33,8 @@ HelloWorld::HelloWorld()
     //---------------------------------
     _tileMap = new CCTMXTiledMap();
     _tileMap->initWithTMXFile("TileMap.tmx");
+//    _tileMap->setScaleX(GameManager::sharedGameManager()->getSCALE_N_X());
+//    _tileMap->setScaleY(GameManager::sharedGameManager()->getSCALE_N_Y());
     _background = _tileMap->layerNamed("Background");
     _coin = _tileMap->layerNamed("Coin");
     _snake = _tileMap->layerNamed("Snake");
@@ -85,14 +87,25 @@ HelloWorld::HelloWorld()
     _layerBg = CCLayer::create();
     _layerBg->setPosition(CCPoint(s.width/2, s.height/2));
     _layerBg->setContentSize(CCSize(s.width, s.height));
-    this->addChild(_layerBg, 1);
+    this->addChild(_layerBg, 1000);
     _lbScores = CCLabelTTF::create("0", "", 20);
-    _lbScores->setPosition(CCPoint(s.width/2 - 300, s.height/2 - 30));
+    _lbScores->setPosition(CCPoint(s.width/2 - 100, s.height/2 - 80));
     _layerBg->addChild(_lbScores, 100);
     _lbLifes = CCLabelTTF::create("X  X  X", "", 40);
-    _lbLifes->setPosition(CCPoint(s.width/2 - 100, s.height/2 - 50));
+    _lbLifes->setPosition(CCPoint(s.width/2 - 100, s.height/2 - 40));
     _layerBg->addChild(_lbLifes, 100);
     
+    _lbWin = CCLabelTTF::create("YOU WIN", "", 40);
+    _lbWin->setPosition(CCPoint(0, -40));
+    _lbWin->setVisible(false);
+    _lbWin->setColor(ccc3(0, 0, 255));
+    _layerBg->addChild(_lbWin, 1000);
+    
+    _lbLost = CCLabelTTF::create("YOU LOST", "", 40);
+    _lbLost->setPosition(CCPoint(0, -40));
+    _lbLost->setVisible(false);
+    _lbLost->setColor(ccc3(0, 0, 255));
+    _layerBg->addChild(_lbLost, 1000);
     
     btpause = CCMenuItemFont::create("PAUSE", this, menu_selector(HelloWorld::click_pause));
     btpause->setPosition(CCPoint( - s.width/2, -50));
@@ -100,10 +113,16 @@ HelloWorld::HelloWorld()
     btquit = CCMenuItemFont::create("QUIT", this, menu_selector(HelloWorld::click_quit));
     btquit->setPosition(CCPoint(- s.width/2, - s.height/2 * 0.275f));
     btquit->setVisible(false);
+    
     btcontinue = CCMenuItemFont::create("CONTINUE", this, menu_selector(HelloWorld::click_continue));
     btcontinue->setPosition(CCPoint(- s.width/2, - s.height/4));
     btcontinue->setVisible(false);
-    menu = CCMenu::create(btpause, btquit, btcontinue, NULL);
+    
+    btreset = CCMenuItemFont::create("RESET", this, menu_selector(HelloWorld::click_reset));
+    btreset->setPosition(CCPoint(- s.width/2, - s.height/4));
+    btreset->setVisible(false);
+    
+    menu = CCMenu::create(btpause, btquit, btcontinue, btreset, NULL);
     menu->setPosition(CCPoint( s.width/2 ,  s.height/2 ));
     _layerBg->addChild(menu, 10);
     
@@ -473,6 +492,9 @@ void HelloWorld::update(float dt)
         _player->getImage()->runAction(animet);
 //        _player->getImage()->setFlipX(false);
         _player->getImage()->setFlipY(false);
+        if (_player->getAttack() == 3) {
+            this->touch1(touchLocation);
+        }
     }
     
    
@@ -502,14 +524,14 @@ void HelloWorld::update(float dt)
 
     }
     
-    if (_player->getPosition().x > _player->getPoint().x) {
-        
-        _player->setFlipX(false);
-        _player->getImage()->setFlipX(false);
-    }else {
-        _player->setFlipX(true);
-        _player->getImage()->setFlipX(true);
-    }
+//    if (_player->getPosition().x > _player->getPoint().x) {
+//        
+//        _player->setFlipX(false);
+//        _player->getImage()->setFlipX(false);
+//    }else {
+//        _player->setFlipX(true);
+//        _player->getImage()->setFlipX(true);
+//    }
     
     //--------------------contact with coins------------------------------------
     CCObject *i3 ;
@@ -683,11 +705,23 @@ void HelloWorld::update(float dt)
 //        this->attackTaget(spriteTaget->getPosition());
 //    }
     
-    //----------------------End game -------------------------
-    if (_lifes == 0) {
+    //----------------------End game ------------Lost-------------
+    if (_lifes == 0 || _player->getPosition().y < - 5000) {
         this->unscheduleAllSelectors();
         this->unscheduleUpdate();
-        CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(3.7f, GameMenu::scene()));
+        _lbLost->setVisible(true);
+        btquit->setVisible(true);
+        btreset->setVisible(true);
+        btpause->setVisible(false);
+    }
+    //--------------------- Win ---------------------------------
+    if (_arraySnake->count() <= 0 && _arrayScorpion->count() <= 0) {
+        this->unscheduleAllSelectors();
+        this->unscheduleUpdate();
+        _lbWin->setVisible(true);
+        btquit->setVisible(true);
+        btreset->setVisible(true);
+        btpause->setVisible(false);
     }
 }
 void HelloWorld::updatePhantom(float dt) {
@@ -742,16 +776,23 @@ void HelloWorld::updateLocation_Direction(float dt) {
         Scorpion *scorpion = (Scorpion*)i2;
         scorpion->setLocation(scorpion->getPosition());
     }
-    
-    _player->setPoint(_player->getPosition());
+    CCPoint pPlay = convertMetterToPixel(CCPoint(_player->getMpBody()->GetPosition().x, _player->getMpBody()->GetPosition().y));
+    if (pPlay.x < _player->getPoint().x) {
+        _player->getImage()->setFlipX(true);
+        _player->setFlipX(true);
+    }else if (pPlay.x > _player->getPoint().x){
+        _player->getImage()->setFlipX(false);
+        _player->setFlipX(false);
+    }
+    _player->setPoint(pPlay);
 }
 void HelloWorld::updateScoreLife(float dt) {
     char scoreStr[20] = {0};
-    sprintf(scoreStr, "%i", _scores);
+    sprintf(scoreStr, "Score: %i", _scores);
     _lbScores->setString(scoreStr);
     
     char strlife[20] = {0};
-    sprintf(strlife, "%i-X", _lifes);
+    sprintf(strlife, "Lifes: %i-X", _lifes);
     _lbLifes->setString(strlife);
 
 }
@@ -891,8 +932,7 @@ void HelloWorld::touch( CCPoint location)
         if (isTouchRight == true) {
             _player->getMpBody()->SetAngularVelocity(-10000);
         }else if ( isTouchRight == false) {
-            _player->getMpBody()->SetAngularVelocity(10000);
-        }
+            _player->getMpBody()->SetAngularVelocity(10000);        }
     }
 }
 void HelloWorld::touch1(cocos2d::CCPoint location) {
@@ -902,6 +942,12 @@ void HelloWorld::touch1(cocos2d::CCPoint location) {
     impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) / 10 + 10;
     impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) /5 ;
     _player->getMpBody()->SetLinearVelocity(impulse);
+    if (isTouchRight == true) {
+        _player->getMpBody()->SetAngularVelocity(-100);
+    }else if ( isTouchRight == false) {
+        _player->getMpBody()->SetAngularVelocity(100);
+    }
+    
 }
 void HelloWorld::attackTaget(cocos2d::CCPoint p) {
     CCPoint point = convertPixelToMetter(p);
@@ -1000,8 +1046,10 @@ void HelloWorld::createRectangularFixtureWithPoint(cocos2d::CCPoint p1, cocos2d:
     // define the shape
     b2PolygonShape shape;
     CCLog("with : %f, height : %f", with, height);
-    shape.SetAsBox(with / 2 /pixelsPerMeter, height / 2/ pixelsPerMeter);
-    
+    shape.SetAsBox((with / 2 /pixelsPerMeter), (height / 2/ pixelsPerMeter));
+//    shape.SetAsBox((with / 2 /pixelsPerMeter) * GameManager::sharedGameManager()->getSCALE_N_X(),
+//                   (height / 2/ pixelsPerMeter) * GameManager::sharedGameManager()->getSCALE_N_Y());
+
     // create the fixture
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &shape;
@@ -1367,4 +1415,9 @@ void HelloWorld::click_quit(cocos2d::CCObject *pSender) {
     this->unscheduleUpdate();
     this->unscheduleAllSelectors();
     CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, GameMenu::scene()));
+}
+void HelloWorld::click_reset(cocos2d::CCObject *pSender) {
+    this->unscheduleUpdate();
+    this->unscheduleAllSelectors();
+    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, HelloWorld::scene()));
 }

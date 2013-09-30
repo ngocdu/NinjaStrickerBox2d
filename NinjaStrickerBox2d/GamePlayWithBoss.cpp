@@ -31,7 +31,8 @@ GamePlayWithBoss::GamePlayWithBoss() {
     //---------------------------------
     _tileMap = new CCTMXTiledMap();
     _tileMap->initWithTMXFile("mapBoss.tmx");
-//    _background = _tileMap->layerNamed("background");
+//    _tileMap->setScaleX(GameManager::sharedGameManager()->getSCALE_N_X());
+//    _tileMap->setScaleY(GameManager::sharedGameManager()->getSCALE_N_Y());
     this->addChild(_tileMap);
     withTileMap = _tileMap->getMapSize().width * _tileMap->getTileSize().width;
     heightTileMap = _tileMap->getMapSize().height * _tileMap->getTileSize().height;
@@ -52,6 +53,19 @@ GamePlayWithBoss::GamePlayWithBoss() {
     _lbLifes->setColor(ccc3(150, 150, 255));
     this->addChild(_lbLifes, 100);
     
+    _lbWin = CCLabelTTF::create("YOU WIN", "", 40);
+    _lbWin->setPosition(CCPoint(size.width/2 , size.height/2));
+    _lbWin->setVisible(false);
+    _lbWin->setColor(ccc3(0, 0, 255));
+    this->addChild(_lbWin, 100);
+    
+    _lbLost = CCLabelTTF::create("YOU LOST", "", 40);
+    _lbLost->setPosition(CCPoint(size.width/2 , size.height/2));
+    _lbLost->setVisible(false);
+    _lbLost->setColor(ccc3(0, 0, 255));
+    this->addChild(_lbLost, 100);
+
+    
     //---------menu-------
     btpause = CCMenuItemFont::create("PAUSE", this, menu_selector(GamePlayWithBoss::click_pause));
     btpause->setPosition(CCPoint(  size.width/2, size.height - 50));
@@ -62,7 +76,12 @@ GamePlayWithBoss::GamePlayWithBoss() {
     btcontinue = CCMenuItemFont::create("CONTINUE", this, menu_selector(GamePlayWithBoss::click_continue));
     btcontinue->setPosition(CCPoint( size.width/2, size.height - size.height/3));
     btcontinue->setVisible(false);
-    menu = CCMenu::create(btpause, btquit, btcontinue, NULL);
+    
+    btreset = CCMenuItemFont::create("RESET", this, menu_selector(GamePlayWithBoss::click_reset));
+    btreset->setPosition(CCPoint(size.width/2, size.height - size.height/3));
+    btreset->setVisible(false);
+    
+    menu = CCMenu::create(btpause, btquit, btcontinue, btreset, NULL);
     menu->setPosition(CCPoint( 0 ,  0 ));
     this->addChild(menu, 10);
     
@@ -518,9 +537,11 @@ void GamePlayWithBoss::bossAttack() {
     
     b2Vec2  p1 = _boss->getMpBody()->GetPosition();
     b2Vec2  p2 = _player->getMpBody()->GetPosition();
+    float lenght = sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
+    
     b2Vec2 impulse(0.0f, 0.0f) ;
-    impulse.y = ( p2.y - p1.y)  ;
-    impulse.x = ( p2.x - p1.x)   ;
+    impulse.y = (( p2.y - p1.y) / lenght) * 20  ;
+    impulse.x = (( p2.x - p1.x) / lenght) * 20  ;
     body->SetLinearVelocity(impulse);
 }
 void GamePlayWithBoss::attackBoss() {
@@ -529,6 +550,7 @@ void GamePlayWithBoss::attackBoss() {
     b2Vec2 impulse(0.0f, 0.0f) ;
     impulse.y = (- p2.y + p1.y) * 6 ;
     impulse.x = (- p2.x + p1.x) * 6  ;
+    
     _player->getMpBody()->SetLinearVelocity(impulse);
 //    _player->getMpBody()->ApplyForce(impulse, p1);
 //    _player->setPosition(_boss->getPoint());
@@ -775,10 +797,22 @@ void GamePlayWithBoss::updateBoss(float dt) {
     char strlife[20] = {0};
     sprintf(strlife, "%i-X", _lifes);
     _lbLifes->setString(strlife);
-    if (_lifes == 0) {
+    //-------------Lost------------------------
+    if (_lifes <= 0) {
         this->unscheduleUpdate();
         this->unscheduleAllSelectors();
-        CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(3.7f, GameMenu::scene()));
+        _lbLost->setVisible(true);
+        btquit->setVisible(true);
+        btreset->setVisible(true);
+        btpause->setVisible(false);
+    }
+    if (_bloodBoss <= 0) {
+        this->unscheduleUpdate();
+        this->unscheduleAllSelectors();
+        _lbWin->setVisible(true);
+        btquit->setVisible(true);
+        btreset->setVisible(true);
+        btpause->setVisible(false);
     }
     if (_player->getAttack() != 3 && GameManager::sharedGameManager()->getBeginContact() == false) {
         for (b2Fixture* f = _player->getMpBody()->GetFixtureList(); f; f = f->GetNext())
@@ -905,7 +939,9 @@ void GamePlayWithBoss::createRectangularFixtureWithPoint(cocos2d::CCPoint p1, co
     // define the shape
     b2PolygonShape shape;
     CCLog("with : %f, height : %f", with, height);
-    shape.SetAsBox(with / 2 /pixelsPerMeter, height / 2/ pixelsPerMeter);
+    shape.SetAsBox((with / 2 /pixelsPerMeter), (height / 2/ pixelsPerMeter));
+//    shape.SetAsBox((with / 2 /pixelsPerMeter) * GameManager::sharedGameManager()->getSCALE_N_X(),
+//                   (height / 2/ pixelsPerMeter) * GameManager::sharedGameManager()->getSCALE_N_Y());
     
     // create the fixture
     b2FixtureDef fixtureDef;
@@ -960,4 +996,9 @@ void GamePlayWithBoss::click_quit(cocos2d::CCObject *pSender) {
     this->unscheduleUpdate();
     this->unscheduleAllSelectors();
     CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, GameMenu::scene()));
+}
+void GamePlayWithBoss::click_reset(cocos2d::CCObject *pSender) {
+    this->unscheduleUpdate();
+    this->unscheduleAllSelectors();
+    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, GamePlayWithBoss::scene()));
 }

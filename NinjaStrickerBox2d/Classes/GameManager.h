@@ -25,7 +25,10 @@ private:
 
     //Instance of the singleton
     static GameManager* m_mySingleton;
-
+    CC_SYNTHESIZE(float, _SCALE_N_X, SCALE_N_X);
+    CC_SYNTHESIZE(float, _SCALE_N_Y, SCALE_N_Y);
+//    float SCALE_N_X;
+//    float SCALE_N_Y;
 public:
     //Get instance of singleton
     static GameManager* sharedGameManager();
