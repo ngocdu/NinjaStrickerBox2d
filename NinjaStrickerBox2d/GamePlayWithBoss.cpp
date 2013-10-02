@@ -31,8 +31,6 @@ GamePlayWithBoss::GamePlayWithBoss() {
     //---------------------------------
     _tileMap = new CCTMXTiledMap();
     _tileMap->initWithTMXFile("mapBoss.tmx");
-//    _tileMap->setScaleX(GameManager::sharedGameManager()->getSCALE_N_X());
-//    _tileMap->setScaleY(GameManager::sharedGameManager()->getSCALE_N_Y());
     this->addChild(_tileMap);
     withTileMap = _tileMap->getMapSize().width * _tileMap->getTileSize().width;
     heightTileMap = _tileMap->getMapSize().height * _tileMap->getTileSize().height;
@@ -64,20 +62,21 @@ GamePlayWithBoss::GamePlayWithBoss() {
     _lbLost->setVisible(false);
     _lbLost->setColor(ccc3(0, 0, 255));
     this->addChild(_lbLost, 100);
-
-    
     //---------menu-------
-    btpause = CCMenuItemFont::create("PAUSE", this, menu_selector(GamePlayWithBoss::click_pause));
-    btpause->setPosition(CCPoint(  size.width/2, size.height - 50));
-    
-    btquit = CCMenuItemFont::create("QUIT", this, menu_selector(GamePlayWithBoss::click_quit));
+    btpause = CCMenuItemFont::create("PAUSE", this,
+                                    menu_selector(GamePlayWithBoss::click_pause));
+    btpause->setPosition(CCPoint(  size.width/2, size.height - 50)); 
+    btquit = CCMenuItemFont::create("QUIT", this,
+                                menu_selector(GamePlayWithBoss::click_quit));
     btquit->setPosition(CCPoint( size.width/2, size.height - size.height * 0.2f));
     btquit->setVisible(false);
-    btcontinue = CCMenuItemFont::create("CONTINUE", this, menu_selector(GamePlayWithBoss::click_continue));
+    btcontinue = CCMenuItemFont::create("CONTINUE", this,
+                                    menu_selector(GamePlayWithBoss::click_continue));
     btcontinue->setPosition(CCPoint( size.width/2, size.height - size.height/3));
     btcontinue->setVisible(false);
     
-    btreset = CCMenuItemFont::create("RESET", this, menu_selector(GamePlayWithBoss::click_reset));
+    btreset = CCMenuItemFont::create("RESET", this,
+                                    menu_selector(GamePlayWithBoss::click_reset));
     btreset->setPosition(CCPoint(size.width/2, size.height - size.height/3));
     btreset->setVisible(false);
     
@@ -91,7 +90,6 @@ GamePlayWithBoss::GamePlayWithBoss() {
     _progressBloodBoss->setType(kCCProgressTimerTypeBar);
     _progressBloodBoss->setPercentage(100);
     _progressBloodBoss->setPosition(CCPoint(size.width/2, size.height/6));
-//    _progressBloodBoss->setAnchorPoint(ccp(0, 0));
     _progressBloodBoss->setMidpoint(ccp(0,0));
     _progressBloodBoss->setBarChangeRate(ccp(1, 0));
     this->addChild(_progressBloodBoss, 100);
@@ -117,20 +115,14 @@ void GamePlayWithBoss::initPhysics()
     world->SetAllowSleeping(true);
     
     world->SetContinuousPhysics(true);
-    
-    
+
     m_debugDraw = new GLESDebugDraw( PTM_RATIO );
     world->SetDebugDraw(m_debugDraw);
     
     uint32 flags = 0;
     flags += b2Draw::e_shapeBit;
-    //        flags += b2Draw::e_jointBit;
-    //        flags += b2Draw::e_aabbBit;
-    //        flags += b2Draw::e_pairBit;
-    //        flags += b2Draw::e_centerOfMassBit;
     m_debugDraw->SetFlags(flags);
-    
-    
+
     // Define the ground body.
     b2BodyDef groundBodyDef;
     groundBodyDef.position.Set(0, 0); // bottom-left corner
@@ -144,111 +136,39 @@ void GamePlayWithBoss::initPhysics()
     b2EdgeShape groundBox;
     
     // bottom
-    
     groundBox.Set(b2Vec2(0,0), b2Vec2(s.width/PTM_RATIO,0));
     groundBody->CreateFixture(&groundBox,0);
-    
     // top
     groundBox.Set(b2Vec2(0, s.height/PTM_RATIO), b2Vec2(s.width/PTM_RATIO, s.height/PTM_RATIO));
-    groundBody->CreateFixture(&groundBox,0);
-    
+    groundBody->CreateFixture(&groundBox,0);    
     // left
     groundBox.Set(b2Vec2(0,s.height/PTM_RATIO), b2Vec2(0 ,0));
-    groundBody->CreateFixture(&groundBox,0);
-    
-    // right
-    
+    groundBody->CreateFixture(&groundBox,0);    
+    // right    
     groundBox.Set(b2Vec2(s.width/PTM_RATIO, s.height/PTM_RATIO), b2Vec2(s.width/PTM_RATIO,0));
     groundBody->CreateFixture(&groundBox,0);
-    
-    
-    
-//    CCSize s = CCDirector::sharedDirector()->getWinSize();
-//    
-//    b2Vec2 gravity;
-//    gravity.Set(0.0f, -10.0f);
-//    world = new b2World(gravity);
-//    _contactListener = new MyContactListener();
-//    _contactListener->setNumberBegin(0);
-//    world->SetContactListener(_contactListener);
-//    // Do we want to let bodies sleep?
-//    world->SetAllowSleeping(true);
-//    
-//    world->SetContinuousPhysics(true);
-//    
-//    
-//    m_debugDraw = new GLESDebugDraw( PTM_RATIO );
-//    world->SetDebugDraw(m_debugDraw);
-//    
-//    uint32 flags = 0;
-//    flags += b2Draw::e_shapeBit;
-//    //        flags += b2Draw::e_jointBit;
-//    //        flags += b2Draw::e_aabbBit;
-//    //        flags += b2Draw::e_pairBit;
-//    //        flags += b2Draw::e_centerOfMassBit;
-//    m_debugDraw->SetFlags(flags);
-//    
-//    
-//    // Define the ground body.
-//    b2BodyDef groundBodyDef;
-//    groundBodyDef.position.Set(0, 0); // bottom-left corner
-//    
-//    // Call the body factory which allocates memory for the ground body
-//    // from a pool and creates the ground box shape (also from a pool).
-//    // The body is also added to the world.
-//    b2Body* groundBody = world->CreateBody(&groundBodyDef);
-//    
-//    // Define the ground box shape.
-//    b2EdgeShape groundBox;
-//    
-//    // bottom
-//    
-//    groundBox.Set(b2Vec2(0,0), b2Vec2(withTileMap/PTM_RATIO,0));
-//    groundBody->CreateFixture(&groundBox,0);
-//    
-//    // top
-//    groundBox.Set(b2Vec2(0, heightTileMap/PTM_RATIO), b2Vec2(withTileMap/PTM_RATIO, heightTileMap/PTM_RATIO));
-//    groundBody->CreateFixture(&groundBox,0);
-//    
-//    // left
-//    groundBox.Set(b2Vec2(0,s.height/PTM_RATIO), b2Vec2(0 ,0));
-//    groundBody->CreateFixture(&groundBox,0);
-//    
-//    // right
-//    
-//    groundBox.Set(b2Vec2(withTileMap/PTM_RATIO, s.height/PTM_RATIO), b2Vec2(withTileMap/PTM_RATIO,0));
-//    groundBody->CreateFixture(&groundBox,0);
 }
 
-void GamePlayWithBoss::draw()
-{
+void GamePlayWithBoss::draw() {
     //
     // IMPORTANT:
     // This is only for debug purposes
     // It is recommend to disable it
     //
-    CCLayer::draw();
-    
+    CCLayer::draw();    
     ccGLEnableVertexAttribs( kCCVertexAttribFlag_Position );
-    
-    kmGLPushMatrix();
-    
-    world->DrawDebugData();
-    
-    kmGLPopMatrix();
-    
+    kmGLPushMatrix();    
+    world->DrawDebugData();    
+    kmGLPopMatrix();    
 }
-void GamePlayWithBoss::addNewSpriteAtPosition(CCPoint p)
-{
+void GamePlayWithBoss::addNewSpriteAtPosition(CCPoint p) {
     CCSprite *sp = CCSprite::create("ninja.png");
     _player = new Ninja();
-    
     _player->setAttack(4);
     _player->init();
     this->addChild(_player, 1000);
     _player->addChild(sp);
-    _player->setImage(sp);
-    
+    _player->setImage(sp); 
     _player->setPosition( CCPointMake( p.x, p.y) );
     // Define the dynamic body.
     //Set up a 1m squared box in the physics world
@@ -256,40 +176,31 @@ void GamePlayWithBoss::addNewSpriteAtPosition(CCPoint p)
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(p.x/PTM_RATIO, p.y/PTM_RATIO);
     bodyDef.userData = _player;
-    b2Body *body = world->CreateBody(&bodyDef);
-    
+    b2Body *body = world->CreateBody(&bodyDef);    
     // Define another box shape for our dynamic body.
     b2PolygonShape dynamicBox;
-    
-    b2CircleShape circle;
-    
+    b2CircleShape circle;    
     float _radius = _player->getImage()->getContentSize().width / 2;
     circle.m_radius = _radius / PTM_RATIO;
-    
-    
     // Define the dynamic body fixture.
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &circle;
-    //    fixtureDef.shape = &dynamicBox;
     fixtureDef.density = 0.1f; // trong luong
     fixtureDef.friction = 1.0f; //ma sat
     fixtureDef.restitution = 0;
     fixtureDef.filter.groupIndex = -10;
-    body->CreateFixture(&fixtureDef);
-    
+    body->CreateFixture(&fixtureDef);    
     _player->setMpBody(body);
 }
 void GamePlayWithBoss::addNewBossAtPosition(CCPoint p)
 {
     CCSprite *sp = CCSprite::create("ninja2d.png");
-    _boss = new Boss();
-    
+    _boss = new Boss();    
     _boss->setAttack(4);
     _boss->init();
     this->addChild(_boss, 1000);
     _boss->addChild(sp);
-    _boss->setImage(sp);
-    
+    _boss->setImage(sp);    
     _boss->setPosition( CCPointMake( p.x, p.y) );
     // Define the dynamic body.
     //Set up a 1m squared box in the physics world
@@ -298,16 +209,11 @@ void GamePlayWithBoss::addNewBossAtPosition(CCPoint p)
     bodyDef.position.Set(p.x/PTM_RATIO, p.y/PTM_RATIO);
     bodyDef.userData = _boss;
     b2Body *body = world->CreateBody(&bodyDef);
-    
     // Define another box shape for our dynamic body.
     b2PolygonShape dynamicBox;
-    
-    b2CircleShape circle;
-    
+    b2CircleShape circle; 
     float _radius = _boss->getImage()->getContentSize().width / 2;
     circle.m_radius = _radius / PTM_RATIO;
-    
-    
     // Define the dynamic body fixture.
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &circle;
@@ -317,15 +223,12 @@ void GamePlayWithBoss::addNewBossAtPosition(CCPoint p)
     fixtureDef.restitution = 0.0f;
     fixtureDef.filter.groupIndex = -10;
     body->CreateFixture(&fixtureDef);
-    
     _boss->setMpBody(body);
-    
 }
 
 void GamePlayWithBoss::setViewPointCenter(CCPoint position)
 {
     CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-    
     int x = MAX(position.x, winSize.width/2);
     int y = MAX(position.y, winSize.height/2);
     x = MIN(x, (_tileMap->getMapSize().width * this->_tileMap->getTileSize().width) - winSize.width / 2);
@@ -357,9 +260,6 @@ bool GamePlayWithBoss::ccTouchBegan(CCTouch *touch, CCEvent *event)
         touchLocation = touch->getLocationInView();
         touchLocation = CCDirector::sharedDirector()->convertToGL(touchLocation);
         touchLocation = this->convertToNodeSpace(touchLocation);
-        
-        
-        
         if (_player->getMpBody()->GetPosition().y * PTM_RATIO < touchLocation.y )
             isTouchTop = true;
         else isTouchTop = false;
@@ -370,22 +270,17 @@ bool GamePlayWithBoss::ccTouchBegan(CCTouch *touch, CCEvent *event)
     }
     return true;
 }
-
 void GamePlayWithBoss::ccTouchEnded(CCSet* touches, CCEvent* event)
 {
     //Add a new body/atlas sprite at the touched location
     CCSetIterator it;
     CCTouch* touch;
-    
     for( it = touches->begin(); it != touches->end(); it++)
     {
         touch = (CCTouch*)(*it);
-        
         if(!touch)
             break;
-        
         CCPoint location = touch->getLocationInView();
-        
         location = CCDirector::sharedDirector()->convertToGL(location);
         this->touch(location);
     }
@@ -421,7 +316,6 @@ void GamePlayWithBoss::checkTouchPoint(cocos2d::CCPoint p) {
         _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
         this->touch(p);
     }
-    
     GameManager::sharedGameManager()->setNumberActionPlayer(
                 GameManager::sharedGameManager()->getNumberActionPlayer() - 1);
 }
@@ -435,13 +329,16 @@ void GamePlayWithBoss::touch( CCPoint location)
         impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.5f;
         if (abs(impulse.y / impulse.x) < 0.9f) {
             if (impulse.LengthSquared() > 100000 && impulse.LengthSquared() < 350000) {
-                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.8f + 150 * (1-abs(impulse.y / impulse.x));
+                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) *
+                      1.8f + 150 * (1-abs(impulse.y / impulse.x));
                 impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.5f;
             }else if (impulse.LengthSquared() < 100000) {
-                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 2.8f + 150 * (1-abs(impulse.y / impulse.x));
+                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) *
+                      2.8f + 150 * (1-abs(impulse.y / impulse.x));
                 impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 2.0f;
             }else if (impulse.LengthSquared() > 350000) {
-                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) * 1.2f + 150 * (1-abs(impulse.y / impulse.x));
+                impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) *
+                      1.2f + 150 * (1-abs(impulse.y / impulse.x));
                 impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) * 1.2f;
             }
         }else {
@@ -457,11 +354,12 @@ void GamePlayWithBoss::touch( CCPoint location)
             }
         }
         if( location.x < (winSize.width * 0.5f) )
-            b2Vec2 point((location.x - _player->getPositionX())/10, (location.y - _player->getPositionY())/10);
+            b2Vec2 point((location.x - _player->getPositionX())/10,
+                         (location.y - _player->getPositionY())/10);
         impulse.x = impulse.x / 43;
         impulse.y = impulse.y / 43;
-                _player->getMpBody()->ApplyLinearImpulse(impulse, _player->getMpBody()->GetWorldCenter());
-        
+                _player->getMpBody()->ApplyLinearImpulse(impulse,
+                        _player->getMpBody()->GetWorldCenter());
         if (isTouchRight == true) {
             _player->getMpBody()->SetAngularVelocity(-10000);
         }else if ( isTouchRight == false) {
@@ -480,25 +378,6 @@ void GamePlayWithBoss::touchBoss(cocos2d::CCPoint location) {
     _boss->getMpBody()->SetLinearVelocity(impulse);
 }
 void GamePlayWithBoss::bossAttack() {
-//    CCPoint p = _player->getPosition();
-//    CCSprite * taget = CCSprite::create("phitieu.png");
-//    taget->setPosition(convertMetterToPixel(ccp(_boss->getMpBody()->GetPosition().x,
-//                                                _boss->getMpBody()->GetPosition().y)));
-//    this->addChild(taget, 10);
-//    taget->setTag(10);
-//    CCPoint p1 = convertMetterToPixel(CCPoint(_boss->getMpBody()->GetPosition().x,
-//                                              _boss->getMpBody()->GetPosition().y));
-//    CCPoint p2 = convertMetterToPixel(CCPoint(_player->getMpBody()->GetPosition().x,
-//                                              _player->getMpBody()->GetPosition().y));
-//    float s = sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) *  (p1.y - p2.y));
-//    CCMoveTo * move = CCMoveTo::create(s/600, p);
-//    CCCallFuncN *remove = CCCallFuncN::create(this,
-//                                callfuncN_selector(GamePlayWithBoss::removeSprite));
-//    CCSequence * sq = CCSequence::create(move, remove, NULL);
-//    taget->runAction(sq);
-//    if (this->getChildByTag(10)) {
-//        this->removeChildByTag(10);
-//    }
     b2Vec2 p = _boss->getMpBody()->GetPosition();
     CCSprite *taget = CCSprite::create("phitieu.png");
     array_taget->addObject(taget);
@@ -511,17 +390,12 @@ void GamePlayWithBoss::bossAttack() {
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(p.x, p.y);
     bodyDef.userData = taget;
-    b2Body *body = world->CreateBody(&bodyDef);
-    
+    b2Body *body = world->CreateBody(&bodyDef);    
     // Define another box shape for our dynamic body.
     b2PolygonShape dynamicBox;
-    
     b2CircleShape circle;
-    
     float _radius = taget->getContentSize().width / 2;
     circle.m_radius = _radius / PTM_RATIO;
-    
-    
     // Define the dynamic body fixture.
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &circle;
@@ -538,7 +412,6 @@ void GamePlayWithBoss::bossAttack() {
     b2Vec2  p1 = _boss->getMpBody()->GetPosition();
     b2Vec2  p2 = _player->getMpBody()->GetPosition();
     float lenght = sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
-    
     b2Vec2 impulse(0.0f, 0.0f) ;
     impulse.y = (( p2.y - p1.y) / lenght) * 20  ;
     impulse.x = (( p2.x - p1.x) / lenght) * 20  ;
@@ -550,10 +423,7 @@ void GamePlayWithBoss::attackBoss() {
     b2Vec2 impulse(0.0f, 0.0f) ;
     impulse.y = (- p2.y + p1.y) * 6 ;
     impulse.x = (- p2.x + p1.x) * 6  ;
-    
     _player->getMpBody()->SetLinearVelocity(impulse);
-//    _player->getMpBody()->ApplyForce(impulse, p1);
-//    _player->setPosition(_boss->getPoint());
 }
 #pragma mark - update
 void GamePlayWithBoss::update(float dt) {
@@ -565,11 +435,6 @@ void GamePlayWithBoss::update(float dt) {
 			CCSprite *myActor = (CCSprite*)b->GetUserData();
 			myActor->setPosition(ccp(b->GetPosition().x * PTM_RATIO,
                                            b->GetPosition().y * PTM_RATIO));
-//            CCRect rect = this->boundingBox();
-//            if (myActor->getPosition().y < 0 && myActor->getTag() == 10) {
-//                this->removeChildByTag(10);
-//                world->DestroyBody(b);
-//            }
 		}
 	}
     if (_player->getMpBody()) {
@@ -579,17 +444,12 @@ void GamePlayWithBoss::update(float dt) {
         _player->getMpBody()->SetFixedRotation(true);
         _boss->getMpBody()->SetFixedRotation(true);
         int velocityIterations = 8;
-        int positionIterations = 1;
-        
+        int positionIterations = 1; 
         // Instruct the world to perform a single step of simulation. It is
         // generally best to keep the time step and iterations fixed.
         world->Step(dt, velocityIterations, positionIterations);
-//        this->setPosition(_player->getPosition());
-        //        _player->getMpBody()->SetFixedRotation(false);
-//        
         if (_player->getMpBody()->GetPosition().y * PTM_RATIO > touchLocation.y &&
             giamVanToc == true && isTouchTop == true && _player->getAttack() == 1) {
-//            _player->setAttack(2);
             b2Vec2 v = _player->getMpBody()->GetLinearVelocity();
             CCLog("velocity x: %f", v.x);
             CCLog("velocity y: %f", v.y);
@@ -598,34 +458,42 @@ void GamePlayWithBoss::update(float dt) {
             CCLog("diff y / diff x: %f", v.y / v.x);
             if (abs(v.y / v.x) > 1 && abs(v.x) > 40) {
                 if (abs(v.x) > 20) {
-                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/15 + 1), v.y  /(diffy/50 + 1)));
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/15 + 1),
+                                                                v.y  /(diffy/50 + 1)));
                 }else if (abs(v.y) > 12) {
-                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/20 + 1), v.y  /(diffy/30 + 1)));
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/20 + 1),
+                                                                v.y  /(diffy/30 + 1)));
                 }else {
-                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/20 + 1), v.y  /(diffy/50 + 1)));
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/20 + 1),
+                                                                v.y  /(diffy/50 + 1)));
                 }
                 
             }else if (abs(v.y / v.x) < 1 && abs(v.x) < 20) {
                 if (abs(v.x) > 20) {
-                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/150 + 1), v.y  /(diffy/50 + 1)));
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/150 + 1),
+                                                                v.y  /(diffy/50 + 1)));
                 }else if (abs(v.y) > 12) {
-                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/200 + 1), v.y  /(diffy/30 + 1)));
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/200 + 1),
+                                                                v.y  /(diffy/30 + 1)));
                 }else {
-                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/200 + 1), v.y  /(diffy/50 + 1)));
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/200 + 1),
+                                                                v.y  /(diffy/50 + 1)));
                 }
             }else if (abs(v.y / v.x) > 1  || abs(v.x) > 20){
                 if (abs(v.x) > 20) {
-                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/50 + 1), v.y  /(diffy/50 + 1)));
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/50 + 1),
+                                                                v.y  /(diffy/50 + 1)));
                 }else if (abs(v.y) > 12) {
-                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/100 + 1), v.y  /(diffy/30 + 1)));
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/100 + 1),
+                                                                v.y  /(diffy/30 + 1)));
                 }else {
-                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/100 + 1), v.y  /(diffy/50 + 1)));
+                    _player->getMpBody()->SetLinearVelocity(b2Vec2(v.x  /(diffx/100 + 1),
+                                                                v.y  /(diffy/50 + 1)));
                 }
             }
             giamVanToc = false;
         }else if (_player->getMpBody()->GetPosition().y * PTM_RATIO < touchLocation.y &&
                   giamVanToc == true && isTouchTop == false && _player->getAttack() == 1) {
-//            _player->setAttack(2);
             b2Vec2 v = _player->getMpBody()->GetLinearVelocity();
             CCLog("velocity x: %f", v.x);
             CCLog("velocity y: %f", v.y);
@@ -674,7 +542,6 @@ void GamePlayWithBoss::update(float dt) {
             //right
         }else if (GameManager::sharedGameManager()->getDirectionContact() == 4) {
             anim->addSpriteFrameWithFileName("ninja2_bam_tuong.png");
-            //            _player->setFlipX(true);
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
             _player->getMpBody()->SetGravityScale(0);
             _player->getMpBody()->SetAngularVelocity(0);
@@ -683,7 +550,6 @@ void GamePlayWithBoss::update(float dt) {
         }
         
         anim->setDelayPerUnit(2.8f / 4.0f);
-//        anim->setRestoreOriginalFrame(true);
         CCAnimate * animet=CCAnimate::create(anim);
         CCRepeatForever * rep=CCRepeatForever::create(animet);
         rep->setTag(123456);
@@ -698,10 +564,8 @@ void GamePlayWithBoss::update(float dt) {
         CCAnimation *anim=CCAnimation::create();
         anim->addSpriteFrameWithFileName("ninja.png");
         anim->setDelayPerUnit(2.8f / 6.0f);
-//        anim->setRestoreOriginalFrame(true);
         CCAnimate * animet=CCAnimate::create(anim);
         _player->getImage()->runAction(animet);
-        //        _player->getImage()->setFlipX(false);
         _player->getImage()->setFlipY(false);
     }
   
@@ -714,8 +578,10 @@ void GamePlayWithBoss::updateCheckStop(float dt) {
     }else _player->setStop(false);
 }
 void GamePlayWithBoss::updateLocation_Direction(float dt) {
-    CCPoint pBoss = convertMetterToPixel(CCPoint(_boss->getMpBody()->GetPosition().x, _boss->getMpBody()->GetPosition().y));
-    CCPoint pPlay = convertMetterToPixel(CCPoint(_player->getMpBody()->GetPosition().x, _player->getMpBody()->GetPosition().y));
+    CCPoint pBoss = convertMetterToPixel(CCPoint(_boss->getMpBody()->GetPosition().x,
+                                        _boss->getMpBody()->GetPosition().y));
+    CCPoint pPlay = convertMetterToPixel(CCPoint(_player->getMpBody()->GetPosition().x,
+                                        _player->getMpBody()->GetPosition().y));
     
     if (pPlay.x < _player->getPoint().x) {
         _player->getImage()->setFlipX(true);
@@ -742,7 +608,8 @@ void GamePlayWithBoss::updatePhantom(float dt) {
             CCSprite * sprite = CCSprite::create("ninja.png");
             sprite->setPosition(_player->getPosition());
             CCFadeOut *fo = CCFadeOut::create(0.4f);
-            CCCallFuncN *remove = CCCallFuncN::create(sprite,callfuncN_selector(GamePlayWithBoss::removeSprite));
+            CCCallFuncN *remove = CCCallFuncN::create(sprite,
+                                callfuncN_selector(GamePlayWithBoss::removeSprite));
             CCSequence * sq = CCSequence::create(fo, remove, NULL);
             sprite->runAction(sq);
             this->addChild(sprite, 1000);
@@ -752,7 +619,8 @@ void GamePlayWithBoss::updatePhantom(float dt) {
             int i = rand() % 4 + 1;
             CCRotateTo *rotate = CCRotateTo::create(0, 360 / i);
             CCFadeOut *fo = CCFadeOut::create(0.4f);
-            CCCallFuncN *remove = CCCallFuncN::create(sprite,callfuncN_selector(GamePlayWithBoss::removeSprite));
+            CCCallFuncN *remove = CCCallFuncN::create(sprite,
+                                callfuncN_selector(GamePlayWithBoss::removeSprite));
             CCSequence * sq = CCSequence::create(fo, remove, NULL);
             sprite->runAction(sq);
             sprite->runAction(rotate);
@@ -769,8 +637,7 @@ void GamePlayWithBoss::updateTime(float dt) {
     }
     if (timeDelayContactBoss > 0) {
         timeDelayContactBoss --;
-    }
-    
+    }  
     if (timeDelayAttackBoss == 0) {
         _boss->getMpBody()->SetGravityScale(1);
         timeDelayAttackBoss = -1;
@@ -789,8 +656,7 @@ void GamePlayWithBoss::updateTime(float dt) {
         }else {
             CCPoint p = CCPoint(abs(_boss->getPosition().x + maxWithJumpBoss/2), maxHeightJumpBoss);
             touchBoss(p);
-        }
-        
+        }    
     }
 }
 void GamePlayWithBoss::updateBoss(float dt) {
@@ -847,8 +713,7 @@ void GamePlayWithBoss::updateBoss(float dt) {
         //giam soc
         _boss->getMpBody()->SetLinearDamping(0);
         this->bossAttack();
-    }
-    
+    }  
     // contact boss with taget
     CCSprite * sprite = (CCSprite*)array_taget->lastObject();
     if (sprite) {
@@ -860,7 +725,6 @@ void GamePlayWithBoss::updateBoss(float dt) {
             _lifes --;
             ninjaAttack = false;
             _player->setAttack(2);
-//            this->removeChild(sprite);
             array_taget->removeLastObject();
         }
     }
@@ -868,14 +732,12 @@ void GamePlayWithBoss::updateBoss(float dt) {
     // ninja attack boss
     if (ninjaAttack == true) {
         this->attackBoss();
-//        _player->getMpBody()->GetFixtureList()->SetSensor(false);
-//        fixtureDef.filter.groupIndex = -10;
     }else {
-//        _player->getMpBody()->GetFixtureList()->SetSensor(false);
     }
     
     //----------ninja contact with boss------------
-    float kc1 = _player->getImage()->getContentSize().width/2 + _boss->getImage()->getContentSize().width/2;
+    float kc1 = _player->getImage()->getContentSize().width/2 +
+                _boss->getImage()->getContentSize().width/2;
     float kc2 = ccpDistance(_player->getPoint(), _boss->getPoint());
     if (kc2 < kc1) {
         
@@ -885,8 +747,7 @@ void GamePlayWithBoss::updateBoss(float dt) {
         }else if(_player->getAttack() == 3) {
             _bloodBoss = _bloodBoss - 0.05f;
             _player->actionAttack2();
-        }
-        
+        } 
     }
     _progressBloodBoss->setPercentage(_bloodBoss);
     
@@ -897,20 +758,16 @@ void GamePlayWithBoss::removeSprite(cocos2d::CCNode *node) {
 }
 void GamePlayWithBoss::registerWithTouchDispatcher()
 {
-    //    CCDirector* pDirector = CCDirector::sharedDirector();
-    //    pDirector->getTouchDispatcher()->addTargetedDelegate(this, -10, true);
     CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
 }
 CCScene* GamePlayWithBoss::scene()
 {
     // 'scene' is an autorelease object
-    CCScene *scene = CCScene::create();
-    
+    CCScene *scene = CCScene::create();    
     // add layer as a child to scene
     CCLayer* layer = new GamePlayWithBoss();
     scene->addChild(layer);
     layer->release();
-    
     return scene;
 }
 #pragma mark - add wall
@@ -940,9 +797,6 @@ void GamePlayWithBoss::createRectangularFixtureWithPoint(cocos2d::CCPoint p1, co
     b2PolygonShape shape;
     CCLog("with : %f, height : %f", with, height);
     shape.SetAsBox((with / 2 /pixelsPerMeter), (height / 2/ pixelsPerMeter));
-//    shape.SetAsBox((with / 2 /pixelsPerMeter) * GameManager::sharedGameManager()->getSCALE_N_X(),
-//                   (height / 2/ pixelsPerMeter) * GameManager::sharedGameManager()->getSCALE_N_Y());
-    
     // create the fixture
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &shape;

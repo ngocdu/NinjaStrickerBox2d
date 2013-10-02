@@ -5,7 +5,6 @@
 //  Created by NgocDu on 13/09/20.
 //
 //
-
 #ifndef NinjaStrickerBox2d_GameMenu_h
 #define NinjaStrickerBox2d_GameMenu_h
 #include "cocos2d.h"

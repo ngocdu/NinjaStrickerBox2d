@@ -5,7 +5,6 @@
 //  Created by NgocDu on 13/09/16.
 //
 //
-
 #include "Snake.h"
 Snake::Snake() {
     

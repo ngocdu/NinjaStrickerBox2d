@@ -2,7 +2,7 @@
 //  GamePlayWithBoss.h
 //  NinjaStrickerBox2d
 //
-//  Created by MinhNT on 13/09/23.
+//  Created by NgocDu on 13/09/23.
 //
 //
 

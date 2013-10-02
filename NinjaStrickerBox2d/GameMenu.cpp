@@ -5,7 +5,6 @@
 //  Created by NgocDu on 13/09/20.
 //
 //
-
 #include "GameMenu.h"
 CCScene* GameMenu::scene() {
     CCScene *scene = CCScene::create();
@@ -13,16 +12,18 @@ CCScene* GameMenu::scene() {
     scene->addChild(layer1);
     return scene;
 }
-
 bool GameMenu::init() {
     size = CCDirector::sharedDirector()->getWinSize();
-    CCMenuItemFont * menuPlay = CCMenuItemFont::create("PLAY", this, menu_selector(GameMenu::click_play));
+    CCMenuItemFont * menuPlay = CCMenuItemFont::create("PLAY", this,
+                                        menu_selector(GameMenu::click_play));
     menuPlay->setPosition(CCPoint(size.width/2, size.height/2));
     
-    CCMenuItemFont * menuPlayBoss = CCMenuItemFont::create("PLAY BOSS", this, menu_selector(GameMenu::click_play_boss));
+    CCMenuItemFont * menuPlayBoss = CCMenuItemFont::create("PLAY BOSS", this,
+                                        menu_selector(GameMenu::click_play_boss));
     menuPlayBoss->setPosition(CCPoint(size.width/2, size.height * 0.375f));
     
-    CCMenuItemFont * menuExit = CCMenuItemFont::create("EXIT", this, menu_selector(GameMenu::click_exit));
+    CCMenuItemFont * menuExit = CCMenuItemFont::create("EXIT", this,
+                                        menu_selector(GameMenu::click_exit));
     menuExit->setPosition(CCPoint(size.width/2, size.height/4));
     
     menu = CCMenu::create(menuPlay, menuExit, menuPlayBoss, NULL);
@@ -32,10 +33,12 @@ bool GameMenu::init() {
     return true;
 }
 void GameMenu::click_play_boss(cocos2d::CCObject *pSender) {
-    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, GamePlayWithBoss::scene()));
+    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f,
+                                                    GamePlayWithBoss::scene()));
 }
 void GameMenu::click_play(cocos2d::CCObject *pSender) {
-    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, HelloWorld::scene()));
+    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f,
+                                                        HelloWorld::scene()));
 }
 void GameMenu::click_exit(cocos2d::CCObject *pSender) {
     CCDirector::sharedDirector()->end();
@@ -89,5 +92,4 @@ void GameMenu::addSpriteBg() {
             }
         }
     }
-
 }

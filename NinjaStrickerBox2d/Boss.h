@@ -2,7 +2,7 @@
 //  Boss.h
 //  NinjaStrickerBox2d
 //
-//  Created by MinhNT on 13/09/23.
+//  Created by NgocDu on 13/09/23.
 //
 //
 
@@ -26,6 +26,4 @@ private:
     CC_SYNTHESIZE(CCPoint , _point, Point);
     CC_SYNTHESIZE(bool , _stop, Stop);
 };
-
-
 #endif

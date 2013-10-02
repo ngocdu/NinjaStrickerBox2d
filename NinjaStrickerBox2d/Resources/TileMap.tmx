@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="100" height="24" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="200" height="24" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="tmw_desert_spacing" tilewidth="32" tileheight="32" spacing="1" margin="1">
   <image source="tmw_desert_spacing.png" width="265" height="199"/>
   <tile id="30">
@@ -62,40 +62,40 @@
  <tileset firstgid="279" name="tiles" tilewidth="16" tileheight="16" spacing="1" margin="1">
   <image source="tiles.png" trans="ff00ff" width="256" height="256"/>
  </tileset>
- <layer name="Background" width="100" height="24">
+ <layer name="Background" width="200" height="24" visible="0">
   <data encoding="base64" compression="zlib">
-   eJzt06ERwCAQRUF0ikCk/yLjUQlDuANWrGU+vKGWUioAAAAs6Hopeucp9IC5/LlcdupxN6L3nE6PXGb10FyPFbU9evWeHX3/bPTIZaUeIzb9df9R7xa958s76pFjox65Nmbt8QBBdxwE
+   eJzt1bENgDAMRcHUDEHB/kPSIyEhIHG+csX1wfYTe2ttBwAAAAAAAAixPVT9TqigDwBm4Z8E9/RBL8dF9XtgJvoYN9uvqr9nRaN2sOKe9ZFPH+Nmq488PXe3+s71kU8f8892hVnNKqmPHvf09w2TLeE+9EGVhPvQB1US7kMfvHECabY9Iw==
   </data>
  </layer>
- <objectgroup name="Objects" width="100" height="24">
+ <objectgroup name="Objects" width="200" height="24">
   <object name="SpawnPoint" x="80" y="299"/>
  </objectgroup>
- <layer name="Meta" width="100" height="24">
+ <layer name="Meta" width="200" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt10EOgCAMBVGuxP0v51YXJQgt/DbzElcqECeQ2BpU9NsLwAc9tNBDCz200EMLPbTQQws9tFTp0ScvdRnWOIMeiEAP2409Rw9bpR7Zzm0VkT2i56goe49qe7BCj+g5TjrVY/Wyxs7+n2FR3h+jHivvZUAPnz27O+Z77J3zxFqjVw/P7zF69s+aPJ+LENnDCz3G91fHXZWpxwM6rCNq
+   eJzt10EOhSAMBUCvxP0v9/c/YkRbQmUmIWGBiMJL9TgAAAAAAAAA6mg3G+xIPgBYhZoEffJBFmcI+lqnz3t365r6t65Z+dhxnyOfdaf3tpKZ+ci+x2rko77/fETW/t2/GeSjvoj6cZWPJ9d9hXzUVykfGf+z0f/QWfUxe53a+X61Tn9E9Pm8GjuypshxT0Tng1yZ+YgiH/lzcU4+3s05Sj7m+gH/pDX7
   </data>
  </layer>
- <layer name="Coin" width="100" height="24">
+ <layer name="Coin" width="200" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt10kKwCAQBEDflP8/LvcmEAgEZqm66LF7BMVzAGC3K9bcAzBL5Tv+jzepct/UKes022affTv175S1u22zfuvbaR5fsk76F2aXp27M4VwBAABquAG6BQTj
+   eJzt2bEJwDAMBEDPlP2HS5FOBEKCRQR/19jtm1chvBYAAABvHeWsdwAAgMk7QsdOMzkvs+kOXNJmoeZNy88+ukOqtO4/5U17D/b50h3/hHSp3brrGtDDnAEAAAAAAMB/Tln9BOM=
   </data>
  </layer>
- <layer name="Snake" width="100" height="24">
+ <layer name="Snake" width="200" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt1EENADAIA0As4d/cDPCGEe4UtEnTCAAAAAB+k9MBAChd/eervelnawAAbPQAPdkAxQ==
+   eJzt1kENAAAIAkAr2b+cMcDtLgEPxpgBAAAAAAAAAIBumw4AAMBr/iQN9BAgzxYDAAAAAHQ5Df0AxQ==
   </data>
  </layer>
- <layer name="Scorpion" width="100" height="24">
+ <layer name="Scorpion" width="200" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt1MEJACAMA8Cu1P2XcwMtUsHC3QAhnyQCAAD28vPcV/2APrc7nbTvSV0BTnwaAAAAQN0C9PkBWA==
+   eJzt1kENADAIBEEs1b+5eiApKTAj4HLPjQAAAAAAKp3Pd1/9AwD2yXZFpx7p9BUAYAoNBgAAAAAAAAAAM1xO5wFY
   </data>
  </layer>
- <layer name="Arrow" width="100" height="24">
+ <layer name="Arrow" width="200" height="24">
   <properties>
    <property name="1" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJzt1LENwCAMRUE2CVVCx/7bZYMQIcBC3LVfll7llIC/rsb+LKkAIuWO7esG4HR3Y88rIjZSowPgMCU6gGH8TwAAAABmegGQ+gFz
+   eJztzsENgCAQRNHtRE7qjf67owMJkLho3rtOJvkRALDu6OzXKxUAsKcysT19AACAcWd2wMfU7AAAYEt3dgAAAAAAAAAAAADwKw3QQAEk
   </data>
  </layer>
 </map>

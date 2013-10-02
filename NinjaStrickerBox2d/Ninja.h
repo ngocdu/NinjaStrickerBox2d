@@ -2,7 +2,7 @@
 //  Ninja.h
 //  NinjaStrickerBox2d
 //
-//  Created by MinhNT on 13/09/17.
+//  Created by NgocDu on 13/09/17.
 //
 //
 
@@ -20,6 +20,7 @@ public:
     void actionAttack();
     void actionAttack2();
     void effectsAddPoint(int point);
+    void effectsAddPractics(CCPoint point);
 private:
     CC_SYNTHESIZE(b2Body *, _mpBody, MpBody);
     // 0 nothing 1 - attack  2 - was attack 3 - attack to taget

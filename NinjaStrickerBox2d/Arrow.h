@@ -21,6 +21,4 @@ public:
     Arrow(int direction);
     void rotate();
 };
-
-
 #endif

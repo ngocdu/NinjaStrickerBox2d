@@ -21,6 +21,7 @@
 #include "Arrow.h"
 #include "Ninja.h"
 #include "GameMenu.h"
+#include "Blood.h"
 using namespace cocos2d;
 class HelloWorld : public cocos2d::CCLayer {
 public:
@@ -33,22 +34,25 @@ public:
     void initPhysics();
     // adds a new sprite at a given coordinate
     void addNewSpriteAtPosition(cocos2d::CCPoint p);
+    void addBlood(CCPoint p, b2Vec2  impluse);
+    void addGroupBlood(CCPoint p, int numberBoold);
 
     virtual void draw();
     bool ccTouchBegan(CCTouch *touch, CCEvent *event);
     virtual void ccTouchEnded(cocos2d::CCSet* touches, cocos2d::CCEvent* event);
+    void touch( CCPoint location);
+    void touch1( CCPoint location);
+    void touch2( CCPoint location);
+    
     void update(float dt);
     void updatePhantom(float dt);
     void updateCheckStop(float dt);
     void updateScoreLife(float dt);
-    void touch( CCPoint location);
-    void touch1( CCPoint location);
+    void updateLocation_Direction(float dt);
+    void updateEtfect(float dt);
     
-    
-    void setViewPointCenter(CCPoint position);
-    
+    void setViewPointCenter(CCPoint position);    
     void registerWithTouchDispatcher();
-    
     void setPlayerPosition(CCPoint position);
     CCPoint tileCoordForPosition(CCPoint position);
     
@@ -66,12 +70,9 @@ public:
     void addCoins();
     void addSnakes();
     void addScorpions();
-    void addArrows();
-    
+    void addArrows();    
     void addWalls();
-    
-    void updateLocation_Direction(float dt);
-    
+   
     void removeSprite(CCNode * node);
     void removeCoin(CCNode * node);
     void removeSnake(CCNode * node);
@@ -93,26 +94,19 @@ private:
     Ninja * _player;
     float delta;
     int delayPlayer;
-    CCTMXTiledMap *_tileMap;
-    
+    CCTMXTiledMap *_tileMap;    
     CCTMXLayer *_background;
-    
-    CCTMXLayer *_meta;
-    
-    CCTMXLayer *_coin;
-    
-    CCTMXLayer *_snake;
-    
-    CCTMXLayer *_scorpion;
-    
-    CCTMXLayer *_arrow;
-    
+    CCTMXLayer *_meta;    
+    CCTMXLayer *_coin;    
+    CCTMXLayer *_snake;    
+    CCTMXLayer *_scorpion;    
+    CCTMXLayer *_arrow;    
     float withTileMap;
     float heightTileMap;
     GLESDebugDraw *m_debugDraw;
-
     
     CCPoint touchLocation;
+    bool touchBack;
     bool giamVanToc;
     bool isTouchTop;
     bool isTouchRight;
@@ -128,7 +122,8 @@ private:
     CCArray * _arrayRemoveSnake;
     CCArray * _arrayRemoveScorpion;
     CCArray * _arrayRemoveCoin;
-    
+    CCArray * _arrayBlood;
+    CCArray * _arrayBloodRemove;
     //--------------score-------------
     int _scores;
     CCLabelTTF *_lbScores;
@@ -145,9 +140,6 @@ private:
     //--------------end game -------
     CCMenuItemFont * btreset;
     CCLabelTTF *_lbWin;
-    CCLabelTTF *_lbLost;
-    
-    
+    CCLabelTTF *_lbLost;   
 };
-
 #endif // __HELLO_WORLD_H__

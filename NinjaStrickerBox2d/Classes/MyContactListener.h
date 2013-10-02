@@ -14,7 +14,6 @@ struct MyContact {
     }
     };
     
-    
     class MyContactListener : public b2ContactListener {
     public:
         std::vector<MyContact> _contacts;

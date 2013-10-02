@@ -21,5 +21,4 @@ public:
     void fluctuating(float amplitude);
     void fluctuatingAndMove(float amplitude, float distances);
 };
-
 #endif

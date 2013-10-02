@@ -25,6 +25,7 @@ HelloWorld::HelloWorld()
     
     s = CCDirector::sharedDirector()->getWinSize();
     delta = 3.14f;
+    touchBack = true;
     setTouchEnabled( true );
     setAccelerometerEnabled( true );
     // init physics
@@ -33,8 +34,6 @@ HelloWorld::HelloWorld()
     //---------------------------------
     _tileMap = new CCTMXTiledMap();
     _tileMap->initWithTMXFile("TileMap.tmx");
-//    _tileMap->setScaleX(GameManager::sharedGameManager()->getSCALE_N_X());
-//    _tileMap->setScaleY(GameManager::sharedGameManager()->getSCALE_N_Y());
     _background = _tileMap->layerNamed("Background");
     _coin = _tileMap->layerNamed("Coin");
     _snake = _tileMap->layerNamed("Snake");
@@ -58,13 +57,8 @@ HelloWorld::HelloWorld()
     
     if(objectGroup == NULL){
         CCLog("tile map has no objects object layer");
-//        return false;
-    }
-
-//    this->prepareLayers();
-    
-    addNewSpriteAtPosition(convertPoitMapToPixel(CCPoint(3, 19)));
-    
+    }    
+    addNewSpriteAtPosition(convertPoitMapToPixel(CCPoint(3, 19)));    
     //----------------------------------
     _arrayCoin = new CCArray();
     _arraySnake = new CCArray();
@@ -73,14 +67,13 @@ HelloWorld::HelloWorld()
     _arrayRemoveCoin = new CCArray();
     _arrayRemoveSnake = new CCArray();
     _arrayRemoveScorpion = new CCArray();
+    _arrayBlood = new CCArray();
+    _arrayBloodRemove = new CCArray();
     this->addCoins();
     this->addSnakes();
     this->addScorpions();
-    this->addArrows();
-    
-    this->addWalls();
-    
-        
+    this->addArrows();    
+    this->addWalls();            
     //----------point ,life-----------------------
     _scores = 0;
     _lifes = 3;
@@ -136,22 +129,20 @@ HelloWorld::HelloWorld()
     this->schedule(schedule_selector(HelloWorld::updateCheckStop), 0.05f);
     this->schedule(schedule_selector(HelloWorld::updatePhantom), 0.02f);
     this->schedule(schedule_selector(HelloWorld::updateScoreLife), 0.2f);
+    this->schedule(schedule_selector(HelloWorld::updateEtfect), 0.1f);
     scheduleUpdate();
 }
 
 HelloWorld::~HelloWorld()
 {
     delete world;
-    world = NULL;
-    
+    world = NULL;    
     delete m_debugDraw;
 }
 
 void HelloWorld::initPhysics()
 {
-
     CCSize s = CCDirector::sharedDirector()->getWinSize();
-
     b2Vec2 gravity;
     gravity.Set(0.0f, -15.0f);
     world = new b2World(gravity);
@@ -160,49 +151,32 @@ void HelloWorld::initPhysics()
     world->SetContactListener(_contactListener);
     // Do we want to let bodies sleep?
     world->SetAllowSleeping(true);
-
     world->SetContinuousPhysics(true);
-
-   
-     m_debugDraw = new GLESDebugDraw( PTM_RATIO );
-     world->SetDebugDraw(m_debugDraw);
-
+    m_debugDraw = new GLESDebugDraw( PTM_RATIO );
+    world->SetDebugDraw(m_debugDraw);
     uint32 flags = 0;
     flags += b2Draw::e_shapeBit;
-    //        flags += b2Draw::e_jointBit;
-    //        flags += b2Draw::e_aabbBit;
-    //        flags += b2Draw::e_pairBit;
-    //        flags += b2Draw::e_centerOfMassBit;
     m_debugDraw->SetFlags(flags);
-
-
     // Define the ground body.
     b2BodyDef groundBodyDef;
     groundBodyDef.position.Set(0, 0); // bottom-left corner
-
     // Call the body factory which allocates memory for the ground body
     // from a pool and creates the ground box shape (also from a pool).
     // The body is also added to the world.
     b2Body* groundBody = world->CreateBody(&groundBodyDef);
-
     // Define the ground box shape.
     b2EdgeShape groundBox;
-
+    
     // bottom
-
     groundBox.Set(b2Vec2(0,0), b2Vec2(withTileMap/PTM_RATIO,0));
     groundBody->CreateFixture(&groundBox,0);
-
     // top
     groundBox.Set(b2Vec2(0, heightTileMap/PTM_RATIO), b2Vec2(withTileMap/PTM_RATIO, heightTileMap/PTM_RATIO));
     groundBody->CreateFixture(&groundBox,0);
-
     // left
     groundBox.Set(b2Vec2(0,s.height/PTM_RATIO), b2Vec2(0 ,0));
     groundBody->CreateFixture(&groundBox,0);
-
     // right
-    
     groundBox.Set(b2Vec2(withTileMap/PTM_RATIO, s.height/PTM_RATIO), b2Vec2(withTileMap/PTM_RATIO,0));
     groundBody->CreateFixture(&groundBox,0);
 }
@@ -215,27 +189,18 @@ void HelloWorld::draw()
     // It is recommend to disable it
     //
     CCLayer::draw();
-
     ccGLEnableVertexAttribs( kCCVertexAttribFlag_Position );
-
     kmGLPushMatrix();
-
     world->DrawDebugData();
-
     kmGLPopMatrix();
-    
 }
 
 void HelloWorld::addNewSpriteAtPosition(CCPoint p)
 {
     CCSprite *sp = CCSprite::create("ninja.png");
-    
     _player = new Ninja();
-        
     _player->setAttack(4);
-//    _player->initWithFile("ninja.png");
     _player->init();
-//    _player->autorelease();
     this->addChild(_player, 1000);
     _player->addChild(sp);
     _player->setImage(sp);
@@ -277,10 +242,12 @@ void HelloWorld::addNewSpriteAtPosition(CCPoint p)
     fixtureDef.density = 4.0f; // trong luong
     fixtureDef.friction = 1.0f; //ma sat
     fixtureDef.restitution = 0;
+    fixtureDef.filter.groupIndex = -10;
     body->CreateFixture(&fixtureDef);
     
     _player->setMpBody(body);
     
+    //------------- use GB2ShapeCache - note: no remove ---------
 //    GB2ShapeCache *sc = GB2ShapeCache::sharedGB2ShapeCache();
 //    sc->addFixturesToBody(body, "ninja");
 //    _player->setAnchorPoint(sc->anchorPointForShape("ninja"));
@@ -334,7 +301,50 @@ void HelloWorld::addNewSpriteAtPosition(CCPoint p)
 //    attack->runAction(rep2);
 ////    _player->addChild(attack);
 }
-
+void HelloWorld::addBlood(cocos2d::CCPoint p, b2Vec2 impluse) {
+    Blood * blood = new Blood();
+    blood->initWithFile("fire.png");
+    blood->setColor(ccc3(255, 0, 0));
+    this->addChild(blood, 1000);
+    blood->setContentSize(CCSize(5, 5));
+    blood->setScale(0.2f);
+    blood->setPosition( CCPointMake( p.x, p.y) );
+    // Define the dynamic body.
+    //Set up a 1m squared box in the physics world
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.position.Set(p.x/PTM_RATIO, p.y/PTM_RATIO);
+    bodyDef.userData = blood;
+    b2Body *body = world->CreateBody(&bodyDef);
+    
+    // Define another box shape for our dynamic body.
+    b2PolygonShape dynamicBox;
+    b2CircleShape circle;
+    
+    float _radius = blood->getContentSize().width / 4;
+    circle.m_radius = _radius / PTM_RATIO;
+    
+    
+    // Define the dynamic body fixture.
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &circle;
+    fixtureDef.density = .1f; // trong luong
+    fixtureDef.friction = 1.0f; //ma sat
+    fixtureDef.restitution = 0;
+    fixtureDef.filter.groupIndex = -10;
+    body->CreateFixture(&fixtureDef);
+    body->GetFixtureList()->SetSensor(true);
+    body->SetLinearVelocity(impluse);
+    blood->setMpBody(body);
+    _arrayBlood->addObject(blood);
+}
+void HelloWorld::addGroupBlood(cocos2d::CCPoint p, int numberBoold) {
+    for (int i = 1; i <= numberBoold; i++) {
+        int x = (rand() % 3 - 1) * 40 ;
+        int y = (rand() % 3 - 1) * 40 ;
+        this->addBlood(p, b2Vec2(x, y));
+    } 
+}
 #pragma mark - update
 void HelloWorld::update(float dt)
 {
@@ -418,9 +428,9 @@ void HelloWorld::update(float dt)
     world->Step(dt, velocityIterations, positionIterations);
 
     if (_player->getAttack() == 1 && isTouchRight == true) {
-//        _player->getMpBody()->SetAngularVelocity(-100);
+        //do something
     }else if (_player->getAttack() == 1 && isTouchRight == false) {
-//        _player->getMpBody()->SetAngularVelocity(100);
+        //do something
     }else {
         _player->getMpBody()->SetAngularVelocity(0);
         _player->getMpBody()->SetTransform(_player->getMpBody()->GetPosition(), 0);
@@ -494,10 +504,10 @@ void HelloWorld::update(float dt)
         _player->getImage()->setFlipY(false);
         if (_player->getAttack() == 3) {
             this->touch1(touchLocation);
+        }else {
+            this->touch2(touchLocation);
         }
     }
-    
-   
     //---------------------change direction ------------------------------------
     CCObject * i1;
     CCARRAY_FOREACH(_arraySnake, i1) {
@@ -523,16 +533,6 @@ void HelloWorld::update(float dt)
         }
 
     }
-    
-//    if (_player->getPosition().x > _player->getPoint().x) {
-//        
-//        _player->setFlipX(false);
-//        _player->getImage()->setFlipX(false);
-//    }else {
-//        _player->setFlipX(true);
-//        _player->getImage()->setFlipX(true);
-//    }
-    
     //--------------------contact with coins------------------------------------
     CCObject *i3 ;
     CCARRAY_FOREACH(_arrayCoin, i3) {
@@ -549,19 +549,17 @@ void HelloWorld::update(float dt)
         Coin *snake = (Coin*)i4;
         float kc1 = _player->getImage()->getContentSize().width/2 + snake->getContentSize().width/2;
         float kc2 = ccpDistance(_player->getPosition(), snake->getPosition());
-        
         if (kc2 < kc1 && _player->getAttack() == 0 && delayPlayer <= 0) {
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 5));
             _player->setAttack(4);
-//            _player->setStop(false);
             _lifes --;
-            delayPlayer = 25;
+            delayPlayer = 15;
         }
         else if (kc2 < kc1 && _player->getAttack() == 2 && delayPlayer <= 0) {
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 5));
             _player->setAttack(4);
             _lifes --;
-            delayPlayer = 25;
+            delayPlayer = 15;
         }else if (kc2 <= kc1 && _player->getAttack() == 1) {
             CCSprite *attack = CCSprite::create("attack.png");
             attack->setPosition(snake->getPosition());
@@ -574,6 +572,7 @@ void HelloWorld::update(float dt)
             _arrayRemoveSnake->addObject(snake);
             _player->setAttack(4);
             _player->actionAttack();
+//            this->addGroupBlood(snake->getPosition(), 10);
         }else if (kc2 <= kc1 && _player->getAttack() == 3) {
             CCSprite *attack = CCSprite::create("attack.png");
             CCSprite *attack2 = CCSprite::create("attack.png");
@@ -593,9 +592,9 @@ void HelloWorld::update(float dt)
             if (isTouchTop) {
                 _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 10));
             }
-//            else _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 3));
             _player->actionAttack2();
             _player->setAttack(4);
+//            this->addGroupBlood(snake->getPosition(), 10);
         }
     }
     //--------------------contact with Scorpion---------------------------------
@@ -607,14 +606,14 @@ void HelloWorld::update(float dt)
         if (kc2 < kc1 && _player->getAttack() == 0 && delayPlayer <= 0) {
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 5));
             _player->setAttack(4);
-            delayPlayer = 25;
+            delayPlayer = 15;
             _lifes --;
         }
         else if (kc2 < kc1 && _player->getAttack() == 2 && delayPlayer <= 0) {
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 5));
             _player->setAttack(4);
             _lifes --;
-            delayPlayer = 25;
+            delayPlayer = 15;
         }else if (kc2 <= kc1 && _player->getAttack() == 1) {
             CCSprite *attack = CCSprite::create("attack.png");
             attack->setPosition(scorpion->getPosition());
@@ -627,6 +626,7 @@ void HelloWorld::update(float dt)
             _arrayRemoveScorpion->addObject(scorpion);
             _player->setAttack(4);
             _player->actionAttack();
+//            this->addGroupBlood(scorpion->getPosition(), 10);
         }else if (kc2 <= kc1 && _player->getAttack() == 3) {
             CCSprite *attack = CCSprite::create("attack.png");
             CCSprite *attack2 = CCSprite::create("attack.png");
@@ -647,9 +647,9 @@ void HelloWorld::update(float dt)
             _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 10));
             _player->setAttack(4);
             _player->actionAttack2();
+//            this->addGroupBlood(scorpion->getPosition(), 10);
         }
     }
-    
     //--------------------contact with arrow -----------------------------------
     CCObject *i8;
     CCARRAY_FOREACH(_arrayArrow, i8) {
@@ -660,8 +660,7 @@ void HelloWorld::update(float dt)
             GameManager::sharedGameManager()->setNumberActionPlayer(1);
             this->arrowAttack(arrow->getDirection());
         }
-    }
-        
+    }        
     //---------------remove object when ninja attack ---------------------------
     CCObject * i6;
     CCARRAY_FOREACH(_arrayRemoveSnake, i6) {
@@ -670,10 +669,12 @@ void HelloWorld::update(float dt)
         _scores = _scores + sp->getPoint();
         CCDelayTime * delay = CCDelayTime::create(0.5f);
         CCFadeIn *fo = CCFadeIn::create(0.5f);
-        CCCallFuncN *remove = CCCallFuncN::create(this,callfuncN_selector(HelloWorld::removeSnake));
+        CCCallFuncN *remove = CCCallFuncN::create(this, callfuncN_selector(HelloWorld::removeSnake));
         CCSequence * sq = CCSequence::create(delay, fo, remove, NULL);
         sp->runAction(sq);
         _player->effectsAddPoint(sp->getPoint());
+//        _player->effectsAddPractics(sp->getLocation());
+        this->addGroupBlood(sp->getPosition(), 1);
     }
     
     CCObject * i7;
@@ -683,30 +684,28 @@ void HelloWorld::update(float dt)
         _scores = _scores + sp->getPoint();
         CCDelayTime * delay = CCDelayTime::create(0.5f);
         CCFadeIn *fo = CCFadeIn::create(0.5f);
-        CCCallFuncN *remove = CCCallFuncN::create(this,callfuncN_selector(HelloWorld::removeScorpion));
+        CCCallFuncN *remove = CCCallFuncN::create(this, callfuncN_selector(HelloWorld::removeScorpion));
         CCSequence * sq = CCSequence::create(delay, fo, remove, NULL);
         sp->runAction(sq);
         _player->effectsAddPoint(sp->getPoint());
+//        _player->effectsAddPractics(sp->getLocation());
+        this->addGroupBlood(sp->getPosition(), 1);
     }
     
     CCObject * i9;
     CCARRAY_FOREACH(_arrayRemoveCoin, i9) {
         Coin * sp = (Coin*)i9;
         _scores = _scores + sp->getPoint();
-        CCMoveTo * moveTop = CCMoveTo::create(0.3f, CCPoint(sp->getPosition().x , sp->getPosition().y + 10));
+        CCMoveTo * moveTop = CCMoveTo::create(0.3f, CCPoint(sp->getPosition().x ,
+                                                    sp->getPosition().y + 10));
         CCCallFuncN *remove = CCCallFuncN::create(this,callfuncN_selector(HelloWorld::removeCoin));
         CCSequence * sq = CCSequence::create(moveTop, remove, NULL);
         sp->runAction(sq);
         _player->effectsAddPoint(sp->getPoint());
     }
     _arrayRemoveCoin->removeAllObjects();
-    
-//    if (spriteTaget != NULL) {
-//        this->attackTaget(spriteTaget->getPosition());
-//    }
-    
     //----------------------End game ------------Lost-------------
-    if (_lifes == 0 || _player->getPosition().y < - 5000) {
+    if ( _player->getPosition().y < - 5000) {
         this->unscheduleAllSelectors();
         this->unscheduleUpdate();
         _lbLost->setVisible(true);
@@ -731,7 +730,8 @@ void HelloWorld::updatePhantom(float dt) {
             CCSprite * sprite = CCSprite::create("ninja.png");
             sprite->setPosition(_player->getPosition());
             CCFadeOut *fo = CCFadeOut::create(0.4f);
-            CCCallFuncN *remove = CCCallFuncN::create(sprite,callfuncN_selector(HelloWorld::removeSprite));
+            CCCallFuncN *remove = CCCallFuncN::create(sprite,
+                                callfuncN_selector(HelloWorld::removeSprite));
             CCSequence * sq = CCSequence::create(fo, remove, NULL);
             sprite->runAction(sq);
             this->addChild(sprite, 1000);
@@ -741,7 +741,8 @@ void HelloWorld::updatePhantom(float dt) {
             int i = rand() % 4 + 1;
             CCRotateTo *rotate = CCRotateTo::create(0, 360 / i);
             CCFadeOut *fo = CCFadeOut::create(0.4f);
-            CCCallFuncN *remove = CCCallFuncN::create(sprite,callfuncN_selector(HelloWorld::removeSprite));
+            CCCallFuncN *remove = CCCallFuncN::create(sprite,
+                                callfuncN_selector(HelloWorld::removeSprite));
             CCSequence * sq = CCSequence::create(fo, remove, NULL);
             sprite->runAction(sq);
             sprite->runAction(rotate);
@@ -750,16 +751,14 @@ void HelloWorld::updatePhantom(float dt) {
     }else {
         _player->getMpBody()->SetAngularVelocity(0);
         _player->getMpBody()->SetTransform(_player->getMpBody()->GetPosition(), 0);
-    }
-    
+    }    
 }
 void HelloWorld::updateCheckStop(float dt) {
     CCPoint p = _player->getPosition();
     CCPoint p2 = _player->getPoint();
     if (p.x == p2.x && p.y == p2.y) {
         _player->setStop(true);
-    }else _player->setStop(false);
-    
+    }else _player->setStop(false);    
 }
 void HelloWorld::updateLocation_Direction(float dt) {
     if (delayPlayer > 0) {
@@ -770,13 +769,13 @@ void HelloWorld::updateLocation_Direction(float dt) {
         Snake *snake = (Snake*)i1;
         snake->setLocation(snake->getPosition());
     }
-    
     CCObject * i2;
     CCARRAY_FOREACH(_arrayScorpion, i2) {
         Scorpion *scorpion = (Scorpion*)i2;
         scorpion->setLocation(scorpion->getPosition());
     }
-    CCPoint pPlay = convertMetterToPixel(CCPoint(_player->getMpBody()->GetPosition().x, _player->getMpBody()->GetPosition().y));
+    CCPoint pPlay = convertMetterToPixel(CCPoint(_player->getMpBody()->GetPosition().x,
+                                                _player->getMpBody()->GetPosition().y));
     if (pPlay.x < _player->getPoint().x) {
         _player->getImage()->setFlipX(true);
         _player->setFlipX(true);
@@ -789,17 +788,44 @@ void HelloWorld::updateLocation_Direction(float dt) {
 void HelloWorld::updateScoreLife(float dt) {
     char scoreStr[20] = {0};
     sprintf(scoreStr, "Score: %i", _scores);
-    _lbScores->setString(scoreStr);
-    
+    _lbScores->setString(scoreStr);    
     char strlife[20] = {0};
     sprintf(strlife, "Lifes: %i-X", _lifes);
     _lbLifes->setString(strlife);
-
 }
+void HelloWorld::updateEtfect(float dt) {
+    CCObject *i;
+    CCARRAY_FOREACH(_arrayBlood, i) {
+        Blood * bl = (Blood*)i;
+        CCPoint p1 = convertMetterToPixel(ccp(_player->getMpBody()->GetPosition().x,
+                                              _player->getMpBody()->GetPosition().y));
+        CCPoint p2 = convertMetterToPixel(ccp(bl->getMpBody()->GetPosition().x,
+                                              bl->getMpBody()->GetPosition().y));
+        float kc1 = _player->getImage()->getContentSize().width/2;
+        float kc2 = ccpDistance(p1, p2);
+        if (kc2 <= kc1) {
+            _arrayBloodRemove->addObject(bl);
+        }
+        bl->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
+        b2Vec2 imple = b2Vec2((_player->getMpBody()->GetPosition().x - bl->getMpBody()->GetPosition().x) *5,
+                              (_player->getMpBody()->GetPosition().y - bl->getMpBody()->GetPosition().y) *5);
+        bl->getMpBody()->SetLinearVelocity(imple);
+    }
+    CCObject *j;
+    CCARRAY_FOREACH(_arrayBloodRemove, j) {
+        Blood * bl = (Blood*)j;
+        world->DestroyBody(bl->getMpBody());
+        _arrayBlood->removeObject(bl);
+        this->removeChild(bl);
+    }
+    _arrayBloodRemove->removeAllObjects();
+}
+
 bool HelloWorld::ccTouchBegan(CCTouch *touch, CCEvent *event)
 {
     if (GameManager::sharedGameManager()->getNumberActionPlayer() > 0)
     {
+        touchBack = true;
         _contactting = false;
         giamVanToc = true;
         touchLocation = touch->getLocationInView();
@@ -812,26 +838,20 @@ bool HelloWorld::ccTouchBegan(CCTouch *touch, CCEvent *event)
             isTouchRight = true;
         }else isTouchRight = false;
         this->checkTouchPoint(touchLocation);
-       
     }
     return true;
 }
-
 void HelloWorld::ccTouchEnded(CCSet* touches, CCEvent* event)
 {
     //Add a new body/atlas sprite at the touched location
     CCSetIterator it;
-    CCTouch* touch;
-    
+    CCTouch* touch;    
     for( it = touches->begin(); it != touches->end(); it++) 
     {
         touch = (CCTouch*)(*it);
-        
         if(!touch)
             break;
-        
         CCPoint location = touch->getLocationInView();
-        
         location = CCDirector::sharedDirector()->convertToGL(location);
         this->touch(location);
     }
@@ -857,8 +877,7 @@ void HelloWorld::checkTouchPoint(cocos2d::CCPoint p) {
                     GameManager::sharedGameManager()->getNumberActionPlayer() - 1);
             return;
         }
-    }
-    
+    }   
     CCObject *i2;
     CCARRAY_FOREACH(_arrayScorpion, i2) {
         Scorpion * scorpion = (Scorpion*)i2;
@@ -889,8 +908,7 @@ void HelloWorld::checkTouchPoint(cocos2d::CCPoint p) {
     this->addChild(t, 10);
     _player->setAttack(1);
     _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
-    this->touch(p);
-    
+    this->touch(p);    
     GameManager::sharedGameManager()->setNumberActionPlayer(
                 GameManager::sharedGameManager()->getNumberActionPlayer() - 1);
 }
@@ -936,19 +954,34 @@ void HelloWorld::touch( CCPoint location)
     }
 }
 void HelloWorld::touch1(cocos2d::CCPoint location) {
-    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-    b2Vec2 currentVelocity = _player->getMpBody()->GetLinearVelocity();
     b2Vec2 impulse(0.0f,0.0f);
-    impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) / 10 + 10;
-    impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) /5 ;
+    impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) / 7 ;
+    impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) /7 ;
     _player->getMpBody()->SetLinearVelocity(impulse);
     if (isTouchRight == true) {
         _player->getMpBody()->SetAngularVelocity(-100);
     }else if ( isTouchRight == false) {
         _player->getMpBody()->SetAngularVelocity(100);
     }
-    
 }
+void HelloWorld::touch2(cocos2d::CCPoint location) {
+    b2Vec2 impulse(0.0f,0.0f);
+    impulse.y = (location.y - _player->getMpBody()->GetPosition().y * PTM_RATIO) / 18 ;
+    impulse.x = (location.x - _player->getMpBody()->GetPosition().x * PTM_RATIO) / 18 ;
+    if (touchBack == true)
+    {
+        _player->getMpBody()->SetLinearVelocity(impulse);
+        if (isTouchRight == true) {
+            _player->getMpBody()->SetAngularVelocity(-100);
+        }else if ( isTouchRight == false) {
+            _player->getMpBody()->SetAngularVelocity(100);
+        }
+        if (GameManager::sharedGameManager()->getDirectionContact() == 3) {
+            touchBack = false;
+        }      
+    }
+}
+
 void HelloWorld::attackTaget(cocos2d::CCPoint p) {
     CCPoint point = convertPixelToMetter(p);
     b2Vec2  p1 = b2Vec2(point.x, point.y);
@@ -961,17 +994,8 @@ void HelloWorld::attackTaget(cocos2d::CCPoint p) {
 #pragma mark - create map
 void HelloWorld::prepareLayers()
 {
-//    CCObject *object;
-//    CCARRAY_FOREACH(this->_tileMap->getChildren(), object)
-//    {
-//        // is this map child a tile layer?
-//        CCTMXLayer* layer = dynamic_cast<CCTMXLayer*>(object);
-//        if( layer != NULL )
-//            this->createFixtures(layer);
-//    }
     this->createFixtures(_meta);
 }
-
 void HelloWorld::createFixtures(CCTMXLayer* layer)
 {
     // create all the rectangular fixtures for each tile in the level
@@ -987,34 +1011,28 @@ void HelloWorld::createFixtures(CCTMXLayer* layer)
         }
     }
 }
-
 void HelloWorld::createRectangularFixture(CCTMXLayer* layer, int x, int y,
-                                     float width, float height)
-{
+                                     float width, float height) {
     // get position & size
     CCPoint p = layer->positionAt(ccp(x,y));
     CCSize tileSize = this->_tileMap->getTileSize();
-    const float pixelsPerMeter = 32.0f;
-    
+    const float pixelsPerMeter = 32.0f;    
     // create the body
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
     bodyDef.position.Set((p.x + (tileSize.width / 2.0f)) / pixelsPerMeter,
                          (p.y + (tileSize.height / 2.0f)) / pixelsPerMeter);
     b2Body* body = world->CreateBody(&bodyDef);
-    
     // define the shape
     b2PolygonShape shape;
     shape.SetAsBox((tileSize.width / pixelsPerMeter) * 0.5f * width,
-                   (tileSize.width / pixelsPerMeter) * 0.5f * height);
-    
+                   (tileSize.width / pixelsPerMeter) * 0.5f * height);    
     // create the fixture
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &shape;
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 1.0f;
     fixtureDef.restitution = 0.0f;
-//    fixtureDef.filter.categoryBits = kFilterCategoryLevel;
     fixtureDef.filter.maskBits = 0xffff;
     body->CreateFixture(&fixtureDef);
 }
@@ -1036,27 +1054,21 @@ void HelloWorld::createRectangularFixtureWithPoint(cocos2d::CCPoint p1, cocos2d:
     CCLog("pCenter 2 : %f   -  %f", pCenter.x, pCenter.y);
     with = pw2.x - pw1.x;
     height = abs(pw1.y - pw2.y);
-    
     // create the body
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
     bodyDef.position.Set(pCenter.x / pixelsPerMeter, pCenter.y / pixelsPerMeter);
-//    bodyDef.position.Set(pCenter.x , pCenter.y );
     b2Body* body = world->CreateBody(&bodyDef);
     // define the shape
     b2PolygonShape shape;
     CCLog("with : %f, height : %f", with, height);
     shape.SetAsBox((with / 2 /pixelsPerMeter), (height / 2/ pixelsPerMeter));
-//    shape.SetAsBox((with / 2 /pixelsPerMeter) * GameManager::sharedGameManager()->getSCALE_N_X(),
-//                   (height / 2/ pixelsPerMeter) * GameManager::sharedGameManager()->getSCALE_N_Y());
-
     // create the fixture
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &shape;
     fixtureDef.density = 1000.0f;
     fixtureDef.friction = 1.0f;
     fixtureDef.restitution = 0.0f;
-//    fixtureDef.filter.categoryBits = 1;
     fixtureDef.filter.maskBits = 0xffff;
     body->CreateFixture(&fixtureDef);
 }
@@ -1068,36 +1080,34 @@ void HelloWorld::addWalls() {
     this->createRectangularFixtureWithPoint(CCPoint(44, 18), CCPoint(52, 20));
     this->createRectangularFixtureWithPoint(CCPoint(47, 16), CCPoint(49, 17));
     this->createRectangularFixtureWithPoint(CCPoint(64, 20), CCPoint(75, 23));
-    this->createRectangularFixtureWithPoint(CCPoint(85, 20), CCPoint(98, 23));
-    this->createRectangularFixtureWithPoint(CCPoint(99, 0), CCPoint(99, 19));
+    this->createRectangularFixtureWithPoint(CCPoint(85, 20), CCPoint(107, 23));
+    
     this->createRectangularFixtureWithPoint(CCPoint(70, 12), CCPoint(79, 13));
     this->createRectangularFixtureWithPoint(CCPoint(49, 9), CCPoint(58, 10));
+    
+    this->createRectangularFixtureWithPoint(CCPoint(108, 15), CCPoint(127, 23));
+    this->createRectangularFixtureWithPoint(CCPoint(128, 20), CCPoint(199, 23));
+    this->createRectangularFixtureWithPoint(CCPoint(199, 0), CCPoint(199, 19));
 }
 #pragma mark - handle touches
-
 void HelloWorld::registerWithTouchDispatcher()
 {
-//    CCDirector* pDirector = CCDirector::sharedDirector();
-//    pDirector->getTouchDispatcher()->addTargetedDelegate(this, -10, true);
     CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
 }
-void HelloWorld::setViewPointCenter(CCPoint position)
-{
-    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-    
+void HelloWorld::setViewPointCenter(CCPoint position) {
+    CCSize winSize = CCDirector::sharedDirector()->getWinSize();    
     int x = MAX(position.x, winSize.width/2);
     int y = MAX(position.y, winSize.height/2);
     x = MIN(x, (_tileMap->getMapSize().width * this->_tileMap->getTileSize().width) - winSize.width / 2);
     y = MIN(y, (_tileMap->getMapSize().height * _tileMap->getTileSize().height) - winSize.height/2);
     CCPoint actualPosition = ccp(x, y);
-    
     CCPoint centerOfView = ccp(winSize.width/2, winSize.height/2);
     CCPoint viewPoint = ccpSub(centerOfView, actualPosition);
     this->setPosition(viewPoint);
-//    CCLog("this point x: %f , y: %f", viewPoint.x, viewPoint.y);
-    _layerBg->setPosition(CCPoint(s.width/2 - viewPoint.x, s.height/2 + viewPoint.y));
-//    _layerBg->setPosition(viewPoint);
-//    CCLog("layer point x: %f , y: %f", _layerBg->getPosition().x, _layerBg->getPosition().y);
+    if (position.y < winSize.height / 2) {
+        _layerBg->setPosition(CCPoint(s.width/2 - viewPoint.x, s.height/2 + viewPoint.y));
+    }else _layerBg->setPosition(CCPoint(s.width/2 - viewPoint.x, s.height/2 - viewPoint.y));
+    
 }
 CCPoint HelloWorld::tileCoordForPosition(CCPoint position)
 {
@@ -1109,12 +1119,10 @@ CCScene* HelloWorld::scene()
 {
     // 'scene' is an autorelease object
     CCScene *scene = CCScene::create();
-    
     // add layer as a child to scene
     CCLayer* layer = new HelloWorld();
     scene->addChild(layer);
     layer->release();
-    
     return scene;
 }
 #pragma mark - add object 
@@ -1136,8 +1144,7 @@ void HelloWorld::addCoins() {
                 coin->action();
                 _arrayCoin->addObject(coin);
                 this->addChild(coin, 10000);
-            }
-                
+            }                
         }
     }
 }
@@ -1159,8 +1166,7 @@ void HelloWorld::addSnakes() {
                 snake->actionMoveToPoint(CCPoint(p.x + 200, p.y));
                 _arraySnake->addObject(snake);
                 this->addChild(snake, 10000);
-            }
-            
+            }    
         }
     }
 }
@@ -1188,8 +1194,7 @@ void HelloWorld::addScorpions() {
                 
                 _arrayScorpion->addObject(scorpion);
                 this->addChild(scorpion, 10000);
-            }
-            
+            }   
         }
     }
 }
@@ -1201,8 +1206,6 @@ void HelloWorld::addArrows() {
         {
             // create a fixture if this tile has a sprite
             CCSprite* tileSprite = _arrow->tileAt(ccp(x, y));
-            
-            
             CCPoint tileCoord = this->tileCoordForPosition(convertPoitMapToPixel(ccp(x, y)));
             int tileGid = _arrow->tileGIDAt(ccp(x, y));
             if (tileGid) {
@@ -1223,7 +1226,6 @@ void HelloWorld::addArrows() {
                         arrow->setDirection(i);
                         CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);                            
                         arrow->runAction(rotate);
-//                        break;
                     }
                     //right down
                     CCString *collisionRightDown = new CCString();
@@ -1233,9 +1235,7 @@ void HelloWorld::addArrows() {
                         arrow->setDirection(i);
                         CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
                         arrow->runAction(rotate);
-//                        break;
-                    }
-                    
+                    }  
                     // down
                     CCString *collisionDown = new CCString();
                     *collisionDown = *properties->valueForKey("down");
@@ -1244,7 +1244,6 @@ void HelloWorld::addArrows() {
                         arrow->setDirection(i);
                         CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
                         arrow->runAction(rotate);
-//                        break;
                     }
                     
                     //left down
@@ -1255,7 +1254,6 @@ void HelloWorld::addArrows() {
                         arrow->setDirection(i);
                         CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
                         arrow->runAction(rotate);
-//                        break;
                     }
 
                     //left
@@ -1266,7 +1264,6 @@ void HelloWorld::addArrows() {
                         arrow->setDirection(i);
                         CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
                         arrow->runAction(rotate);
-//                        break;
                     }
                     
                     //left up
@@ -1277,7 +1274,6 @@ void HelloWorld::addArrows() {
                         arrow->setDirection(i);
                         CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
                         arrow->runAction(rotate);
-//                        break;
                     }
 
                     // up
@@ -1288,7 +1284,6 @@ void HelloWorld::addArrows() {
                         arrow->setDirection(i);
                         CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
                         arrow->runAction(rotate);
-//                        break;
                     }
                     
                     //right up
@@ -1299,7 +1294,6 @@ void HelloWorld::addArrows() {
                         arrow->setDirection(i);
                         CCRotateTo *rotate = CCRotateTo::create(0, (i-1) * 45);
                         arrow->runAction(rotate);
-//                        break;
                     }
                 }
             }
@@ -1314,18 +1308,13 @@ CCPoint HelloWorld::convertPixelToMetter(cocos2d::CCPoint p) {
     return CCPoint(p.x / PTM_RATIO, p.y / PTM_RATIO);
 }
 CCPoint HelloWorld::convertPoitMapToPixel(cocos2d::CCPoint pointMap) {
-    float W = CCDirector::sharedDirector()->getWinSize().width;
     float H = CCDirector::sharedDirector()->getWinSize().height;
-    float X = _tileMap->getMapSize().width;
     float Y = _tileMap->getMapSize().height;
     float x = _tileMap->getTileSize().width;
     float y = _tileMap->getTileSize().height;
     return CCPoint(x * 0.5f + x * pointMap.x,H - ((Y - pointMap.y) * y - y * 0.5f));
 }
 CCPoint HelloWorld::convertPoitMapToPixelReverseY(cocos2d::CCPoint pointMap) {
-    float W = CCDirector::sharedDirector()->getWinSize().width;
-    float H = CCDirector::sharedDirector()->getWinSize().height;
-    float X = _tileMap->getMapSize().width;
     float Y = _tileMap->getMapSize().height;
     float x = _tileMap->getTileSize().width;
     float y = _tileMap->getTileSize().height;
