@@ -73,7 +73,10 @@ HelloWorld::HelloWorld()
     this->addSnakes();
     this->addScorpions();
     this->addArrows();    
-    this->addWalls();            
+    this->addWalls();
+    
+    this->addGroupGear();
+    
     //----------point ,life-----------------------
     _scores = 0;
     _lifes = 3;
@@ -345,6 +348,53 @@ void HelloWorld::addGroupBlood(cocos2d::CCPoint p, int numberBoold) {
         this->addBlood(p, b2Vec2(x, y));
     } 
 }
+void HelloWorld::addGear(cocos2d::CCPoint p, int direction) {
+    Gear * gear = new Gear();
+    gear->setDirectionRotation(direction);
+    gear->initWithFile("fire.png");
+//    gear->setColor(ccc3(255, 0, 0));
+    this->addChild(gear, 1000);
+//    gear->setContentSize(CCSize(5, 5));
+//    gear->setScale(0.2f);
+    gear->setPosition( CCPointMake( p.x, p.y) );
+    // Define the dynamic body.
+    //Set up a 1m squared box in the physics world
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_kinematicBody;
+    bodyDef.position.Set(p.x/PTM_RATIO, p.y/PTM_RATIO);
+    bodyDef.userData = gear;
+    b2Body *body = world->CreateBody(&bodyDef);
+    
+    // Define another box shape for our dynamic body.
+    b2PolygonShape dynamicBox;
+    b2CircleShape circle;
+    
+    float _radius = gear->getContentSize().width * 2;
+    circle.m_radius = _radius / PTM_RATIO;
+    
+    
+    // Define the dynamic body fixture.
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &circle;
+    fixtureDef.density = 10.1f; // trong luong
+    fixtureDef.friction = 1.0f; //ma sat
+    fixtureDef.restitution = 0;
+//    fixtureDef.filter.groupIndex = -10;
+    body->CreateFixture(&fixtureDef);
+//    body->GetFixtureList()->SetSensor(true);
+    body->SetAngularVelocity(10000 * direction);
+    gear->setMpBody(body);
+}
+void HelloWorld::addGroupGear() {
+    CCPoint p1 = convertPoitMapToPixelReverseY(CCPoint(112, 5));
+    CCPoint p2 = convertPoitMapToPixelReverseY(CCPoint(116, 5));
+    CCPoint p3 = convertPoitMapToPixelReverseY(CCPoint(120, 5));
+    CCPoint p4 = convertPoitMapToPixelReverseY(CCPoint(124, 5));
+    this->addGear(p1, 1);
+    this->addGear(p2, 1);
+    this->addGear(p3, 1);
+    this->addGear(p4, 1);
+}
 #pragma mark - update
 void HelloWorld::update(float dt)
 {
@@ -448,6 +498,7 @@ void HelloWorld::update(float dt)
         if (GameManager::sharedGameManager()->getDirectionContact() == 1) {
             anim->addSpriteFrameWithFileName("ninja_attack.png");
             anim->addSpriteFrameWithFileName("ninja.png");
+            _player->getMpBody()->SetGravityScale(1);
         //bottom
         }else if (GameManager::sharedGameManager()->getDirectionContact() == 2) {
             anim->addSpriteFrameWithFileName("ninja_attack.png");
@@ -488,6 +539,57 @@ void HelloWorld::update(float dt)
         rep->setTag(123456);
         _player->getImage()->runAction(animet);
         GameManager::sharedGameManager()->setBeginContact(false);
+    }else if (GameManager::sharedGameManager()->getBeginContactKinamic() == true) {
+        GameManager::sharedGameManager()->setBeginContactKinamic(false);
+        if (_player->getAttack() != 0) {
+            _player->setAttack(0);
+        }
+        _player->getMpBody()->SetAngularVelocity(0);
+        CCAnimation *anim=CCAnimation::create();
+        //top
+        if (GameManager::sharedGameManager()->getDirectionContactKinamic() == 1) {
+            anim->addSpriteFrameWithFileName("ninja_attack.png");
+            anim->addSpriteFrameWithFileName("ninja.png");
+            //bottom
+        }else if (GameManager::sharedGameManager()->getDirectionContactKinamic() == 2) {
+            anim->addSpriteFrameWithFileName("ninja_attack.png");
+            anim->addSpriteFrameWithFileName("ninja.png");
+            anim->addSpriteFrameWithFileName("ninja_attack.png");
+            anim->addSpriteFrameWithFileName("ninja.png");
+            _player->setFlipY(true);
+//            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
+            _player->getMpBody()->SetGravityScale(-1);
+            _player->getMpBody()->SetAngularVelocity(0);
+            //giam soc
+            _player->getMpBody()->SetLinearDamping(0);
+            
+            //left
+        }else if (GameManager::sharedGameManager()->getDirectionContactKinamic() == 3) {
+            anim->addSpriteFrameWithFileName("ninja2_bam_tuong.png");
+            _player->getImage()->setFlipX(true);
+//            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
+            _player->getMpBody()->SetGravityScale(0);
+            _player->getMpBody()->SetAngularVelocity(0);
+            //giam soc
+            _player->getMpBody()->SetLinearDamping(0);
+            //right
+        }else if (GameManager::sharedGameManager()->getDirectionContactKinamic() == 4) {
+            anim->addSpriteFrameWithFileName("ninja2_bam_tuong.png");
+            //            _player->setFlipX(true);
+//            _player->getMpBody()->SetLinearVelocity(b2Vec2(0, 0));
+            _player->getMpBody()->SetGravityScale(0);
+            _player->getMpBody()->SetAngularVelocity(0);
+            //giam soc
+            _player->getMpBody()->SetLinearDamping(0);
+        }
+        
+        anim->setDelayPerUnit(2.8f / 4.0f);
+        anim->setRestoreOriginalFrame(true);
+        CCAnimate * animet=CCAnimate::create(anim);
+        CCRepeatForever * rep=CCRepeatForever::create(animet);
+        rep->setTag(123456);
+        _player->getImage()->runAction(animet);
+        GameManager::sharedGameManager()->setBeginContact(false);
     }
     //end contact
     if (GameManager::sharedGameManager()->getEndContact() == true) {
@@ -507,6 +609,11 @@ void HelloWorld::update(float dt)
         }else {
             this->touch2(touchLocation);
         }
+    }else if (GameManager::sharedGameManager()->getEndContactKinamic() == true) {
+        if (GameManager::sharedGameManager()->getDirectionContactKinamic() != 2) {
+            _player->getMpBody()->SetGravityScale(1);
+        }
+        GameManager::sharedGameManager()->setEndContactKinamic(false);
     }
     //---------------------change direction ------------------------------------
     CCObject * i1;

@@ -11,13 +11,16 @@ class GameManager : public cocos2d::CCObject
 private: 
     CC_SYNTHESIZE(int, _numberAction, NumberAction);
     CC_SYNTHESIZE(bool, _beginContact, BeginContact);
+    CC_SYNTHESIZE(bool, _beginContactKinamic, BeginContactKinamic);
     CC_SYNTHESIZE(bool, _endContact, EndContact);
+    CC_SYNTHESIZE(bool, _endContactKinamic, EndContactKinamic);
     
     CC_SYNTHESIZE(bool, _beginContactBoss, BeginContactBoss);
     CC_SYNTHESIZE(bool, _endContactBoss, EndContactBoss);
     
     // 1 - top, 2 bottom, 3 left, 4 right
     CC_SYNTHESIZE(int, _directionContact, DirectionContact);
+    CC_SYNTHESIZE(int, _directionContactKinamic, DirectionContactKinamic);
     CC_SYNTHESIZE(int, _numberActionPlayer, NumberActionPlayer);
     //Constructor
     GameManager();

@@ -22,6 +22,7 @@
 #include "Ninja.h"
 #include "GameMenu.h"
 #include "Blood.h"
+#include "Gear.h"
 using namespace cocos2d;
 class HelloWorld : public cocos2d::CCLayer {
 public:
@@ -36,6 +37,8 @@ public:
     void addNewSpriteAtPosition(cocos2d::CCPoint p);
     void addBlood(CCPoint p, b2Vec2  impluse);
     void addGroupBlood(CCPoint p, int numberBoold);
+    void addGear(CCPoint p, int direction);
+    void addGroupGear();
 
     virtual void draw();
     bool ccTouchBegan(CCTouch *touch, CCEvent *event);
