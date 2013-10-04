@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		DC0258BB17E8634B00C8F628 /* Ninja.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0258B917E8634B00C8F628 /* Ninja.cpp */; };
+		DC0BFDB717FBD19D002525DA /* Blood.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0BFDB617FBD19D002525DA /* Blood.cpp */; };
+		DC0BFDBA17FBF3D9002525DA /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = DC0BFDB917FBF3D9002525DA /* fire.png */; };
+		DC0F76FB17FE9ED7005F120A /* puck.png in Resources */ = {isa = PBXBuildFile; fileRef = DC0F76FA17FE9ED7005F120A /* puck.png */; };
 		DC16728E17E6A69E00CB8EC6 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728717E6A69D00CB8EC6 /* arrow.png */; };
 		DC16728F17E6A69E00CB8EC6 /* attack.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728817E6A69E00CB8EC6 /* attack.png */; };
 		DC16729017E6A69E00CB8EC6 /* coin.png in Resources */ = {isa = PBXBuildFile; fileRef = DC16728917E6A69E00CB8EC6 /* coin.png */; };
@@ -19,6 +22,7 @@
 		DC16729B17E6E4EA00CB8EC6 /* Snake.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC16729A17E6E4EA00CB8EC6 /* Snake.cpp */; };
 		DC16729E17E6E6DA00CB8EC6 /* Scorpion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC16729D17E6E6D900CB8EC6 /* Scorpion.cpp */; };
 		DC1672A117E6EDCB00CB8EC6 /* Arrow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC1672A017E6EDCB00CB8EC6 /* Arrow.cpp */; };
+		DC1A4D5717FD142500A69499 /* Gear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC1A4D5617FD142500A69499 /* Gear.cpp */; };
 		DC64B7DB17E15ADB00587680 /* ninjaS.plist in Resources */ = {isa = PBXBuildFile; fileRef = DC64B7DA17E15ADB00587680 /* ninjaS.plist */; };
 		DC64B7E817E1B29700587680 /* CCDataVisitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC64B7E017E1B29700587680 /* CCDataVisitor.cpp */; };
 		DC64B7E917E1B29700587680 /* GB2ShapeCache-x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC64B7E217E1B29700587680 /* GB2ShapeCache-x.cpp */; };
@@ -378,11 +382,23 @@
 		DCA59F2B17EBF607009FC501 /* Map.tmx in Resources */ = {isa = PBXBuildFile; fileRef = DCA59F2A17EBF607009FC501 /* Map.tmx */; };
 		DCA59F2D17EBFB6B009FC501 /* wall2.png in Resources */ = {isa = PBXBuildFile; fileRef = DCA59F2C17EBFB6B009FC501 /* wall2.png */; };
 		DCB6123017E464AC00C3C382 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB6122E17E464AC00C3C382 /* GameManager.cpp */; };
+		DCE8A31D17F0494B0054339D /* Boss.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCE8A31C17F0494B0054339D /* Boss.cpp */; };
+		DCE8A32217F04BBC0054339D /* ninja2d.png in Resources */ = {isa = PBXBuildFile; fileRef = DCE8A31F17F04BBC0054339D /* ninja2d.png */; };
+		DCE8A32317F04BBC0054339D /* ninja2_attack.png in Resources */ = {isa = PBXBuildFile; fileRef = DCE8A32017F04BBC0054339D /* ninja2_attack.png */; };
+		DCE8A32417F04BBC0054339D /* phitieu.png in Resources */ = {isa = PBXBuildFile; fileRef = DCE8A32117F04BBC0054339D /* phitieu.png */; };
+		DCF5C6F617F3D4FF008043F4 /* progressBar.png in Resources */ = {isa = PBXBuildFile; fileRef = DCF5C6F517F3D4FF008043F4 /* progressBar.png */; };
+		DCF5C6F917F42679008043F4 /* GamePlayWithBoss.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCF5C6F717F42679008043F4 /* GamePlayWithBoss.cpp */; };
+		DCF608FB17F0217000A710FE /* background2.png in Resources */ = {isa = PBXBuildFile; fileRef = DCF608F917F0217000A710FE /* background2.png */; };
+		DCF608FC17F0217000A710FE /* mapBoss.tmx in Resources */ = {isa = PBXBuildFile; fileRef = DCF608FA17F0217000A710FE /* mapBoss.tmx */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		DC0258B917E8634B00C8F628 /* Ninja.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ninja.cpp; sourceTree = "<group>"; };
 		DC0258BA17E8634B00C8F628 /* Ninja.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ninja.h; sourceTree = "<group>"; };
+		DC0BFDB517FBD18B002525DA /* Blood.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Blood.h; sourceTree = "<group>"; };
+		DC0BFDB617FBD19D002525DA /* Blood.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Blood.cpp; sourceTree = "<group>"; };
+		DC0BFDB917FBF3D9002525DA /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire.png; path = Resources/fire.png; sourceTree = "<group>"; };
+		DC0F76FA17FE9ED7005F120A /* puck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = puck.png; path = Resources/puck.png; sourceTree = "<group>"; };
 		DC16728717E6A69D00CB8EC6 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 		DC16728817E6A69E00CB8EC6 /* attack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = attack.png; sourceTree = "<group>"; };
 		DC16728917E6A69E00CB8EC6 /* coin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin.png; sourceTree = "<group>"; };
@@ -398,6 +414,8 @@
 		DC16729D17E6E6D900CB8EC6 /* Scorpion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scorpion.cpp; sourceTree = "<group>"; };
 		DC16729F17E6EDBA00CB8EC6 /* Arrow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Arrow.h; sourceTree = "<group>"; };
 		DC1672A017E6EDCB00CB8EC6 /* Arrow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Arrow.cpp; sourceTree = "<group>"; };
+		DC1A4D5517FD141800A69499 /* Gear.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Gear.h; sourceTree = "<group>"; };
+		DC1A4D5617FD142500A69499 /* Gear.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gear.cpp; sourceTree = "<group>"; };
 		DC64B7DA17E15ADB00587680 /* ninjaS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = ninjaS.plist; path = Resources/ninjaS.plist; sourceTree = "<group>"; };
 		DC64B7E017E1B29700587680 /* CCDataVisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCDataVisitor.cpp; path = Classes/CCDataVisitor.cpp; sourceTree = "<group>"; };
 		DC64B7E117E1B29700587680 /* CCDataVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCDataVisitor.h; path = Classes/CCDataVisitor.h; sourceTree = "<group>"; };
@@ -1083,6 +1101,16 @@
 		DCA59F2C17EBFB6B009FC501 /* wall2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wall2.png; path = Resources/wall2.png; sourceTree = "<group>"; };
 		DCB6122E17E464AC00C3C382 /* GameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameManager.cpp; path = Classes/GameManager.cpp; sourceTree = "<group>"; };
 		DCB6122F17E464AC00C3C382 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameManager.h; path = Classes/GameManager.h; sourceTree = "<group>"; };
+		DCE8A31B17F049400054339D /* Boss.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Boss.h; sourceTree = "<group>"; };
+		DCE8A31C17F0494B0054339D /* Boss.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Boss.cpp; sourceTree = "<group>"; };
+		DCE8A31F17F04BBC0054339D /* ninja2d.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ninja2d.png; sourceTree = "<group>"; };
+		DCE8A32017F04BBC0054339D /* ninja2_attack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ninja2_attack.png; sourceTree = "<group>"; };
+		DCE8A32117F04BBC0054339D /* phitieu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phitieu.png; sourceTree = "<group>"; };
+		DCF5C6F517F3D4FF008043F4 /* progressBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = progressBar.png; path = Resources/progressBar.png; sourceTree = "<group>"; };
+		DCF5C6F717F42679008043F4 /* GamePlayWithBoss.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GamePlayWithBoss.cpp; sourceTree = "<group>"; };
+		DCF5C6F817F42679008043F4 /* GamePlayWithBoss.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GamePlayWithBoss.h; sourceTree = "<group>"; };
+		DCF608F917F0217000A710FE /* background2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = background2.png; path = Resources/background2.png; sourceTree = "<group>"; };
+		DCF608FA17F0217000A710FE /* mapBoss.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = mapBoss.tmx; path = Resources/mapBoss.tmx; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1153,6 +1181,11 @@
 		DC7C79C117DD683500A2325D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DC0F76FA17FE9ED7005F120A /* puck.png */,
+				DC0BFDB917FBF3D9002525DA /* fire.png */,
+				DCF5C6F517F3D4FF008043F4 /* progressBar.png */,
+				DCF608F917F0217000A710FE /* background2.png */,
+				DCF608FA17F0217000A710FE /* mapBoss.tmx */,
 				DCA59F2C17EBFB6B009FC501 /* wall2.png */,
 				DCA59F2A17EBF607009FC501 /* Map.tmx */,
 				DC64B7DA17E15ADB00587680 /* ninjaS.plist */,
@@ -2296,6 +2329,8 @@
 		DC7C7D5417DD684500A2325D /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DCF5C6F717F42679008043F4 /* GamePlayWithBoss.cpp */,
+				DCF5C6F817F42679008043F4 /* GamePlayWithBoss.h */,
 				DC0258B917E8634B00C8F628 /* Ninja.cpp */,
 				DC0258BA17E8634B00C8F628 /* Ninja.h */,
 				DCB6122E17E464AC00C3C382 /* GameManager.cpp */,
@@ -2322,6 +2357,12 @@
 				DC1672A017E6EDCB00CB8EC6 /* Arrow.cpp */,
 				DCA59F2417EBE58B009FC501 /* GameMenu.h */,
 				DCA59F2517EBE599009FC501 /* GameMenu.cpp */,
+				DCE8A31B17F049400054339D /* Boss.h */,
+				DCE8A31C17F0494B0054339D /* Boss.cpp */,
+				DC0BFDB517FBD18B002525DA /* Blood.h */,
+				DC0BFDB617FBD19D002525DA /* Blood.cpp */,
+				DC1A4D5517FD141800A69499 /* Gear.h */,
+				DC1A4D5617FD142500A69499 /* Gear.cpp */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -2389,6 +2430,7 @@
 		DC9CE3DF17E05A5600E7A368 /* ninjagame */ = {
 			isa = PBXGroup;
 			children = (
+				DCE8A31E17F04BBC0054339D /* Ninja2 */,
 				DC16728717E6A69D00CB8EC6 /* arrow.png */,
 				DC16728817E6A69E00CB8EC6 /* attack.png */,
 				DC16728917E6A69E00CB8EC6 /* coin.png */,
@@ -2430,6 +2472,16 @@
 				DC9CE3EA17E05A5600E7A368 /* ninja_attack.png */,
 			);
 			path = Ninja;
+			sourceTree = "<group>";
+		};
+		DCE8A31E17F04BBC0054339D /* Ninja2 */ = {
+			isa = PBXGroup;
+			children = (
+				DCE8A31F17F04BBC0054339D /* ninja2d.png */,
+				DCE8A32017F04BBC0054339D /* ninja2_attack.png */,
+				DCE8A32117F04BBC0054339D /* phitieu.png */,
+			);
+			path = Ninja2;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2580,6 +2632,14 @@
 				DC16729417E6A69E00CB8EC6 /* ninja2_bam_tuong.png in Resources */,
 				DCA59F2B17EBF607009FC501 /* Map.tmx in Resources */,
 				DCA59F2D17EBFB6B009FC501 /* wall2.png in Resources */,
+				DCF608FB17F0217000A710FE /* background2.png in Resources */,
+				DCF608FC17F0217000A710FE /* mapBoss.tmx in Resources */,
+				DCE8A32217F04BBC0054339D /* ninja2d.png in Resources */,
+				DCE8A32317F04BBC0054339D /* ninja2_attack.png in Resources */,
+				DCE8A32417F04BBC0054339D /* phitieu.png in Resources */,
+				DCF5C6F617F3D4FF008043F4 /* progressBar.png in Resources */,
+				DC0BFDBA17FBF3D9002525DA /* fire.png in Resources */,
+				DC0F76FB17FE9ED7005F120A /* puck.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2853,6 +2913,10 @@
 				DC1672A117E6EDCB00CB8EC6 /* Arrow.cpp in Sources */,
 				DC0258BB17E8634B00C8F628 /* Ninja.cpp in Sources */,
 				DCA59F2617EBE599009FC501 /* GameMenu.cpp in Sources */,
+				DCE8A31D17F0494B0054339D /* Boss.cpp in Sources */,
+				DCF5C6F917F42679008043F4 /* GamePlayWithBoss.cpp in Sources */,
+				DC0BFDB717FBD19D002525DA /* Blood.cpp in Sources */,
+				DC1A4D5717FD142500A69499 /* Gear.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2946,7 +3010,7 @@
 					"-lsqlite3",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				USER_HEADER_SEARCH_PATHS = "\"NinjaStrickerBox2d/libs\"";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2972,7 +3036,7 @@
 					"-lsqlite3",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				USER_HEADER_SEARCH_PATHS = "\"NinjaStrickerBox2d/libs\"";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;

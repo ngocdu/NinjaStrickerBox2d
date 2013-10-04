@@ -348,9 +348,10 @@ void HelloWorld::addGroupBlood(cocos2d::CCPoint p, int numberBoold) {
         this->addBlood(p, b2Vec2(x, y));
     } 
 }
-void HelloWorld::addGear(cocos2d::CCPoint p, int direction) {
+void HelloWorld::addGear(cocos2d::CCPoint p, int direction, int r) {
     Gear * gear = new Gear();
     gear->setDirectionRotation(direction);
+    gear->setScale(0.5f);
     gear->initWithFile("fire.png");
 //    gear->setColor(ccc3(255, 0, 0));
     this->addChild(gear, 1000);
@@ -369,7 +370,7 @@ void HelloWorld::addGear(cocos2d::CCPoint p, int direction) {
     b2PolygonShape dynamicBox;
     b2CircleShape circle;
     
-    float _radius = gear->getContentSize().width * 2;
+    float _radius = gear->getContentSize().width / r;
     circle.m_radius = _radius / PTM_RATIO;
     
     
@@ -386,14 +387,20 @@ void HelloWorld::addGear(cocos2d::CCPoint p, int direction) {
     gear->setMpBody(body);
 }
 void HelloWorld::addGroupGear() {
-    CCPoint p1 = convertPoitMapToPixelReverseY(CCPoint(112, 5));
-    CCPoint p2 = convertPoitMapToPixelReverseY(CCPoint(116, 5));
-    CCPoint p3 = convertPoitMapToPixelReverseY(CCPoint(120, 5));
-    CCPoint p4 = convertPoitMapToPixelReverseY(CCPoint(124, 5));
-    this->addGear(p1, 1);
-    this->addGear(p2, 1);
-    this->addGear(p3, 1);
-    this->addGear(p4, 1);
+    for (int i = 113; i <= 129 ; i++) {
+        CCPoint p1 = convertPoitMapToPixelReverseY(CCPoint(i, 5));
+        if (i == 113 || i == 129) {
+            this->addGear(p1, 1, 4);
+        }else
+        this->addGear(p1, 1, 2);
+    }
+    for (int i = 113; i <= 129 ; i++) {
+        CCPoint p1 = convertPoitMapToPixelReverseY(CCPoint(i, 8));
+        if (i == 113 || i == 129) {
+            this->addGear(p1, 1, 4);
+        }else
+        this->addGear(p1, 1, 2);
+    }
 }
 #pragma mark - update
 void HelloWorld::update(float dt)
@@ -940,7 +947,10 @@ bool HelloWorld::ccTouchBegan(CCTouch *touch, CCEvent *event)
         touchLocation = this->convertToNodeSpace(touchLocation);
         if (_player->getMpBody()->GetPosition().y * PTM_RATIO < touchLocation.y )
             isTouchTop = true;
-        else isTouchTop = false;
+        else {
+            isTouchTop = false;
+            _player->getMpBody()->SetGravityScale(1);
+        }
         if (_player->getMpBody()->GetPosition().x * PTM_RATIO < touchLocation.x ) {
             isTouchRight = true;
         }else isTouchRight = false;

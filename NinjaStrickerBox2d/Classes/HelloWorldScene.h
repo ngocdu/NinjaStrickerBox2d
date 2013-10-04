@@ -37,7 +37,7 @@ public:
     void addNewSpriteAtPosition(cocos2d::CCPoint p);
     void addBlood(CCPoint p, b2Vec2  impluse);
     void addGroupBlood(CCPoint p, int numberBoold);
-    void addGear(CCPoint p, int direction);
+    void addGear(CCPoint p, int direction, int radius);
     void addGroupGear();
 
     virtual void draw();

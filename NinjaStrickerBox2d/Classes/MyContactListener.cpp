@@ -137,8 +137,18 @@ void MyContactListener::EndContact(b2Contact* contact) {
         }
         else if (myContact.fixtureA->GetBody()->GetType() == b2_kinematicBody) {
             GameManager::sharedGameManager()->setEndContactKinamic(true);
-            myContact.fixtureB->GetBody()->SetAngularVelocity(0);
-            myContact.fixtureB->GetBody()->SetLinearVelocity(b2Vec2(0, 0));
+            if (GameManager::sharedGameManager()->getDirectionContactKinamic() == 1 ||
+                GameManager::sharedGameManager()->getDirectionContactKinamic() == 2) {
+                myContact.fixtureB->GetBody()->SetAngularVelocity(0);
+                myContact.fixtureB->GetBody()->SetLinearVelocity(b2Vec2(0, 0));
+            }else if (GameManager::sharedGameManager()->getDirectionContactKinamic() == 4) {
+                myContact.fixtureB->GetBody()->SetGravityScale(1);
+//                myContact.fixtureB->GetBody()->SetAngularVelocity(0);
+//                myContact.fixtureB->GetBody()->SetLinearVelocity(b2Vec2(-10, 10));
+            }else if (GameManager::sharedGameManager()->getDirectionContactKinamic() == 3) {
+//                myContact.fixtureB->GetBody()->SetAngularVelocity(0);
+//                myContact.fixtureB->GetBody()->SetLinearVelocity(b2Vec2(10, -10));
+            }
         }
     }else if (myContact.fixtureA->GetBody()->GetType() == b2_dynamicBody) {
         if (myContact.fixtureB->GetBody()->GetType() == b2_staticBody) {
@@ -151,8 +161,18 @@ void MyContactListener::EndContact(b2Contact* contact) {
             }
         }else if (myContact.fixtureB->GetBody()->GetType() == b2_kinematicBody) {
             GameManager::sharedGameManager()->setEndContactKinamic(true);
-            myContact.fixtureA->GetBody()->SetAngularVelocity(0);
-            myContact.fixtureA->GetBody()->SetLinearVelocity(b2Vec2(0, 0));
+            if (GameManager::sharedGameManager()->getDirectionContactKinamic() == 1 ||
+                GameManager::sharedGameManager()->getDirectionContactKinamic() == 2) {
+                myContact.fixtureA->GetBody()->SetAngularVelocity(0);
+                myContact.fixtureA->GetBody()->SetLinearVelocity(b2Vec2(0, 0));
+            }else if (GameManager::sharedGameManager()->getDirectionContactKinamic() == 4) {
+                myContact.fixtureB->GetBody()->SetGravityScale(1);
+//                myContact.fixtureA->GetBody()->SetAngularVelocity(0);
+//                myContact.fixtureA->GetBody()->SetLinearVelocity(b2Vec2(-10, 10));
+            }else if (GameManager::sharedGameManager()->getDirectionContactKinamic() == 3) {
+//                myContact.fixtureA->GetBody()->SetAngularVelocity(0);
+//                myContact.fixtureA->GetBody()->SetLinearVelocity(b2Vec2(10, -10));
+            }
         }
     }
 }
